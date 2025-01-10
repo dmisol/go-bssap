@@ -1,0 +1,69 @@
+package bssmap
+
+type BSSMAP_Cause byte
+
+const (
+	RADIO_INTERFACE_MSG_FAILURE                 BSSMAP_Cause = 0
+	RADIO_INTERFACE_FAILURE                     BSSMAP_Cause = 1
+	UL_QUALITY                                  BSSMAP_Cause = 2
+	UL_STRENGTH                                 BSSMAP_Cause = 3
+	DOWNLINK_QUALITY                            BSSMAP_Cause = 4
+	DOWNLINK_STRENGTH                           BSSMAP_Cause = 5
+	DISTANCE                                    BSSMAP_Cause = 6
+	O_AND_M_INTERVENTION                        BSSMAP_Cause = 7
+	RESPONSE_TO_MSC_INVOCATION                  BSSMAP_Cause = 8
+	CALL_CONTROL                                BSSMAP_Cause = 9
+	RADIO_INTERFACE_FAILURE_REVERSION           BSSMAP_Cause = 10
+	HO_SUCC                                     BSSMAP_Cause = 11
+	BETTER_CELL                                 BSSMAP_Cause = 12
+	DIRECTED_RETRY                              BSSMAP_Cause = 13
+	JOINED_GROUP_CALL_CHANNEL                   BSSMAP_Cause = 14
+	TRAFFIC                                     BSSMAP_Cause = 15
+	REDUCE_LOAD_IN_SERVING_CELL                 BSSMAP_Cause = 0x10
+	TRAFFIC_LOAD_IN_TGT_HIGHER_THAN_IN_SRC_CELL BSSMAP_Cause = 0x11
+	RELOCATION_TRIGGERED                        BSSMAP_Cause = 0x12
+	REQUESTED_OPT_NOT_AUTHORISED                BSSMAP_Cause = 0x14
+	ALT_CHAN_CONFIG_REQUESTED                   BSSMAP_Cause = 0x15
+	RESP_TO_INT_HO_ENQ_MSG                      BSSMAP_Cause = 0x16
+	INT_HO_ENQUIRY_REJECT                       BSSMAP_Cause = 0x17
+	REDUNDANCY_LEVEL_NOT_ADEQUATE               BSSMAP_Cause = 0x18
+	EQUIPMENT_FAILURE                           BSSMAP_Cause = 32
+	NO_RADIO_RESOURCE_AVAIL                     BSSMAP_Cause = 33
+	RQSTED_TERRESTRIAL_RESOURCE_UNAVAIL         BSSMAP_Cause = 34
+	CCCH_OVERLOAD                               BSSMAP_Cause = 35
+	PROCESSOR_OVERLOAD                          BSSMAP_Cause = 36
+	BSS_NOT_EQUIPPED                            BSSMAP_Cause = 37
+	MS_NOT_EQUIPPED                             BSSMAP_Cause = 38
+	INVALID_CELL                                BSSMAP_Cause = 39
+	TRAFFIC_LOAD                                BSSMAP_Cause = 40
+	PREEMPTION                                  BSSMAP_Cause = 41
+	DTM_HO_SGSN_FAILURE                         BSSMAP_Cause = 0x2a
+	DTM_HO_PS_ALLOC_FAILURE                     BSSMAP_Cause = 0x2b
+	RQSTED_TRANSCODING_RATE_ADAPTION_UNAVAIL    BSSMAP_Cause = 48
+	CIRCUIT_POOL_MISMATCH                       BSSMAP_Cause = 49
+	SWITCH_CIRCUIT_POOL                         BSSMAP_Cause = 50
+	RQSTED_SPEECH_VERSION_UNAVAIL               BSSMAP_Cause = 51
+	LSA_NOT_ALLOWED                             BSSMAP_Cause = 52
+	REQ_CODEC_TYPE_OR_CONFIG_UNAVAIL            BSSMAP_Cause = 0x35
+	REQ_A_IF_TYPE_UNAVAIL                       BSSMAP_Cause = 0x36
+	INVALID_CSG_CELL                            BSSMAP_Cause = 0x37
+	REQ_REDUND_LEVEL_NOT_AVAIL                  BSSMAP_Cause = 0x3f
+	CIPH_ALGORITHM_NOT_SUPPORTED                BSSMAP_Cause = 64
+	GERAN_IU_MODE_FAILURE                       BSSMAP_Cause = 0x41
+	INC_RELOC_NOT_SUPP_DT_PUESBINE_FEATURE      BSSMAP_Cause = 0x42
+	ACCESS_RESTRICTED_DUE_TO_SHARED_NETWORKS    BSSMAP_Cause = 0x43
+	REQ_CODEC_TYPE_OR_CONFIG_NOT_SUPP           BSSMAP_Cause = 0x44
+	REQ_A_IF_TYPE_NOT_SUPP                      BSSMAP_Cause = 0x45
+	REQ_REDUND_LVL_NOT_SUPP                     BSSMAP_Cause = 0x46
+	TERRESTRIAL_CIRCUIT_ALREADY_ALLOCATED       BSSMAP_Cause = 80
+	INVALID_MSG_CONTENTS                        BSSMAP_Cause = 81
+	INFORMATION_ELEMENT_OR_FIELD_MISSING        BSSMAP_Cause = 82
+	INCORRECT_VALUE                             BSSMAP_Cause = 83
+	UNK_MSG_TYPE                                BSSMAP_Cause = 84
+	UNK_INFORMATION_ELEMENT                     BSSMAP_Cause = 85
+	DTM_HO_INVALID_PS_IND                       BSSMAP_Cause = 0x56
+	CALL_ID_ALREADY_ALLOC                       BSSMAP_Cause = 0x57
+	PROTOCOL_ERROR_BETWEEN_BSS_AND_MSC          BSSMAP_Cause = 96
+	VGCS_VBS_CALL_NON_EXISTENT                  BSSMAP_Cause = 0x61
+	DTM_HO_TIMER_EXPIRY                         BSSMAP_Cause = 0x62
+)
