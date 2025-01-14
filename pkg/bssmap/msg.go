@@ -1,5 +1,9 @@
 package bssmap
 
+import (
+	"fmt"
+)
+
 type BSSMAP_MsgType byte
 
 const (
@@ -116,3 +120,14 @@ const (
 	MSG_LCLS_CONNECT_CTRL_ACK BSSMAP_MsgType = 0x75
 	MSG_LCLS_NOTIFICATION     BSSMAP_MsgType = 0x76
 )
+
+func (m BSSMAP_MsgType) String() string {
+	switch m {
+	case MSG_ASSIGNMENT_RQST:
+		return "AssReq"
+	case MSG_ASSIGNMENT_CMPL:
+		return "AssCmpt"
+	default:
+		return fmt.Sprintf("Bssmap0x%02X", int(m))
+	}
+}
