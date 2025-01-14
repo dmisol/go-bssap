@@ -1,5 +1,7 @@
 package bssmap
 
+import "fmt"
+
 type BSSMAP_IE byte
 
 const (
@@ -144,3 +146,19 @@ const (
 	PS_REGISTERED_OPERATOR              BSSMAP_IE = 0x99
 	CS_REGISTERED_OPERATOR              BSSMAP_IE = 0x9a
 )
+
+func (ie BSSMAP_IE) Format() (isVariable bool, fixed int) {
+	switch ie {
+	default:
+		return true, 0
+	}
+}
+
+func (ie BSSMAP_IE) String() string {
+	switch ie {
+	case CIC:
+		return "CIC"
+	default:
+		return fmt.Sprintf("IE 0x%02X", int(ie))
+	}
+}
