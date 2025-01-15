@@ -44,6 +44,15 @@ func (m *BssmapMsg) String() string {
 	return s + "}"
 }
 
+func (m *BssmapMsg) GetIE(tag BSSMAP_IE) (IE, bool) {
+	for _, v := range m.IEs {
+		if v.Tag() == tag {
+			return v, true
+		}
+	}
+	return nil, false
+}
+
 func BssmapDecode(b []byte) (*BssmapMsg, error) {
 	if len(b) < 1 {
 		return nil, fmt.Errorf("invalid bssmap message")
