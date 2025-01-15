@@ -3,8 +3,9 @@ package bssmap
 import "fmt"
 
 type IE interface {
-	Tag() BSSMAP_IE
+	Tag() BssmapIE
 	Encode() []byte
+	Len() uint8
 	String() string
 }
 
@@ -32,6 +33,14 @@ func (m *BssmapMsg) Encode() []byte {
 	return r
 }
 
+func (m *BssmapMsg) Len() uint8 {
+	l := uint8(1) // MsgType
+	for i := range m.IEs {
+		l += m.IEs[i].Len()
+	}
+	return l
+}
+
 func (m *BssmapMsg) String() string {
 	s := m.Msg.String() + "{"
 	for i := range len(m.IEs) {
@@ -44,7 +53,7 @@ func (m *BssmapMsg) String() string {
 	return s + "}"
 }
 
-func (m *BssmapMsg) GetIE(tag BSSMAP_IE) (IE, bool) {
+func (m *BssmapMsg) GetIE(tag BssmapIE) (IE, bool) {
 	for _, v := range m.IEs {
 		if v.Tag() == tag {
 			return v, true
@@ -63,30 +72,33 @@ func BssmapDecode(b []byte) (*BssmapMsg, error) {
 	}
 	offset := 1
 	for offset < len(b) {
-		ie := BSSMAP_IE(b[offset])
+		ie := BssmapIE(b[offset])
 		isVar, fixed := ie.Format()
+		// Variable part
 		if isVar {
-			// next byte is length
+			// Next byte is length
 			if (offset + 1) >= len(b) {
-				return nil, fmt.Errorf("variable IE %s is invalid: [len]", ie)
+				return nil, fmt.Errorf("variable IE %q is invalid: [len]", ie)
 			}
 			if (offset + 1 + int(b[offset+1])) >= len(b) {
-				return nil, fmt.Errorf("variable IE %s is invalid: [val]", ie)
+				return nil, fmt.Errorf("variable IE %q is invalid: [val]", ie)
 			}
 			l := int(b[offset+1])
 			d := &DummyIE{
 				Data: b[offset : offset+l+2],
 			}
 			m.IEs = append(m.IEs, d)
+			offset += l + 2
+		// Fixed part
 		} else {
-			// fixed
 			if (offset + fixed) >= len(b) {
-				return nil, fmt.Errorf("fixed IE %s can't fit", ie)
+				return nil, fmt.Errorf("fixed IE %q can't fit", ie)
 			}
 			d := &DummyIE{
 				Data: b[offset : offset+fixed],
 			}
 			m.IEs = append(m.IEs, d)
+			offset += fixed
 		}
 	}
 	return m, nil
