@@ -124,9 +124,14 @@ const (
 func (m BSSMAP_MsgType) String() string {
 	switch m {
 	case MSG_ASSIGNMENT_RQST:
-		return "AssReq"
+		return "AssRQST"
 	case MSG_ASSIGNMENT_CMPL:
-		return "AssCmpt"
+		return "AssCMPL"
+
+	case MSG_HO_RQST:
+		return "HO_RQST"
+	case MSG_HO_REQUIRED:
+		return "HO_REQD"
 	default:
 		return fmt.Sprintf("Bssmap0x%02X", int(m))
 	}

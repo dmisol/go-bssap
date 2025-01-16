@@ -1,7 +1,5 @@
 package bssmap
 
-import "fmt"
-
 type DummyIE struct {
 	Data []byte // Tag + Length + Value
 }
@@ -19,5 +17,6 @@ func (ie *DummyIE) Len() uint8 {
 }
 
 func (ie *DummyIE) String() string {
-	return fmt.Sprintf("IE 0x%2X", ie.Data[0])
+	i := BssmapIE(ie.Data[0])
+	return i.String()
 }

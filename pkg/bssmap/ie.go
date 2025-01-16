@@ -161,7 +161,7 @@ func (ie BssmapIE) Format() (isVariable bool, fixed int) {
 func (ie BssmapIE) String() string {
 	switch ie {
 	case CIC:
-		return "Circuit Identity Code"
+		return "Cic"
 	// RSVD_0
 	// RESRC_AVAILABLE
 	case CAUSE:
@@ -188,9 +188,9 @@ func (ie BssmapIE) String() string {
 	// DLCI
 	// DOWNLINK_DTX_FLAG
 	case CELL_ID_LIST:
-		return "Cell Identifier List"
+		return "CellIdList"
 	case RESPONSE_RQST:
-		return "Response Request"
+		return "RespRqst"
 	// RESRC_IND_METHOD
 	// CLASSMARK_INF_TYPE_1
 	// CIC_LIST
@@ -213,10 +213,10 @@ func (ie BssmapIE) String() string {
 	// TIME_IND
 	// RESRC_SITUATION
 	case CURRENT_CHANNEL_TYPE_1:
-		return "Current Channel type 1"
+		return "CurChanType1"
 	// QUEUEING_INDICATOR
 	case SPEECH_VERSION:
-		return "Speech Version"
+		return "SpeechVer"
 	// ASSIGNMENT_REQUIREMENT
 	// TALKER_FLAG
 	// CONNECTION_RELEASE_RQSTED
@@ -224,7 +224,7 @@ func (ie BssmapIE) String() string {
 	// EMLPP_PRIORITY
 	// CONFIG_EVO_INDI
 	case OLD_BSS_TO_NEW_BSS_INF:
-		return "Old BSS to New BSS Information"
+		return "Old2NewBssInfo"
 	// LSA_ID
 	// LSA_ID_LIST
 	// LSA_INF
@@ -308,6 +308,6 @@ func (ie BssmapIE) String() string {
 	// PS_REGISTERED_OPERATOR
 	// CS_REGISTERED_OPERATOR
 	default:
-		return fmt.Sprintf("IE 0x%02X", int(ie))
+		return fmt.Sprintf("IE_0x%02x", int(ie))
 	}
 }
