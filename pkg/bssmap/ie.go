@@ -24,7 +24,7 @@ const (
 	RSVD_3                              BssmapIE = 17
 	CLASSMARK_INF_T2                    BssmapIE = 18
 	CLASSMARK_INF_T3                    BssmapIE = 19
-	INTERFERENCE_BAND_TO_USE            BssmapIE = 20
+	INTERFERENCE_BAND_TO_USED           BssmapIE = 20
 	RR_CAUSE                            BssmapIE = 21
 	RSVD_4                              BssmapIE = 22
 	LAYER_3_INF                         BssmapIE = 23
@@ -147,14 +147,287 @@ const (
 	CS_REGISTERED_OPERATOR              BssmapIE = 0x9a
 )
 
-func (ie BssmapIE) Format() (isVariable bool, fixed int) {
+// Format returns a length of the Information Element (IE)
+// 1. If length > 0, it means that IE has FIXED length  (For example, "Number Of MSs" or "TMSI")
+// 2. If length = 0, it means that IE has VARIABLE length
+// 3. If length = -1, it means that IE is unsupported
+func (ie BssmapIE) Format() (length int) {
 	switch ie {
+	case CIC:
+		return 1
+	case RESRC_AVAILABLE:
+		return 21 // Need to check
+	case CAUSE:
+		return 3
+	case CELL_ID:
+		return 0
+	case PRIORITY:
+		return 3
+	case LAYER_3_HEADER_INF:
+		return 4
+	case IMSI:
+		return 0 // Variable? Check it again 
+	case TMSI:
+		return 0
+	case ENCRYPTION_INF:
+		return 0
+	case CHANNEL_TYPE:
+		return 0
+	case PERIODICITY:
+		return 2
+	case EXTENDED_RESRC_INDICATOR:
+		return 2
+	case NUMBER_OF_MSS:
+		return 2
+	case CLASSMARK_INF_T2:
+		return 0
+	case CLASSMARK_INF_T3:
+		return 0
+	case INTERFERENCE_BAND_TO_USED:
+		return 2
+	case RR_CAUSE:
+		return 2
+	case LAYER_3_INF:
+		return 0
+	case DLCI:
+		return 2
+	case DOWNLINK_DTX_FLAG:
+		return 2
+	case CELL_ID_LIST:
+		return 0
 	case RESPONSE_RQST:
-		return false, 1
-	case CURRENT_CHANNEL_TYPE_1, SPEECH_VERSION:
-		return false, 2
+		return 1
+	case RESRC_IND_METHOD:
+		return 2
+	case CLASSMARK_INF_TYPE_1:
+		return 2
+	case CIC_LIST:
+		return 0
+	case DIAGNOSTIC:
+		return 0
+	case LAYER_3_MESSAGE_CONTENTS:
+		return 0
+	case CHOSEN_CHANNEL:
+		return 2
+	case TOTAL_RESRC_ACCESSIBLE:
+		return 5
+	case CIPHER_RESPONSE_MODE:
+		return 2
+	case CHANNEL_NEEDED:
+		return 2
+	case TRACE_TYPE:
+		return 2
+	case TRIGGERID:
+		return 0
+	case TRACE_REFERENCE:
+		return 3
+	case TRANSACTIONID:
+		return 0
+	case MOBILE_IDENTITY:
+		return 0
+	case OMCID:
+		return 0
+	case FORWARD_INDICATOR:
+		return 2
+	case CHOSEN_ENCR_ALG:
+		return 2
+	case CIRCUIT_POOL:
+		return 2
+	case CIRCUIT_POOL_LIST:
+		return 0
+	case TIME_IND:
+		return 2
+	case RESRC_SITUATION:
+		return 0
+	case CURRENT_CHANNEL_TYPE_1:
+		return 2
+	case QUEUEING_INDICATOR:
+		return 2
+	case SPEECH_VERSION:
+		return 2
+	case ASSIGNMENT_REQUIREMENT:
+		return 2
+	case TALKER_FLAG:
+		return 1
+	case CONNECTION_RELEASE_RQSTED:
+		return 1
+	case GROUP_CALL_REFERENCE:
+		return 0
+	case EMLPP_PRIORITY:
+		return 2
+	case CONFIG_EVO_INDI:
+		return 2
+	case OLD_BSS_TO_NEW_BSS_INF:
+		return 0
+	case LSA_ID:
+		return 5
+	case LSA_ID_LIST:
+		return 0
+	case LSA_INF:
+		return 0
+	case LCS_QOS:
+		return 0
+	case LSA_ACCESS_CTRL_SUPPR:
+		return 2
+	case LCS_PRIORITY:
+		return 0
+	case LOCATION_TYPE:
+		return 0
+	case LOCATION_ESTIMATE:
+		return 0
+	case POSITIONING_DATA:
+		return 0
+	case LCS_CAUSE:
+		return 0
+	case LCS_CLIENT_TYPE:
+		return 0
+	case APDU:
+		return 0
+	case NETW_ELEMENT_IDENTITY:
+		return 0
+	case GPS_ASSISTANCE_DATA:
+		return 0
+	case DECIPHERING_KEYS:
+		return 0
+	case RET_ERROR_RQST:
+		return 0
+	case RET_ERROR_CAUSE:
+		return 0
+	case SEGMENTATION:
+		return 0
+	case SERVICE_HANDOVER:
+		return 0
+	case SRC_RNC_TO_TARG_RNC_TRANSP_UMTS:
+		return 0
+	case SRC_RNC_TO_TARG_RNC_TRANSP_CDMA2000:
+		return 0
+	case GERAN_CLASSMARK:
+		return 0
+	case GERAN_BSC_CONTAINER:
+		return 0
+	case NEW_BSS_TO_OLD_BSS_INFO:
+		return 0
+	case GSM0800_IE_INTER_SYSTEM_INFO:
+		return 0
+	case SNA_ACCESS_INFO:
+		return 0
+	case VSTK_RAND_INFO:
+		return 0
+	case VSTK_INFO:
+		return 0
+	case PAGING_INFO:
+		return 2
+	case IMEI:
+		return 0
+	case VELOCITY_ESTIMATE:
+		return 0
+	case VGCS_FEATURE_FLAGS:
+		return 0
+	case TALKER_PRIORITY:
+		return 2
+	case EMERGENCY_SET_IND:
+		return 1
+	case TALKER_IDENTITY:
+		return 0
+	case CELL_ID_LIST_SEGMENT:
+		return 0
+	case SMS_TO_VGCS:
+		return 0
+	case VGCS_TALKER_MODE:
+		return 0
+	case VGCS_VBS_CELL_STATUS:
+		return 0
+	case CELL_ID_LIST_SEG_EST_CELLS:
+		return 0
+	case CELL_ID_LIST_SEG_CELLS_TBE:
+		return 0
+	case CELL_ID_LIST_SEG_REL_CELLS:
+		return 0
+	case CELL_ID_LIST_SEG_NE_CELLS:
+		return 0
+	case GANSS_ASSISTANCE_DATA:
+		return 0
+	case GANSS_POSITIONING_DATA:
+		return 0
+	case GANSS_LOCATION_TYPE:
+		return 0
+	case APP_DATA:
+		return 0
+	case DATA_IDENTITY:
+		return 0
+	case APP_DATA_INFO:
+		return 0
+	case MSISDN:
+		return 0
+	case AOIP_TRASP_ADDR:
+		return 8 // Fixed? Check it again 
+	case SPEECH_CODEC_LIST:
+		return 0
+	case SPEECH_CODEC:
+		return 0
+	case CALL_ID:
+		return 5
+	case CALL_ID_LIST:
+		return 0
+	case A_IF_SEL_FOR_RESET:
+		return 2
+	case KC_128:
+		return 17
+	case CSG_ID:
+		return 0
+	case REDIR_ATTEMPT_FLAG:
+		return 1
+	case REROUTE_REJ_CAUSE:
+		return 2
+	case SEND_SEQ_NUM:
+		return 2
+	case REROUTE_COMPL_OUTCOME:
+		return 2
+	case GLOBAL_CALL_REF:
+		return 0
+	case LCLS_CONFIG:
+		return 2
+	case LCLS_CONN_STATUS_CTRL:
+		return 2
+	case LCLS_CORR_NOT_NEEDED:
+		return 1
+	case LCLS_BSS_STATUS:
+		return 2
+	case LCLS_BREAK_REQ:
+		return 1
+	case CSFB_IND:
+		return 1
+	case CS_TO_PS_SRVCC:
+		return 1
+	case SRC_ENB_TO_TGT_ENB_TRANSP:
+		return 0
+	case CS_TO_PS_SRVCC_IND:
+		return 1
+	case CN_TO_MS_TRANSP_INFO:
+		return 0
+	case SELECTED_PLMN_ID:
+		return 4
+	case LAST_USED_EUTRAN_PLMN_ID:
+		return 4
+	case OLD_LAI:
+		return 6
+	case ATTACH_INDICATOR:
+		return 1
+	case SELECTED_OPERATOR:
+		return 4
+	case PS_REGISTERED_OPERATOR:
+		return 4
+	case CS_REGISTERED_OPERATOR:
+		return 4
+	// case RSVD_0: // Reserved
+	// case RSVD_1: // Reserved
+	// case RSVD_2: // Reserved
+	// case RSVD_3: // Reserved
+	// case RSVD_4: // Reserved
+	// case RSVD_5: // Reserved
+	// case RSVD_6: // Reserved
 	default:
-		return true, 0
+		return -1
 	}
 }
 
@@ -162,151 +435,284 @@ func (ie BssmapIE) String() string {
 	switch ie {
 	case CIC:
 		return "Cic"
-	// RSVD_0
-	// RESRC_AVAILABLE
+	case RSVD_0:
+		return "Reserved"
+	case RESRC_AVAILABLE:
+		return "ResAvail" // Resource Available
 	case CAUSE:
 		return "Cause"
-	// CELL_ID
-	// PRIORITY
-	// LAYER_3_HEADER_INF
-	// IMSI
-	// TMSI
-	// ENCRYPTION_INF
-	// CHANNEL_TYPE
-	// PERIODICITY
-	// EXTENDED_RESRC_INDICATOR
-	// NUMBER_OF_MSS
-	// RSVD_1
-	// RSVD_2
-	// RSVD_3
-	// CLASSMARK_INF_T2
-	// CLASSMARK_INF_T3
-	// INTERFERENCE_BAND_TO_USE
-	// RR_CAUSE
-	// RSVD_4
-	// LAYER_3_INF
-	// DLCI
-	// DOWNLINK_DTX_FLAG
+	case CELL_ID:
+		return "CellId" // Cell Identifier
+	case PRIORITY:
+		return "Priority"
+	case LAYER_3_HEADER_INF:
+		return "L3HeaderInfo" // Layer 3 Header Information
+	case IMSI:
+		return "IMSI"
+	case TMSI:
+		return "TMSI"
+	case ENCRYPTION_INF:
+		return "EncInfo" // Encryption Information
+	case CHANNEL_TYPE:
+		return "ChanType" // Channel Type
+	case PERIODICITY:
+		return "Periodicity"
+	case EXTENDED_RESRC_INDICATOR:
+		return "ExtResInd" // Extended Resource Indicator
+	case NUMBER_OF_MSS:
+		return "NumOfMSs" // Number Of MSs
+	case RSVD_1:
+		return "Reserved"
+	case RSVD_2:
+		return "Reserved"
+	case RSVD_3:
+		return "Reserved"
+	case CLASSMARK_INF_T2:
+		return "ClsmarkInfoType2" // Classmark Information Type 2
+	case CLASSMARK_INF_T3:
+		return "ClsmarkInfoType3" // Classmark Information Type 3
+	case INTERFERENCE_BAND_TO_USED:
+		return "InterferBand2BeUsed" // Interference Band To Be Used
+	case RR_CAUSE:
+		return "RRCause"
+	case RSVD_4:
+		return "Reserved"
+	case LAYER_3_INF:
+		return "L3Info" // Layer 3 Information
+	case DLCI:
+		return "DLCI"
+	case DOWNLINK_DTX_FLAG:
+		return "DlDtxFlag" // Downlink DTX Flag
 	case CELL_ID_LIST:
 		return "CellIdList"
 	case RESPONSE_RQST:
 		return "RespRqst"
-	// RESRC_IND_METHOD
-	// CLASSMARK_INF_TYPE_1
-	// CIC_LIST
-	// DIAGNOSTIC
-	// LAYER_3_MESSAGE_CONTENTS
-	// CHOSEN_CHANNEL
-	// TOTAL_RESRC_ACCESSIBLE
-	// CIPHER_RESPONSE_MODE
-	// CHANNEL_NEEDED
-	// TRACE_TYPE
-	// TRIGGERID
-	// TRACE_REFERENCE
-	// TRANSACTIONID
-	// MOBILE_IDENTITY
-	// OMCID
-	// FORWARD_INDICATOR
-	// CHOSEN_ENCR_ALG
-	// CIRCUIT_POOL
-	// CIRCUIT_POOL_LIST
-	// TIME_IND
-	// RESRC_SITUATION
+	case RESRC_IND_METHOD:
+		return "ResIndMethod" // Resource Indication Method
+	case CLASSMARK_INF_TYPE_1:
+		return "ClsmarkInfoType1" // Classmark Information Type 1
+	case CIC_LIST:
+		return "CicList" // Circuit Identity Code List
+	case DIAGNOSTIC:
+		return "Diagnostic"
+	case LAYER_3_MESSAGE_CONTENTS:
+		return "L3MsgCont" // Layer 3 Message Contents
+	case CHOSEN_CHANNEL:
+		return "ChosenChan" // Chosen Channel
+	case TOTAL_RESRC_ACCESSIBLE:
+		return "TtlResAccessible" // Total Resource Accessible
+	case CIPHER_RESPONSE_MODE:
+		return "CipherRespMode" // Cipher Response Mode
+	case CHANNEL_NEEDED:
+		return "ChanNeeded" // Channel Needed
+	case TRACE_TYPE:
+		return "TraceType"
+	case TRIGGERID:
+		return "Triggerid"
+	case TRACE_REFERENCE:
+		return "TraceRef" // Trace Reference
+	case TRANSACTIONID:
+		return "TransactId" // Transactionid
+	case MOBILE_IDENTITY:
+		return "MobIdty" // Mobile Identity
+	case OMCID:
+		return "OmcId"
+	case FORWARD_INDICATOR:
+		return "FwdInd" // Forward Indicator
+	case CHOSEN_ENCR_ALG:
+		return "ChosenEncAlgo" // Chosen Encryption Algorithm
+	case CIRCUIT_POOL:
+		return "CircPool" // Circuit Pool
+	case CIRCUIT_POOL_LIST:
+		return "CircPoolList" // Circuit Pool List
+	case TIME_IND:
+		return "TimeInd" // Time Indication
+	case RESRC_SITUATION:
+		return "ResSituat" // Resource Situation
 	case CURRENT_CHANNEL_TYPE_1:
 		return "CurChanType1"
-	// QUEUEING_INDICATOR
+	case QUEUEING_INDICATOR:
+		return "QueueingInd" // Queueing Indicator
 	case SPEECH_VERSION:
-		return "SpeechVer"
-	// ASSIGNMENT_REQUIREMENT
-	// TALKER_FLAG
-	// CONNECTION_RELEASE_RQSTED
-	// GROUP_CALL_REFERENCE
-	// EMLPP_PRIORITY
-	// CONFIG_EVO_INDI
+		return "SpeechVer" // Speech Version
+	case ASSIGNMENT_REQUIREMENT:
+		return "AssReqrmnt" // Assignment Requirement
+	case TALKER_FLAG:
+		return "TalkerFlg" // Talker Flag
+	case CONNECTION_RELEASE_RQSTED:
+		return "ConnReleaseReq" // Connection Release Requested
+	case GROUP_CALL_REFERENCE:
+		return "GroupCallRef" // Group Call Reference
+	case EMLPP_PRIORITY:
+		return "eMlppPrior" // eMLPP Priority
+	case CONFIG_EVO_INDI:
+		return "CfgEvoInd" // Configuration Evolution Indication
 	case OLD_BSS_TO_NEW_BSS_INF:
 		return "Old2NewBssInfo"
-	// LSA_ID
-	// LSA_ID_LIST
-	// LSA_INF
-	// LCS_QOS
-	// LSA_ACCESS_CTRL_SUPPR
-	// LCS_PRIORITY
-	// LOCATION_TYPE
-	// LOCATION_ESTIMATE
-	// POSITIONING_DATA
-	// LCS_CAUSE
-	// LCS_CLIENT_TYPE
-	// APDU
-	// NETW_ELEMENT_IDENTITY
-	// GPS_ASSISTANCE_DATA
-	// DECIPHERING_KEYS
-	// RET_ERROR_RQST
-	// RET_ERROR_CAUSE
-	// SEGMENTATION
-	// SERVICE_HANDOVER
-	// SRC_RNC_TO_TARG_RNC_TRANSP_UMTS
-	// SRC_RNC_TO_TARG_RNC_TRANSP_CDMA2000
-	// RSVD_5
-	// RSVD_6
-	// GERAN_CLASSMARK
-	// GERAN_BSC_CONTAINER
-	// NEW_BSS_TO_OLD_BSS_INFO
-	// GSM0800_IE_INTER_SYSTEM_INFO
-	// SNA_ACCESS_INFO
-	// VSTK_RAND_INFO
-	// VSTK_INFO
-	// PAGING_INFO
-	// IMEI
-	// VELOCITY_ESTIMATE
-	// VGCS_FEATURE_FLAGS
-	// TALKER_PRIORITY
-	// EMERGENCY_SET_IND
-	// TALKER_IDENTITY
-	// CELL_ID_LIST_SEGMENT
-	// SMS_TO_VGCS
-	// VGCS_TALKER_MODE
-	// VGCS_VBS_CELL_STATUS
-	// CELL_ID_LIST_SEG_EST_CELLS
-	// CELL_ID_LIST_SEG_CELLS_TBE
-	// CELL_ID_LIST_SEG_REL_CELLS
-	// CELL_ID_LIST_SEG_NE_CELLS
-	// GANSS_ASSISTANCE_DATA
-	// GANSS_POSITIONING_DATA
-	// GANSS_LOCATION_TYPE
-	// APP_DATA
-	// DATA_IDENTITY
-	// APP_DATA_INFO
-	// MSISDN
-	// AOIP_TRASP_ADDR
-	// SPEECH_CODEC_LIST
-	// SPEECH_CODEC
-	// CALL_ID
-	// CALL_ID_LIST
-	// A_IF_SEL_FOR_RESET
-	// KC_128
-	// CSG_ID
-	// REDIR_ATTEMPT_FLAG
-	// REROUTE_REJ_CAUSE
-	// SEND_SEQ_NUM
-	// REROUTE_COMPL_OUTCOME
-	// GLOBAL_CALL_REF
-	// LCLS_CONFIG
-	// LCLS_CONN_STATUS_CTRL
-	// LCLS_CORR_NOT_NEEDED
-	// LCLS_BSS_STATUS
-	// LCLS_BREAK_REQ
-	// CSFB_IND
-	// CS_TO_PS_SRVCC
-	// SRC_ENB_TO_TGT_ENB_TRANSP
-	// CS_TO_PS_SRVCC_IND
-	// CN_TO_MS_TRANSP_INFO
-	// SELECTED_PLMN_ID
-	// LAST_USED_EUTRAN_PLMN_ID
-	// OLD_LAI
-	// ATTACH_INDICATOR
-	// SELECTED_OPERATOR
-	// PS_REGISTERED_OPERATOR
-	// CS_REGISTERED_OPERATOR
+	case LSA_ID:
+		return "LsaId" // LSA Identifier
+	case LSA_ID_LIST:
+		return "LsaIdList" // LSA Identifier List
+	case LSA_INF:
+		return "LsaInfo" // LSA Information
+	case LCS_QOS:
+		return "LcsQoS" // LCS QoS
+	case LSA_ACCESS_CTRL_SUPPR:
+		return "LsaAccessCtrlSuppr" // LSA access control suppression
+	case LCS_PRIORITY:
+		return "LcsPrio" // LCS Priority
+	case LOCATION_TYPE:
+		return "LocType" // Location Type
+	case LOCATION_ESTIMATE:
+		return "LocEst" // Location Estimate
+	case POSITIONING_DATA:
+		return "PosData" // Positioning Data
+	case LCS_CAUSE:
+		return "LcsCause" // LCS Cause
+	case LCS_CLIENT_TYPE:
+		return "LcsClientType" // LCS Client Type
+	case APDU:
+		return "APDU"
+	case NETW_ELEMENT_IDENTITY:
+		return "NetwrkElemId" // Network Element Identity
+	case GPS_ASSISTANCE_DATA:
+		return "GpsAssistData" // GPS Assistance Data
+	case DECIPHERING_KEYS:
+		return "DecipheringKeys" // Deciphering Keys
+	case RET_ERROR_RQST:
+		return "RetErrRqst" // Return Error Request
+	case RET_ERROR_CAUSE:
+		return "RetErrCause" // Return Error Cause
+	case SEGMENTATION:
+		return "Segmentat" // Segmentation
+	case SERVICE_HANDOVER:
+		return "ServHO" // Service Handover
+	case SRC_RNC_TO_TARG_RNC_TRANSP_UMTS:
+		return "SrcRnc2TrgRncTranspInfoUmts" // Source RNC to target RNC transparent information (UMTS)
+	case SRC_RNC_TO_TARG_RNC_TRANSP_CDMA2000:
+		return "SrcRnc2TrgRncTranspInfoCdma2000" // Source RNC to target RNC transparent information (cdma2000)
+	case RSVD_5:
+		return "Reserved"
+	case RSVD_6:
+		return "Reserved"
+	case GERAN_CLASSMARK:
+		return "GeranClsmrk" // GERAN Classmark
+	case GERAN_BSC_CONTAINER:
+		return "GeranBscCont" // GERAN BSC Container
+	case NEW_BSS_TO_OLD_BSS_INFO:
+		return "NewBss2OldBssInfo" // New BSS to Old BSS Information
+	case GSM0800_IE_INTER_SYSTEM_INFO:
+		return "InterSysInfo" // Inter-System Information
+	case SNA_ACCESS_INFO:
+		return "SnaAccessInfo" // SNA Access Information
+	case VSTK_RAND_INFO:
+		return "VSTK_RANDInfo" // VSTK_RAND Information
+	case VSTK_INFO:
+		return "VSTKInfo" // VSTK Information
+	case PAGING_INFO:
+		return "PagingInfo" // Paging Information
+	case IMEI:
+		return "IMEI"
+	case VELOCITY_ESTIMATE:
+		return "VelocityEst" // Velocity Estimate
+	case VGCS_FEATURE_FLAGS:
+		return "VgcsFeatFlags" // VGCS Feature Flags
+	case TALKER_PRIORITY:
+		return "TalkerPrio" // Talker Priority
+	case EMERGENCY_SET_IND:
+		return "EmergSetInd" // Emergency Set Indication
+	case TALKER_IDENTITY:
+		return "TalkerId" // Talker Identity
+	case CELL_ID_LIST_SEGMENT:
+		return "CellIdListSegm" // Cell Identifier List Segment
+	case SMS_TO_VGCS:
+		return "Sms2Vgcs" // SMS to VGCS
+	case VGCS_TALKER_MODE:
+		return "VgcsTalkMode" // VGCS Talker Mode
+	case VGCS_VBS_CELL_STATUS:
+		return "Vgcs/VbsCellStatus" // VGCS/VBS Cell Status
+	case CELL_ID_LIST_SEG_EST_CELLS:
+		return "CellIdListSegmForEstabCells" // Cell Identifier List Segment for established cells
+	case CELL_ID_LIST_SEG_CELLS_TBE:
+		return "CellIdListSegmForCells2BeEstab" // Cell Identifier List Segment for cells to be established
+	case CELL_ID_LIST_SEG_REL_CELLS:
+		return "CellIdListSegmForRlsdCellsNoUsrPresent" // Cell Identifier List Segment for released cells - no user present
+	case CELL_ID_LIST_SEG_NE_CELLS:
+		return "CellIdListSegmForNotEstabCellsNoEstabPsbl" // Cell Identifier List Segment for not established cells - no establishment possible
+	case GANSS_ASSISTANCE_DATA:
+		return "GanssAssistData" // GANSS Assistance Data
+	case GANSS_POSITIONING_DATA:
+		return "GanssPosData" // GANSS Positioning Data
+	case GANSS_LOCATION_TYPE:
+		return "GanssLocType" // GANSS Location Type
+	case APP_DATA:
+		return "AppData" // Application Data
+	case DATA_IDENTITY:
+		return "DataId" // Data Identity
+	case APP_DATA_INFO:
+		return "AppDataInfo" // Application Data Information
+	case MSISDN:
+		return "MSISDN"
+	case AOIP_TRASP_ADDR:
+		return "AoIpTranspLayerAddr" // AoIP Transport Layer Address
+	case SPEECH_CODEC_LIST:
+		return "SpeechCodecList" // Speech Codec List
+	case SPEECH_CODEC:
+		return "SpeechCodec" // Speech Codec
+	case CALL_ID:
+		return "CallId" // Call Identifier
+	case CALL_ID_LIST:
+		return "CallIdList" // Call Identifier List
+	case A_IF_SEL_FOR_RESET:
+		return "A-IfaceSelForReset" // A-Interface Selector for RESET
+	case KC_128:
+		return "Kc128"
+	case CSG_ID:
+		return "CsgId" // CSG Identifier
+	case REDIR_ATTEMPT_FLAG:
+		return "RedirAttemptFlag" // Redirect Attempt Flag
+	case REROUTE_REJ_CAUSE:
+		return "RerouteRejectCause" // Reroute Reject Cause
+	case SEND_SEQ_NUM:
+		return "SendSeqNum" // Send Sequence Number
+	case REROUTE_COMPL_OUTCOME:
+		return "RerouteCompleteOutcome" // Reroute complete outcome
+	case GLOBAL_CALL_REF:
+		return "GlobalCallRef" // Global Call Reference
+	case LCLS_CONFIG:
+		return "LclsCfg" // LCLS-Configuration
+	case LCLS_CONN_STATUS_CTRL:
+		return "LclsConnStatusCtrl" // LCLS-Connection-Status-Control
+	case LCLS_CORR_NOT_NEEDED:
+		return "LclsCorrelNotNeed" // LCLS-Correlation-Not-Needed
+	case LCLS_BSS_STATUS:
+		return "LclsBssStat" // LCLS-BSS-Status
+	case LCLS_BREAK_REQ:
+		return "LclsBreakReq" // LCLS-Break-Request
+	case CSFB_IND:
+		return "CsfbInd" // CSFB Indication
+	case CS_TO_PS_SRVCC:
+		return "Cs2PsSrvcc" // CS to PS SRVCC
+	case SRC_ENB_TO_TGT_ENB_TRANSP:
+		return "SrcEnb2TrgEnbTransparInfoEutran" // Source eNB to target eNB transparent information (E-UTRAN)
+	case CS_TO_PS_SRVCC_IND:
+		return "Cs2PsSrvccInd" // CS to PS SRVCC Indication
+	case CN_TO_MS_TRANSP_INFO:
+		return "Cn2MsTransparInfo" // CN to MS transparent information
+	case SELECTED_PLMN_ID:
+		return "SlctdPlmnId" // Selected PLMN ID
+	case LAST_USED_EUTRAN_PLMN_ID:
+		return "LastUsedEutranPlmnId" // Last used E-UTRAN PLMN ID
+	case OLD_LAI:
+		return "OldLocAreaId" // Old Location Area Identification
+	case ATTACH_INDICATOR:
+		return "AttachInd" // Attach Indicator
+	case SELECTED_OPERATOR:
+		return "SlctdOper" // Selected Operator
+	case PS_REGISTERED_OPERATOR:
+		return "PsRegOper" // PS Registered Operator
+	case CS_REGISTERED_OPERATOR:
+		return "CsRegOper" // CS Registered Operator
 	default:
 		return fmt.Sprintf("IE_0x%02x", int(ie))
 	}

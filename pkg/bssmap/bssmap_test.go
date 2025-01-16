@@ -12,6 +12,11 @@ var BssmapMockBytes1 []byte = []byte{
 	0x18, 0x40, 0x01, 0x3a, 0x04, 0x02, 0x02, 0x01, 0x08,
 }
 
+type expectedIE struct {
+	IEType BssmapIE
+	B      []byte
+}
+
 func Test_NewBssMapMinLen(t *testing.T) {
 	if _, err := BssmapDecode([]byte{}); err == nil {
 		t.Fatal("Error should be returned")
@@ -19,11 +24,11 @@ func Test_NewBssMapMinLen(t *testing.T) {
 }
 
 func Test_NewBssmap(t *testing.T) {
-	m, err := BssmapDecode(BssmapMockBytes1)
+	msg, err := BssmapDecode(BssmapMockBytes1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(m)
+	fmt.Println(msg)
 }
 
 func Test_NewBssmapIE(t *testing.T) {
@@ -32,12 +37,7 @@ func Test_NewBssmapIE(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	type ExpectedIE struct {
-		IEType BssmapIE
-		B      []byte
-	}
-
-	expIEs := []ExpectedIE{
+	expIEs := []expectedIE{
 		{CAUSE, []byte{0x4, 0x1, 0xc}},
 		{RESPONSE_RQST, []byte{0x1b}},
 		{CELL_ID_LIST, []byte{0x1a, 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00, 0x79}},
@@ -59,3 +59,8 @@ func Test_NewBssmapIE(t *testing.T) {
 		}
 	}
 }
+
+// @todo: 
+// func Test_NewBssmapBuild(t *testing.T) {
+// msg := new(BssmapMsg)
+// }

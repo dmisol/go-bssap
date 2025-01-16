@@ -73,9 +73,9 @@ func BssmapDecode(b []byte) (*BssmapMsg, error) {
 	offset := 1
 	for offset < len(b) {
 		ie := BssmapIE(b[offset])
-		isVar, fixed := ie.Format()
+		ieLen := ie.Format()
 		// Variable part
-		if isVar {
+		if ieLen == 0 { // (0 means a length is unknown and should be calculated)
 			// Next byte is length
 			if (offset + 1) >= len(b) {
 				return nil, fmt.Errorf("variable IE %q is invalid: [len]", ie)
@@ -90,15 +90,18 @@ func BssmapDecode(b []byte) (*BssmapMsg, error) {
 			m.IEs = append(m.IEs, d)
 			offset += l + 2
 		// Fixed part
-		} else {
-			if (offset + fixed) >= len(b) {
+		} else if ieLen > 0 {
+			if (offset + ieLen) >= len(b) {
 				return nil, fmt.Errorf("fixed IE %q can't fit", ie)
 			}
 			d := &DummyIE{
-				Data: b[offset : offset+fixed],
+				Data: b[offset : offset+ieLen],
 			}
 			m.IEs = append(m.IEs, d)
-			offset += fixed
+			offset += ieLen
+		// Unsupported IE
+		} else {
+			return nil, fmt.Errorf("found unsupported IE %02x", b[offset])
 		}
 	}
 	return m, nil
