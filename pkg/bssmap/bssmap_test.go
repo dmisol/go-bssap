@@ -2,6 +2,7 @@ package bssmap
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -18,11 +19,11 @@ func Test_NewBssMapMinLen(t *testing.T) {
 }
 
 func Test_NewBssmap(t *testing.T) {
-	_, err := BssmapDecode(BssmapMockBytes1)
+	m, err := BssmapDecode(BssmapMockBytes1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	// b := NewBssMapMsg(bssmapMsg)
+	fmt.Println(m)
 }
 
 func Test_NewBssmapIE(t *testing.T) {
@@ -32,8 +33,8 @@ func Test_NewBssmapIE(t *testing.T) {
 	}
 
 	type ExpectedIE struct {
-		IEType 	BssmapIE
-		B 		[]byte
+		IEType BssmapIE
+		B      []byte
 	}
 
 	expIEs := []ExpectedIE{
