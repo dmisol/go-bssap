@@ -1,6 +1,11 @@
 package bssap
 
-import "github.com/dmisol/go-bssap/pkg/bssmap"
+import (
+	"fmt"
+
+	"github.com/dmisol/go-bssap/pkg/bssmap"
+	"github.com/dmisol/go-bssap/pkg/dtap"
+)
 
 type BssapType = uint8
 
@@ -28,4 +33,21 @@ func NewBssDtapMsg() []byte {
 	b := make([]byte, 1)
 	b[0] = BssapTypeDtap
 	return nil
+}
+
+func ParseBssap(b []byte) (*bssmap.BssmapMsg, *dtap.DtapMsg, error) {
+	x := BssapType(b[0])
+	pl := b[2:]
+	if int(b[1]) != len(pl) {
+		return nil, nil, fmt.Errorf("error wrong bssap data len")
+	}
+	if x == BssapTypeBssMap {
+		m, err := bssmap.BssmapDecode(pl)
+		return m, nil, err
+	}
+	if x == BssapTypeDtap {
+		m, err := dtap.DtapDecode(pl)
+		return nil, m, err
+	}
+	return nil, nil, fmt.Errorf("error unknown bssap payload type")
 }
