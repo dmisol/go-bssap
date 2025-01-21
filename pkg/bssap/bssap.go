@@ -1,12 +1,12 @@
 package bssap
 
-import "go-bssap/bssmap"
+import "github.com/dmisol/go-bssap/pkg/bssmap"
 
 type BssapType = uint8
 
 const (
-	BssapTypeBssMap 	BssapType = 0x0 // the BSS Management Application Part
-	BssapTypeDtap 		BssapType = 0x1 // the Direct Transfer Application Part
+	BssapTypeBssMap BssapType = 0x0 // the BSS Management Application Part
+	BssapTypeDtap   BssapType = 0x1 // the Direct Transfer Application Part
 )
 
 // NewBssMapMsg builds a new BSS_MAP_ message

@@ -2,7 +2,8 @@ package bssap
 
 import (
 	"testing"
-	"go-bssap/bssmap"
+
+	"github.com/dmisol/go-bssap/pkg/bssmap"
 )
 
 // BSSAP
