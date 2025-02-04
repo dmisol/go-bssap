@@ -132,7 +132,13 @@ func (m BSSMAP_MsgType) String() string {
 		return "HO_RQST"
 	case MSG_HO_REQUIRED:
 		return "HO_REQD"
+
+	case MSG_RESET:
+		return "RESET"
+	case MSG_RESET_ACK:
+		return "RESET_ACK"
+
 	default:
-		return fmt.Sprintf("Bssmap0x%02X", int(m))
+		return fmt.Sprintf("BSSMAP_0x%02X", int(m))
 	}
 }

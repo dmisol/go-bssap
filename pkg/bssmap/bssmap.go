@@ -89,9 +89,9 @@ func BssmapDecode(b []byte) (*BssmapMsg, error) {
 			}
 			m.IEs = append(m.IEs, d)
 			offset += l + 2
-		// Fixed part
+			// Fixed part
 		} else if ieLen > 0 {
-			if (offset + ieLen) >= len(b) {
+			if (offset + ieLen) > len(b) {
 				return nil, fmt.Errorf("fixed IE %q can't fit", ie)
 			}
 			d := &DummyIE{
@@ -99,7 +99,7 @@ func BssmapDecode(b []byte) (*BssmapMsg, error) {
 			}
 			m.IEs = append(m.IEs, d)
 			offset += ieLen
-		// Unsupported IE
+			// Unsupported IE
 		} else {
 			return nil, fmt.Errorf("found unsupported IE %02x", b[offset])
 		}

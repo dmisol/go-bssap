@@ -37,15 +37,24 @@ func NewBssDtapMsg() []byte {
 
 func ParseBssap(b []byte) (*bssmap.BssmapMsg, *dtap.DtapMsg, error) {
 	x := BssapType(b[0])
-	pl := b[2:]
-	if int(b[1]) != len(pl) {
-		return nil, nil, fmt.Errorf("error wrong bssap data len")
-	}
+
 	if x == BssapTypeBssMap {
+		pl := b[2:]
+		if int(b[1]) != len(pl) {
+			return nil, nil, fmt.Errorf("error wrong bssmap data len(%d), %v", int(b[1]), pl)
+		}
+
 		m, err := bssmap.BssmapDecode(pl)
 		return m, nil, err
 	}
 	if x == BssapTypeDtap {
+		// dlci := b[1]
+		l := int(b[2])
+		pl := b[3:]
+		if l != len(pl) {
+			return nil, nil, fmt.Errorf("error wrong dtap data len(%d), %v", int(b[1]), pl)
+		}
+
 		m, err := dtap.DtapDecode(pl)
 		return nil, m, err
 	}
