@@ -15,17 +15,19 @@ const (
 )
 
 // NewBssMapMsg builds a new BSS_MAP_ message
-func NewBssMapMsg(msg *bssmap.BssmapMsg) []byte {
-	b := make([]byte, 1)
-	b[0] = BssapTypeBssMap
-	b[1] = 0
-	var iesTtlLen uint8
-	for i := range msg.IEs {
-		iesTtlLen += msg.IEs[i].Len()
-		b = append(b, msg.IEs[i].Encode()...)
+func NewBssap(bssap *bssmap.Bssmap, dtap []byte) []byte {
+	if bssap != nil {
+		b := make([]byte, 2)
+		b[0] = BssapTypeBssMap
+		data := bssap.Encode()
+		b = append(b, data...)
+		b[1] = 2 + byte(len(data))
+		return b
 	}
-	b[1] = iesTtlLen
-	return nil
+	b := []byte{BssapTypeDtap}
+	b = append(b, dtap...)
+	return b
+
 }
 
 // NewBssDtapMsg builds a new BSS_DTAP_ message
@@ -35,7 +37,7 @@ func NewBssDtapMsg() []byte {
 	return nil
 }
 
-func ParseBssap(b []byte) (*bssmap.BssmapMsg, *dtap.DtapMsg, error) {
+func ParseBssap(b []byte) (*bssmap.Bssmap, *dtap.Dtap, error) {
 	x := BssapType(b[0])
 
 	if x == BssapTypeBssMap {
@@ -55,8 +57,8 @@ func ParseBssap(b []byte) (*bssmap.BssmapMsg, *dtap.DtapMsg, error) {
 			return nil, nil, fmt.Errorf("error wrong dtap data len(%d), %v", int(b[1]), pl)
 		}
 
-		m, err := dtap.DtapDecode(pl)
-		return nil, m, err
+		dt, err := dtap.DtapDecode(pl)
+		return nil, dt, err
 	}
 	return nil, nil, fmt.Errorf("error unknown bssap payload type")
 }

@@ -14,7 +14,7 @@ var BssmapMockBytes1 []byte = []byte{
 
 type expectedIE struct {
 	IEType BssmapIE
-	B      []byte
+	B      IE
 }
 
 func Test_NewBssMapMinLen(t *testing.T) {
@@ -38,12 +38,12 @@ func Test_NewBssmapIE(t *testing.T) {
 	}
 
 	expIEs := []expectedIE{
-		{CAUSE, []byte{0x4, 0x1, 0xc}},
-		{RESPONSE_RQST, []byte{0x1b}},
-		{CELL_ID_LIST, []byte{0x1a, 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00, 0x79}},
-		{CURRENT_CHANNEL_TYPE_1, []byte{0x31, 0x18}},
-		{SPEECH_VERSION, []byte{0x40, 0x1}},
-		{OLD_BSS_TO_NEW_BSS_INF, []byte{0x3a, 0x4, 0x2, 0x2, 0x1, 0x8}},
+		{CAUSE, IE{byte(CAUSE), 0x1, 0xc}},
+		{RESPONSE_RQST, IE{byte(RESPONSE_RQST)}},
+		{CELL_ID_LIST, IE{byte(CELL_ID_LIST), 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00, 0x79}},
+		{CURRENT_CHANNEL_TYPE_1, IE{byte(CURRENT_CHANNEL_TYPE_1), 0x18}},
+		{SPEECH_VERSION, IE{byte(SPEECH_VERSION), 0x1}},
+		{OLD_BSS_TO_NEW_BSS_INF, IE{byte(OLD_BSS_TO_NEW_BSS_INF), 0x4, 0x2, 0x2, 0x1, 0x8}},
 	}
 
 	for i := range expIEs {
@@ -53,14 +53,14 @@ func Test_NewBssmapIE(t *testing.T) {
 		if !ok {
 			t.Fatalf("IE %d was not found", expIEType)
 		}
-		actB := ie.Encode()
+		actB := ie
 		if !bytes.Equal(expB, actB) {
 			t.Fatalf("found error of IE %q: expected bytes '% x' (len=%d) <> actual bytes '% x' (len=%d)", expIEType, expB, len(expB), actB, len(actB))
 		}
 	}
 }
 
-// @todo: 
+// @todo:
 // func Test_NewBssmapBuild(t *testing.T) {
 // msg := new(BssmapMsg)
 // }

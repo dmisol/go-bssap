@@ -1,15 +1,26 @@
 package dtap
 
-func DtapDecode(b []byte) (*DtapMsg, error) {
-	d := &DtapMsg{pl: b}
+type Dtap struct {
+	PD  PD_Type
+	Msg Msg_Type
+	IEs []IE
+
+	raw []byte
+}
+
+// todo: fix
+func (d *Dtap) Encode() []byte {
+	return d.raw
+}
+
+// ToDO: fix!
+func DtapDecode(b []byte) (*Dtap, error) {
+	_, mt := Mt(b[1])
+	d := &Dtap{
+		PD:  PD(b[0]),
+		Msg: mt,
+		IEs: make([]IE, 0),
+		raw: b,
+	}
 	return d, nil
-}
-
-type DtapMsg struct {
-	// @todo
-	pl []byte
-}
-
-func (d *DtapMsg) Encode() []byte {
-	return d.pl
 }
