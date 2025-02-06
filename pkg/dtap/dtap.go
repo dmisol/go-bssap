@@ -2,7 +2,7 @@ package dtap
 
 type Dtap struct {
 	PD  PD_Type
-	Msg DTAP_MsgType
+	Msg Msg_Type
 	IEs []IE
 
 	raw []byte

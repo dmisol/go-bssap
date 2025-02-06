@@ -9,11 +9,11 @@ func (i IE) Tag() BssmapIE {
 }
 
 type Bssmap struct {
-	Msg BSSMAP_MsgType
+	Msg Msg_Type
 	IEs []IE
 }
 
-func NewBssmap(mt BSSMAP_MsgType, ies ...IE) *Bssmap {
+func NewBssmap(mt Msg_Type, ies ...IE) *Bssmap {
 	m := &Bssmap{
 		Msg: mt,
 		IEs: ies,
@@ -58,7 +58,7 @@ func BssmapDecode(b []byte) (*Bssmap, error) {
 		return nil, fmt.Errorf("invalid bssmap message")
 	}
 	m := &Bssmap{
-		Msg: BSSMAP_MsgType(b[0]),
+		Msg: Msg_Type(b[0]),
 		IEs: make([]IE, 0),
 	}
 	offset := 1
