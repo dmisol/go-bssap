@@ -2,15 +2,20 @@ package bssmap
 
 import (
 	"bytes"
+	"encoding/hex"
 	"fmt"
 	"testing"
 )
 
-// Bssmap: Handover Required
-var BssmapMockBytes1 []byte = []byte{
-	0x11, 0x04, 0x01, 0x0c, 0x1b, 0x1a, 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00, 0x79, 0x31,
-	0x18, 0x40, 0x01, 0x3a, 0x04, 0x02, 0x02, 0x01, 0x08,
-}
+var (
+	mockAssRQST = []byte{ /*0x0, 0x1e, */ byte(MSG_ASSIGNMENT_RQST), 0xb, 0x5, 0x1, 0xa, 0xa1, 0xa5, 0x1, 0x7c, 0x6, 0xc0, 0xa8, 0x1e, 0x57, 0x3e, 0xa2, 0x7d, 0x7, 0x83, 0xff, 0x57, 0x84, 0x3f, 0x7, 0x80, 0x7f, 0x23, 0x0, 0x0, 0x0}
+
+	mockAoIpTranspAddr = []byte{byte(AOIP_TRASP_ADDR), 6, 127, 0, 0, 1, 0x1234 >> 8, 0x1234 & 0xFF}
+	// Bssmap: Handover Required
+	mockHoRQRD []byte = []byte{
+		0x11, 0x04, 0x01, 0x0c, 0x1b, 0x1a, 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00, 0x79, 0x31,
+		0x18, 0x40, 0x01, 0x3a, 0x04, 0x02, 0x02, 0x01, 0x08}
+)
 
 type expectedIE struct {
 	IEType BssmapIE
@@ -24,7 +29,7 @@ func Test_NewBssMapMinLen(t *testing.T) {
 }
 
 func Test_NewBssmap(t *testing.T) {
-	msg, err := BssmapDecode(BssmapMockBytes1)
+	msg, err := BssmapDecode(mockHoRQRD)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +37,7 @@ func Test_NewBssmap(t *testing.T) {
 }
 
 func Test_NewBssmapIE(t *testing.T) {
-	msg, err := BssmapDecode(BssmapMockBytes1)
+	msg, err := BssmapDecode(mockHoRQRD)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,6 +63,61 @@ func Test_NewBssmapIE(t *testing.T) {
 			t.Fatalf("found error of IE %q: expected bytes '% x' (len=%d) <> actual bytes '% x' (len=%d)", expIEType, expB, len(expB), actB, len(actB))
 		}
 	}
+}
+
+func Test_Replace(t *testing.T) {
+	msg, err := BssmapDecode(mockAssRQST)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("\n\nReplace\n", msg)
+	fmt.Println(hex.Dump(msg.Encode()))
+
+	msg.Replace(mockAoIpTranspAddr)
+
+	fmt.Println(msg)
+	fmt.Println(hex.Dump(msg.Encode()))
+}
+
+func Test_Remove0(t *testing.T) {
+	msg, err := BssmapDecode(mockAssRQST)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("\n\nRemove(leading)\n", msg)
+	//fmt.Println(hex.Dump(msg.Encode()))
+
+	msg.Remove(CHANNEL_TYPE)
+
+	fmt.Println(msg)
+	fmt.Println(hex.Dump(msg.Encode()))
+}
+func Test_Remove1(t *testing.T) {
+	msg, err := BssmapDecode(mockAssRQST)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("\n\nRemove(middle)\n", msg)
+	//fmt.Println(hex.Dump(msg.Encode()))
+
+	msg.Remove(AOIP_TRASP_ADDR)
+
+	fmt.Println(msg)
+	fmt.Println(hex.Dump(msg.Encode()))
+}
+
+func Test_Remove2(t *testing.T) {
+	msg, err := BssmapDecode(mockAssRQST)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("\n\nRemove(last)\n", msg)
+	//fmt.Println(hex.Dump(msg.Encode()))
+
+	msg.Remove(CALL_ID)
+
+	fmt.Println(msg)
+	fmt.Println(hex.Dump(msg.Encode()))
 }
 
 // @todo:

@@ -1,11 +1,31 @@
 package bssmap
 
-import "fmt"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 type IE []byte
 
 func (i IE) Tag() BssmapIE {
 	return BssmapIE(i[0])
+}
+func (i IE) String() string {
+	switch i.Tag() {
+	case AOIP_TRASP_ADDR:
+		s := i.Tag().String() + "("
+		for j := 2; j < 5; j++ {
+			s += fmt.Sprintf("%d.", i[j])
+		}
+		x := uint16(i[6])<<8 + uint16(i[7])
+		s += fmt.Sprintf("%d:%d)", i[5], x)
+		return s
+	case CALL_ID:
+		return fmt.Sprintf("%s(%d)", i.Tag().String(), binary.LittleEndian.Uint32(i[1:5]))
+	default:
+		return i.Tag().String()
+	}
+
 }
 
 type Bssmap struct {
@@ -36,9 +56,9 @@ func (m *Bssmap) String() string {
 	s := m.Msg.String() + "{"
 	for i := range len(m.IEs) {
 		if i == 0 {
-			s += m.IEs[i].Tag().String()
+			s += m.IEs[i].String()
 		} else {
-			s += fmt.Sprintf(",%s", m.IEs[i])
+			s += fmt.Sprintf(",%s", m.IEs[i].String())
 		}
 	}
 	return s + "}"
@@ -51,6 +71,33 @@ func (m *Bssmap) GetIE(tag BssmapIE) (IE, bool) {
 		}
 	}
 	return nil, false
+}
+
+func (m *Bssmap) Remove(tag BssmapIE) {
+	for i := 0; i < len(m.IEs); i++ {
+		if len(m.IEs[i]) == 0 {
+			continue
+		}
+		if m.IEs[i].Tag() == tag {
+			// fmt.Println(tag, "found at", i)
+			b := m.IEs[:i]
+			b = append(b, m.IEs[i+1:]...)
+			m.IEs = b
+			return
+		}
+	}
+}
+
+func (m *Bssmap) Replace(upd IE) {
+	for i := 0; i < len(m.IEs); i++ {
+		if len(m.IEs[i]) == 0 {
+			continue
+		}
+		if m.IEs[i].Tag() == upd.Tag() {
+			m.IEs[i] = upd
+			return
+		}
+	}
 }
 
 func BssmapDecode(b []byte) (*Bssmap, error) {

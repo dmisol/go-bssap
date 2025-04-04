@@ -154,7 +154,7 @@ const (
 func (ie BssmapIE) Format() (length int) {
 	switch ie {
 	case CIC:
-		return 1
+		return 3
 	case RESRC_AVAILABLE:
 		return 21 // Need to check
 	case CAUSE:
@@ -166,7 +166,7 @@ func (ie BssmapIE) Format() (length int) {
 	case LAYER_3_HEADER_INF:
 		return 4
 	case IMSI:
-		return 0 // Variable? Check it again 
+		return 0
 	case TMSI:
 		return 0
 	case ENCRYPTION_INF:
@@ -360,7 +360,7 @@ func (ie BssmapIE) Format() (length int) {
 	case MSISDN:
 		return 0
 	case AOIP_TRASP_ADDR:
-		return 8 // Fixed? Check it again 
+		return 0
 	case SPEECH_CODEC_LIST:
 		return 0
 	case SPEECH_CODEC:
