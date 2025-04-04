@@ -41,14 +41,17 @@ func NewBssmap(mt Msg_Type, ies ...IE) *Bssmap {
 	return m
 }
 
+// Encode() issues BSSAP (not BSSMAP) bytes!
 func (m *Bssmap) Encode() []byte {
-	r := make([]byte, 1)
-	r[0] = byte(m.Msg)
+	r := make([]byte, 3)
+	r[0] = 0
+	r[2] = byte(m.Msg)
 
 	for i := range len(m.IEs) {
 		r = append(r, m.IEs[i]...)
 	}
 
+	r[1] = byte(len(r)) - 2
 	return r
 }
 
