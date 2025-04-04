@@ -138,6 +138,11 @@ func (m Msg_Type) String() string {
 	case MSG_RESET_ACK:
 		return "RESET_ACK"
 
+	case MSG_CMPL_LAYER_3:
+		return "CMPLT_L3_INFO"
+
+	case MSG_PAGING:
+		return "PAGING"
 	default:
 		return fmt.Sprintf("BSSMAP_0x%02X", int(m))
 	}
