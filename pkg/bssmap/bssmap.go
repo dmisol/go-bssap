@@ -22,6 +22,20 @@ func (i IE) String() string {
 		return s
 	case CALL_ID:
 		return fmt.Sprintf("%s(%d)", i.Tag().String(), binary.LittleEndian.Uint32(i[1:5]))
+	case IMSI:
+		s := i.Tag().String() + "("
+		for j := 2; j < len(i); j++ {
+			if j == 2 {
+				s += fmt.Sprintf("%d", (i[j]>>4)&0x0F)
+			} else {
+				s += fmt.Sprintf("%d%d", i[j]&0x0F, (i[j]>>4)&0x0F)
+			}
+		}
+		if i[1]&0x08 == 0 {
+			s = s[:len(s)-1]
+		}
+		s += ")"
+		return s
 	default:
 		return i.Tag().String()
 	}
