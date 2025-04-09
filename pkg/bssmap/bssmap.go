@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+const SEP = "/"
+
 type IE []byte
 
 func (i IE) Tag() BssmapIE {
@@ -13,17 +15,17 @@ func (i IE) Tag() BssmapIE {
 func (i IE) String() string {
 	switch i.Tag() {
 	case AOIP_TRASP_ADDR:
-		s := i.Tag().String() + "("
+		s := i.Tag().String() + SEP
 		for j := 2; j < 5; j++ {
 			s += fmt.Sprintf("%d.", i[j])
 		}
 		x := uint16(i[6])<<8 + uint16(i[7])
-		s += fmt.Sprintf("%d:%d)", i[5], x)
+		s += fmt.Sprintf("%d:%d", i[5], x)
 		return s
 	case CALL_ID:
-		return fmt.Sprintf("%s(%d)", i.Tag().String(), binary.LittleEndian.Uint32(i[1:5]))
+		return fmt.Sprintf("%s%s%d", i.Tag().String(), SEP, binary.LittleEndian.Uint32(i[1:5]))
 	case IMSI:
-		s := i.Tag().String() + "("
+		s := i.Tag().String() + SEP
 		for j := 2; j < len(i); j++ {
 			if j == 2 {
 				s += fmt.Sprintf("%d", (i[j]>>4)&0x0F)
@@ -34,12 +36,40 @@ func (i IE) String() string {
 		if i[1]&0x08 == 0 {
 			s = s[:len(s)-1]
 		}
-		s += ")"
 		return s
+	case TMSI:
+		return fmt.Sprintf("%s%sTODO", i.Tag().String(), SEP)
+	case CELL_ID:
+		return fmt.Sprintf("%s%sTODO", i.Tag().String(), SEP)
 	default:
 		return i.Tag().String()
 	}
+}
 
+func (i IE) Int() int {
+	switch i.Tag() {
+	case CALL_ID:
+		// todo
+		return -1
+	case CELL_ID:
+		// todo
+		return -1
+	}
+	return 0
+}
+
+func (i IE) List() []int {
+	switch i.Tag() {
+	case CALL_ID_LIST:
+		// todo
+		a := make([]int, 0)
+		return a
+	case CELL_ID_LIST:
+		// todo
+		a := make([]int, 0)
+		return a
+	}
+	return nil
 }
 
 type Bssmap struct {
