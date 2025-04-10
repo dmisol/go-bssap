@@ -88,6 +88,7 @@ const (
 	RSVD_6                              BssmapIE = 66
 	GERAN_CLASSMARK                     BssmapIE = 0x53
 	GERAN_BSC_CONTAINER                 BssmapIE = 0x54
+	VELOCITY_ESTIMATE                   BssmapIE = 0x55
 	NEW_BSS_TO_OLD_BSS_INFO             BssmapIE = 0x61
 	GSM0800_IE_INTER_SYSTEM_INFO        BssmapIE = 0x63
 	SNA_ACCESS_INFO                     BssmapIE = 0x64
@@ -95,7 +96,6 @@ const (
 	VSTK_INFO                           BssmapIE = 0x66
 	PAGING_INFO                         BssmapIE = 0x67
 	IMEI                                BssmapIE = 0x68
-	VELOCITY_ESTIMATE                   BssmapIE = 0x55
 	VGCS_FEATURE_FLAGS                  BssmapIE = 0x69
 	TALKER_PRIORITY                     BssmapIE = 0x6a
 	EMERGENCY_SET_IND                   BssmapIE = 0x6b
