@@ -159,15 +159,18 @@ func (m *Bssmap) Replace(upd IE) {
 	}
 }
 
+// BssmapDecode() decodes byte stream from BSSAP(!), aauming leading [0,{len}, {Msg} etc..]
 func BssmapDecode(b []byte) (*Bssmap, error) {
-	if len(b) < 1 {
+	if len(b) < 3 {
 		return nil, fmt.Errorf("invalid bssmap message")
 	}
 	m := &Bssmap{
-		Msg: Msg_Type(b[0]),
+		Msg: Msg_Type(b[2]),
 		IEs: make([]IE, 0),
 	}
-	offset := 1
+	//fmt.Printf(hex.Dump(b))
+
+	offset := 3
 	for offset < len(b) {
 		ie := BssmapIE(b[offset])
 		ieLen := ie.Format()
@@ -177,10 +180,13 @@ func BssmapDecode(b []byte) (*Bssmap, error) {
 			if (offset + 1) >= len(b) {
 				return nil, fmt.Errorf("variable IE %q is invalid: [len]", ie)
 			}
-			if (offset + 1 + int(b[offset+1])) >= len(b) {
-				return nil, fmt.Errorf("variable IE %q is invalid: [val]", ie)
-			}
 			l := int(b[offset+1])
+
+			if (offset + 1 + l) >= len(b) {
+
+				//fmt.Println("given IE:", offset, hex.EncodeToString(b[offset:]))
+				return nil, fmt.Errorf("variable IE %q (%d bytes) is invalid: [val]", ie, l)
+			}
 			d := b[offset : offset+l+2]
 
 			m.IEs = append(m.IEs, d)

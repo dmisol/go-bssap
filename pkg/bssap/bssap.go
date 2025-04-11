@@ -1,6 +1,7 @@
 package bssap
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	"github.com/dmisol/go-bssap/pkg/bssmap"
@@ -41,12 +42,11 @@ func ParseBssap(b []byte) (*bssmap.Bssmap, *dtap.Dtap, error) {
 	x := BssapType(b[0])
 
 	if x == BssapTypeBssMap {
-		pl := b[2:]
-		if int(b[1]) != len(pl) {
-			return nil, nil, fmt.Errorf("error wrong bssmap data len(%d), %v", int(b[1]), pl)
+		if int(b[1]) != len(b)-2 {
+			return nil, nil, fmt.Errorf("error wrong bssmap data len(%d), %v", int(b[1]), hex.Dump(b))
 		}
 
-		m, err := bssmap.BssmapDecode(pl)
+		m, err := bssmap.BssmapDecode(b)
 		return m, nil, err
 	}
 	if x == BssapTypeDtap {

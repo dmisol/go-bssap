@@ -1,6 +1,7 @@
 package bssap
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/dmisol/go-bssap/pkg/bssmap"
@@ -8,14 +9,15 @@ import (
 
 // BSSAP
 var BssapMockBytes []byte = []byte{
+	0, 25,
 	0x11, 0x04, 0x01, 0x0c, 0x1b, 0x1a, 0x08, 0x00, 0x52, 0xf0, 0x70, 0xc7, 0x38, 0x00,
 	0x79, 0x31, 0x18, 0x40, 0x01, 0x3a, 0x04, 0x02, 0x02, 0x01, 0x08,
 }
 
 func Test_NewBssMap(t *testing.T) {
-	_, err := bssmap.BssmapDecode(BssapMockBytes)
+	m, err := bssmap.BssmapDecode(BssapMockBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
-	// b := NewBssMapMsg(bssmapMsg)
+	fmt.Println(m)
 }
