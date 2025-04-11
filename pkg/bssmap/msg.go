@@ -132,11 +132,20 @@ func (m Msg_Type) String() string {
 		return "HO_RQST"
 	case MSG_HO_REQUIRED:
 		return "HO_REQD"
+	case MSG_HO_FAILURE:
+		return "HO_FAILURE"
 
 	case MSG_RESET:
 		return "RESET"
 	case MSG_RESET_ACK:
 		return "RESET_ACK"
+
+	case MSG_CLEAR_RQST:
+		return "CLEAR RQST"
+	case MSG_CLEAR_CMD:
+		return "CLEAR CMD"
+	case MSG_CLEAR_CMPL:
+		return "CLEAR_CMPL"
 
 	case MSG_CMPL_LAYER_3:
 		return "CMPLT_L3_INFO"
