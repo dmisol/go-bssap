@@ -2,6 +2,7 @@ package bssmap
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 )
 
@@ -58,10 +59,13 @@ func (i IE) Int() int {
 	switch i.Tag() {
 	case CALL_ID:
 		// todo
-		return -1
+		return 0
 	case CELL_ID:
-		// todo
-		return -1
+		ci, _, err := i.ParseCellId()
+		if err != nil {
+			return 0
+		}
+		return int(ci)
 	}
 	return 0
 }
@@ -117,7 +121,7 @@ func (m *Bssmap) String() string {
 
 		v := m.IEs[i].String()
 		if len(v) > 0 {
-			s += ":" + v
+			s += "=" + v
 		}
 	}
 	return s + "}"
@@ -130,6 +134,54 @@ func (m *Bssmap) GetIE(tag BssmapIE) (IE, bool) {
 		}
 	}
 	return nil, false
+}
+
+func (m *Bssmap) GetIEs(tag BssmapIE) ([]IE, bool) {
+	var x []IE
+	for _, v := range m.IEs {
+		if v.Tag() == tag {
+			x = append(x, v)
+		}
+	}
+	if len(x) > 0 {
+		return x, true
+	}
+	return nil, false
+}
+
+func (i IE) ParseCellId() (ci uint16, lac uint16, err error) {
+	if i.Tag() != CELL_ID {
+		err = fmt.Errorf("error: wrong IE %s", i.Tag().String())
+		return
+	}
+	if len(i) < 3 {
+		err = fmt.Errorf("error: CELL_ID is too short %s", hex.EncodeToString(i))
+		return
+	}
+	if int(i[1]) != len(i)-2 {
+		err = fmt.Errorf("error: CELL_ID has invalid len %s", hex.EncodeToString(i))
+		return
+	}
+
+	switch i[2] {
+	case 0:
+		if len(i) != 10 {
+			err = fmt.Errorf("error: CELL_ID (whole CGI) unexpected len %d %s", len(i), hex.EncodeToString(i))
+			return
+		}
+		lac = binary.BigEndian.Uint16(i[6:])
+		ci = binary.BigEndian.Uint16(i[8:])
+	case 1:
+		if len(i) != 7 {
+			err = fmt.Errorf("error: CELL_ID (whole CGI) unexpected len %d %s", len(i), hex.EncodeToString(i))
+			return
+		}
+		lac = binary.BigEndian.Uint16(i[3:])
+		ci = binary.BigEndian.Uint16(i[5:])
+	default:
+		err = fmt.Errorf("error: CELL_ID option %d not supported %s", int(i[2]), hex.EncodeToString(i))
+	}
+	return
 }
 
 func (m *Bssmap) Remove(tag BssmapIE) {
