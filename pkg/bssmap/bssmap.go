@@ -70,16 +70,30 @@ func (i IE) Int() int {
 	return 0
 }
 
-func (i IE) List() []int {
+func (i IE) List() []uint16 {
 	switch i.Tag() {
 	case CALL_ID_LIST:
 		// todo
-		a := make([]int, 0)
+		a := make([]uint16, 0)
 		return a
 	case CELL_ID_LIST:
-		// todo
-		a := make([]int, 0)
-		return a
+		//        i[0] -- Element Id
+		//        i[1] -- Length
+		//        i[2] -- Spare bits
+		//   i[3]-i[4] -- Cell 1
+		//   i[5]-i[6] -- Cell 2
+		// ...
+		// i[N]-i[N+1] -- Cell N
+		ttlLen := int(i[1]-1) // length (1 byte) - spare bits (1 byte)
+		qty := ttlLen/2 // each cell allocates 2 bytes
+		cells := make([]uint16, 0, qty)
+		ofs := 3
+		for j:=0; j<qty; j++ {
+			lac := binary.BigEndian.Uint16(i[ofs:ofs+2]) // LAC - Location Area Code
+			cells = append(cells, lac)
+			ofs += 2
+		}
+		return cells
 	}
 	return nil
 }
