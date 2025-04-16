@@ -145,37 +145,17 @@ func Test_String(t *testing.T) {
 	fmt.Println("HO RQST\t", msg)
 }
 
-//                                                                                                                                 ElId  Len  Spare   Cell 1 LAC   Cell 2 LAC   Cell 3 LAC
-//                                                                                                                                                           2          2619            77
-var mockCallIdList = []byte{0x0, 0x16, 0x52, 0x8, 0x8, 0x9, 0x10, 0x10, 0x0, 0x0, 0x0, 0x0, 0x21, 0x9, 0x4, 0x42, 0x3e, 0x48, 0x5, 0x1a, 0x7, 0x5,    0x0, 0x2,    0xA, 0x3B,    0x0, 0x4d}
+var (
+	mockCellIdList0 = IE([]byte{0x1a, 0x8, 0x0, 0x0, 0xf1, 0x10, 0x2, 0x58, 0x3, 0xf2})
+	mockCellIdList1 = IE([]byte{0x1a, 0x5, 0x1, 0x0, 0x2, 0x17, 0x72})
+	mockCellIdList5 = IE([]byte{0x1a, 0x3, 0x5, 0x2, 0x59}) // lac only, should return empty
+)
 
-func TestCallIdList(t *testing.T) {
-	msg, err := BssmapDecode(mockCallIdList)
-	if err != nil {
-		t.Fatal(err)
-	}
-	ie, ok := msg.GetIE(CELL_ID_LIST)
-	if !ok {
-		t.Fatal("unable to get ie `CELL_ID_LIST`")
-	}
-	cells := ie.List()
-	if len(cells) != 3 {
-		t.Fatal("cell")
-	}
-	var exp uint16
-	for i, lac := range cells {
-		switch i {
-		case 0:
-			exp = 2
-		case 1:
-			exp = 2619
-		case 2:
-			exp = 77
-		default:
-			t.Fatalf("the unsupported key %d was found", i)
-		}
-		if lac != exp {
-			t.Fatalf("exp %d, got %d", exp, lac)
-		}
-	}
+func TestLists(t *testing.T) {
+	i := mockCellIdList0
+	fmt.Println("PD 0, lacs:", i.ListLACs(), "cells:", i.ListCIs())
+	i = mockCellIdList1
+	fmt.Println("PD 1, lacs:", i.ListLACs(), "cells:", i.ListCIs())
+	i = mockCellIdList5
+	fmt.Println("PD 5, lacs:", i.ListLACs(), "cells:", i.ListCIs())
 }

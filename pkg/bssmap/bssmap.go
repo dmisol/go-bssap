@@ -70,32 +70,85 @@ func (i IE) Int() int {
 	return 0
 }
 
-func (i IE) List() []uint16 {
+func (i IE) ListLACs() []int {
 	switch i.Tag() {
-	case CALL_ID_LIST:
-		// todo
-		a := make([]uint16, 0)
-		return a
 	case CELL_ID_LIST:
-		//        i[0] -- Element Id
-		//        i[1] -- Length
-		//        i[2] -- Spare bits
-		//   i[3]-i[4] -- Cell 1
-		//   i[5]-i[6] -- Cell 2
-		// ...
-		// i[N]-i[N+1] -- Cell N
-		ttlLen := int(i[1]-1) // length (1 byte) - spare bits (1 byte)
-		qty := ttlLen/2 // each cell allocates 2 bytes
-		cells := make([]uint16, 0, qty)
-		ofs := 3
-		for j:=0; j<qty; j++ {
-			lac := binary.BigEndian.Uint16(i[ofs:ofs+2]) // LAC - Location Area Code
-			cells = append(cells, lac)
-			ofs += 2
+		// ATTN: looking for CellIDs, not LACs
+		res := make([]int, 0)
+		if len(i) < 3 {
+			// error here!
+			return res
 		}
-		return cells
+
+		pd := i[2]
+		var lac_pos, step int
+
+		switch pd {
+		case 0: // CellGloalID
+			lac_pos = 3
+			step = 7
+		case 1: // LAC+CI
+			step = 4
+		case 5:
+			step = 2
+		default:
+			return res
+		}
+
+		offs := 3
+		for (offs + step) <= len(i) {
+			v := binary.BigEndian.Uint16(i[offs+lac_pos:])
+			res = append(res, int(v))
+			offs += step
+		}
+		return res
 	}
 	return nil
+}
+
+func (i IE) ListCIs() []int {
+	switch i.Tag() {
+	case CELL_ID_LIST:
+		// ATTN: looking for CellIDs, not LACs
+		res := make([]int, 0)
+		if len(i) < 3 {
+			// error here!
+			return res
+		}
+
+		pd := i[2]
+		var ci_pos, step int
+
+		switch pd {
+		case 0: // CellGloalID
+			ci_pos = 5
+			step = 7
+		case 1: // LAC+CI
+			ci_pos = 2
+			step = 4
+		default:
+			return res
+		}
+
+		offs := 3
+		for (offs + step) <= len(i) {
+			v := binary.BigEndian.Uint16(i[offs+ci_pos:])
+			res = append(res, int(v))
+			offs += step
+		}
+		return res
+	}
+	return nil
+}
+
+func (i IE) Cause() (BSSMAP_Cause, error) {
+	if i.Tag() != CAUSE {
+		return BSSMAP_Cause(0xFF), fmt.Errorf("wrong TAG(%s)", i.Tag())
+	}
+	if len(i) != 3 {
+		return BSSMAP_Cause(0xFF), fmt.Errorf("invalind len(%s)", hex.EncodeToString(i))
+	}
+	return BSSMAP_Cause(i[2]), nil
 }
 
 type Bssmap struct {
