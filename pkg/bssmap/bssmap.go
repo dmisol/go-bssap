@@ -89,6 +89,9 @@ func (i IE) ListLACs() []int {
 			step = 7
 		case 1: // LAC+CI
 			step = 4
+		case 4:
+			step = 5
+			lac_pos = 3
 		case 5:
 			step = 2
 		default:
@@ -126,6 +129,10 @@ func (i IE) ListCIs() []int {
 		case 1: // LAC+CI
 			ci_pos = 2
 			step = 4
+		case 2: // Cell Identity, CI, is used to identify the cells
+			ci_pos = 2
+			step = 2
+
 		default:
 			return res
 		}
