@@ -138,6 +138,14 @@ func (m Msg_Type) String() string {
 		return "HO_REQD_REJ"
 	case MSG_HO_FAILURE:
 		return "HO_FAILURE"
+	case MSG_HO_DETECT:
+		return "HO_DETECT"
+	case MSG_HO_CMPL:
+		return "HO_CMPL"
+	case MSG_HO_PERFORMED:
+		return "HO_PERFORMED"
+	case MSG_HO_CMD:
+		return "HO_CMD"
 
 	case MSG_RESET:
 		return "RESET"
