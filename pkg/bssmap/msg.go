@@ -130,8 +130,12 @@ func (m Msg_Type) String() string {
 
 	case MSG_HO_RQST:
 		return "HO_RQST"
+	case MSG_HO_RQST_ACK:
+		return "HO_RQST_ACK"
 	case MSG_HO_REQUIRED:
 		return "HO_REQD"
+	case MSG_HO_REQUIRED_REJ:
+		return "HO_REQD_REJ"
 	case MSG_HO_FAILURE:
 		return "HO_FAILURE"
 
