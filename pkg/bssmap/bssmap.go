@@ -299,7 +299,7 @@ func BssmapDecode(b []byte) (*Bssmap, error) {
 	offset := 3
 	for offset < len(b) {
 		ie := BssmapIE(b[offset])
-		ieLen := ie.Format()
+		ieLen := ie.format()
 		// Variable part
 		if ieLen == 0 { // (0 means a length is unknown and should be calculated)
 			// Next byte is length

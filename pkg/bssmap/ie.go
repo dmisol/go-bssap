@@ -147,11 +147,11 @@ const (
 	CS_REGISTERED_OPERATOR              BssmapIE = 0x9a
 )
 
-// Format returns a length of the Information Element (IE)
+// format returns a length of the Information Element (IE)
 // 1. If length > 0, it means that IE has FIXED length  (For example, "Number Of MSs" or "TMSI")
 // 2. If length = 0, it means that IE has VARIABLE length
 // 3. If length = -1, it means that IE is unsupported
-func (ie BssmapIE) Format() (length int) {
+func (ie BssmapIE) format() (length int) {
 	switch ie {
 	case CIC:
 		return 3
