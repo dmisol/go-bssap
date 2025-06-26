@@ -71,14 +71,15 @@ const (
 	IE_LLP_APDU
 )
 
-// format returns a length of the Information Element (IE)
-// 1. If length > 0, it means that IE has FIXED length
-// 2. If length = 0, it means that IE has VARIABLE length
-// 3. If length = -1, it means that IE is unsupported
+// format returns a format of the Information Element (IE)
+// 1. If format > 0, it means that IE has FIXED length (equal to format)
+// 2. If format = 0, it means that IE is unsupported
+// 3. format == -1, IE has TLV structure, length is encoded with a single byte
+// 4. format == -2, IE has TLV structure, length is encoded with a pair of bytes
 func (ie TAG) format() int {
 	switch ie {
 	case IE_CHAN_NR:
-		return
+		return 2 // // GSM 08.58 -> 9.3.1
 	case IE_LINK_IDENT:
 		return
 	case IE_ACT_TYPE:
@@ -98,7 +99,7 @@ func (ie TAG) format() int {
 	case IE_L1_INFO:
 		return
 	case IE_L3_INFO:
-		return
+		return -2 // GSM 08.58 -> 9.3.11
 	case IE_MS_IDENTITY:
 		return
 	case IE_MS_POWER:
@@ -152,7 +153,7 @@ func (ie TAG) format() int {
 	case IE_ERR_MSG:
 		return
 	case IE_FULL_BCCH_INFO:
-		return
+		return -1 // GSM 08.58 -> 9.3.39
 	case IE_CHAN_NEEDED:
 		return
 	case IE_CB_CMD_TYPE:
@@ -195,6 +196,6 @@ func (ie TAG) format() int {
 		return
 	case IE_LLP_APDU:
 	default:
-		return -1
+		return 0
 	}
 }

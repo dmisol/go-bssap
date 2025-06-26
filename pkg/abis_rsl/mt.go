@@ -1,5 +1,7 @@
 package abisrsl
 
+import "errors"
+
 type MT byte
 
 const (
@@ -74,6 +76,24 @@ const (
 	MT_LOCATION_INFO // 0x41
 )
 
-func Parse(rsl []byte) (mt MT, ies []IE, err error) {
-	return
+var (
+	ErrInvalidLen = errors.New("invalid lenght")
+	ErrUnknownIE  = errors.New("unknown IE")
+)
+
+func Parse(rsl []byte) (MT, []IE, error) {
+	if len(rsl) == 0 {
+		return 0, nil, ErrInvalidLen
+	}
+	mt := MT(rsl[0])
+	var ies []IE
+	offset := 1
+	for offset < len(rsl) {
+		tag := TAG(rsl[offset])
+
+		switch tag.format() {
+
+		}
+	}
+	return mt, ies, nil
 }
