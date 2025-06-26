@@ -97,3 +97,12 @@ func Parse(rsl []byte) (MT, []IE, error) {
 	}
 	return mt, ies, nil
 }
+
+func Get(ies []IE, tag TAG) (IE, bool) {
+	for _, v := range ies {
+		if v.Tag() == tag {
+			return v, true
+		}
+	}
+	return nil, false
+}
