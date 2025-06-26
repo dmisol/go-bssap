@@ -90,9 +90,42 @@ func Parse(rsl []byte) (MT, []IE, error) {
 	offset := 1
 	for offset < len(rsl) {
 		tag := TAG(rsl[offset])
+		f := tag.format()
+		switch f {
+		case 0:
+			return mt, ies, ErrUnknownIE
 
-		switch tag.format() {
+		case -1:
+			if offset+2 >= len(rsl) {
+				return mt, ies, ErrInvalidLen
+			}
+			l := int(rsl[offset+1])
+			if offset+l+2 >= len(rsl) {
+				return mt, ies, ErrInvalidLen
+			}
+			ie := rsl[offset : offset+2+l]
+			ies = append(ies, ie)
+			offset += 2 + l
 
+		case -2:
+			if offset+3 >= len(rsl) {
+				return mt, ies, ErrInvalidLen
+			}
+			l := (int(rsl[offset+1]) << 8) + int(rsl[offset+2])
+			if offset+l+3 >= len(rsl) {
+				return mt, ies, ErrInvalidLen
+			}
+			ie := rsl[offset : offset+3+l]
+			ies = append(ies, ie)
+			offset += 3 + l
+
+		default:
+			if offset+f >= len(rsl) {
+				return mt, ies, ErrInvalidLen
+			}
+			ie := rsl[offset : offset+f]
+			ies = append(ies, ie)
+			offset += f
 		}
 	}
 	return mt, ies, nil
