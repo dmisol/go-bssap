@@ -72,7 +72,7 @@ const (
 )
 
 // format() returns a format of the Information Element (IE)
-// 1. If format =  2, it means that IE has FIXED length (equal to format)
+// 1. If format >  0, it means that IE has FIXED length (equal to format)
 // 2. If format =  0, it means that IE is unsupported/not exist anymore
 // 3.    format = -1, IE has TLV structure, length is encoded with a single byte
 // 4.    format = -2, IE has TLV structure, length is encoded with a pair of bytes
@@ -97,7 +97,7 @@ func (ie TAG) format() int {
 	case IE_HANDO_REF:
 		return 2 // GSM 08.58 -> 9.3.9
 	case IE_L1_INFO:
-		return 2 // GSM 08.58 -> 9.3.10
+		return 3 // GSM 08.58 -> 9.3.10
 	case IE_L3_INFO:
 		return -2 // GSM 08.58 -> 9.3.11
 	case IE_MS_IDENTITY:
