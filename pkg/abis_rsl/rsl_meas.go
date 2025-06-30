@@ -32,17 +32,23 @@ func (r *RSL) DecodeL1Info() (power int, ta int, err error) {
 type SCell struct {
 	Dtx   bool
 	Valid bool
-	LevF  uint64
-	LevS  uint64
-	QualF uint64
-	QualS uint64
-	N     uint64 // todo: 7 -> 0
+	LevF  uint32
+	LevS  uint32
+	QualF uint32
+	QualS uint32
+	N     uint32 // todo: 7 -> 0
 }
 type NCell struct {
-	RxLev uint64
-	Freq  uint64
-	BSIC  uint64
+	RxLev uint32
+	Freq  uint32
+	BSIC  uint32
 }
+
+const (
+	levMask  = 0x3F
+	freqMask = 0x1F
+	bsicMask = 0x3F
+)
 
 // from IE_L3_INFO -> DTAP -> ...
 func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
@@ -61,10 +67,10 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 		return
 	}
 
-	u := binary.BigEndian.Uint64(ie[3+2:])
 	sc = &SCell{}
 	ncs = make([]*NCell, 0)
 
+	u := binary.BigEndian.Uint32(ie[3+2:])
 	sc.Dtx = u&0x40000000 == 0x40000000
 	sc.Valid = u&0x400000 == 0x400000
 	sc.LevF = (u >> 24) & 0x3F
@@ -76,14 +82,68 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 		sc.N = 0
 	}
 
-	nc := &NCell{
-		RxLev: u & 0x3F,
+	nc := &NCell{ // ncell 1
+		RxLev: u & levMask,
 	}
 
-	// todo: etc
-
+	u = binary.BigEndian.Uint32(ie[3+2+4:]) // 10.5.2.20 Measurement Results, Octets 6+
+	nc.Freq = u >> (24 + 3) & freqMask
+	nc.BSIC = u >> (16 + 5) & bsicMask
 	ncs = append(ncs, nc)
-	// todo: etc
+	if len(ncs) >= int(sc.N) {
+		return
+	}
+
+	nc = &NCell{ // ncell 2
+		RxLev: (u >> 15) & levMask,
+		Freq:  (u >> 10) & freqMask,
+		BSIC:  (u >> 4) & bsicMask,
+	}
+	ncs = append(ncs, nc)
+	if len(ncs) >= int(sc.N) {
+		return
+	}
+
+	nc = &NCell{ // ncell 3
+		RxLev: (u << 2) & 0x3C,
+	}
+	u = binary.BigEndian.Uint32(ie[3+2+4:]) // 10.5.2.20 Measurement Results, Octets 10+
+	nc.RxLev |= (u >> 30) & 0x3
+	nc.Freq = (u >> (24 + 1)) & freqMask
+	nc.BSIC = (u >> (16 + 3)) & bsicMask
+	ncs = append(ncs, nc)
+	if len(ncs) >= int(sc.N) {
+		return
+	}
+
+	nc = &NCell{ // ncell 4
+		RxLev: (u >> (8 + 5)) & levMask,
+		Freq:  (u >> 8) & freqMask,
+		BSIC:  (u >> 2) & bsicMask,
+	}
+	ncs = append(ncs, nc)
+	if len(ncs) >= int(sc.N) {
+		return
+	}
+
+	nc = &NCell{ // ncell 5
+		RxLev: (u << 4) & 0xF0,
+	}
+	u = binary.BigEndian.Uint32(ie[3+2+8:]) // 10.5.2.20 Measurement Results, Octets 14+
+	nc.RxLev |= (u >> (24 + 4)) & 0xF
+	nc.Freq = (u >> (16 + 7)) & freqMask
+	nc.BSIC = (u >> (16 + 1)) & bsicMask
+	ncs = append(ncs, nc)
+	if len(ncs) >= int(sc.N) {
+		return
+	}
+
+	nc = &NCell{ // ncell 6
+		RxLev: (u >> (8 + 3)) & levMask,
+		Freq:  (u >> 6) & freqMask,
+		BSIC:  u & bsicMask,
+	}
+	ncs = append(ncs, nc)
 
 	return
 }
