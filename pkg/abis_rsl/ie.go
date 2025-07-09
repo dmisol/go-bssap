@@ -115,7 +115,7 @@ func (ie TAG) format() int {
 	case IE_RACH_LOAD:
 		return -1 // GSM 08.58 -> 9.3.18
 	case IE_REQ_REFERENCE:
-		return 2 // GSM 08.58 -> 9.3.19
+		return 4 // GSM 08.58 -> 9.3.19
 	case IE_RELEASE_MODE:
 		return 2 // GSM 08.58 -> 9.3.20
 	case IE_RESOURCE_INFO:
