@@ -9,6 +9,16 @@ func NewCellId(lac, ci int) IE {
 	return i
 }
 
+func NewCellGlobalId(mcc, mnc, lac, ci int) IE {
+	i := IE([]byte{byte(CELL_ID), 8, 0, 0, 0, 0, 0, 0, 0, 0})
+	i[3] = byte(mcc/100 + ((mcc%100)/10)<<4)
+	i[4] = byte(mcc%10) | 0xF0
+	i[5] = byte((mnc / 10) + (mnc%10)<<4)
+	binary.BigEndian.PutUint16(i[6:], uint16(lac))
+	binary.BigEndian.PutUint16(i[8:], uint16(ci))
+	return i
+}
+
 func NewCellIdList(mcc, mnc int, lac, ci []int) IE {
 	n := len(lac)
 	if n != len(ci) {

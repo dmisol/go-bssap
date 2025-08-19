@@ -16,4 +16,7 @@ func TestNewIe(t *testing.T) {
 	fmt.Println(hex.EncodeToString([]byte(ie)))
 	ie = NewCellIdList(0, 0, lacs, cis)
 	fmt.Println(hex.EncodeToString([]byte(ie)))
+
+	ie = NewCellGlobalId(250, 7, 51000, 121)
+	fmt.Println(hex.EncodeToString([]byte(ie)))
 }
