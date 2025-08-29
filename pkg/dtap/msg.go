@@ -221,3 +221,14 @@ const (
 	MSG_CC_START_DTMF_REJ Msg_Type = 0x37
 	MSG_CC_FACILITY       Msg_Type = 0x3a
 )
+
+type CAUSE byte
+
+// TS 144.018 10.5.2.31
+const (
+	CauseNORMAL CAUSE = iota
+	CauseAbnormalUnspec
+	CauseAbnormalChanUnaccept
+	CauseAbnormalTimerExpired
+	CauseAbnormalNoRadio
+)
