@@ -10,10 +10,20 @@ func NewCellId(lac, ci int) IE {
 }
 
 func NewCellGlobalId(mcc, mnc, lac, ci int) IE {
+	filler := byte(0xF0)
 	i := IE([]byte{byte(CELL_ID), 8, 0, 0, 0, 0, 0, 0, 0, 0})
+
+	if mnc > 99 {
+		// 3 digits mnc
+		i[5] = byte((mnc / 100) + ((mnc%100)/10)<<4)
+		filler = byte((mnc % 10) << 4)
+	} else {
+		// 2 digits
+		i[5] = byte((mnc / 10) + (mnc%10)<<4)
+	}
 	i[3] = byte(mcc/100 + ((mcc%100)/10)<<4)
-	i[4] = byte(mcc%10) | 0xF0
-	i[5] = byte((mnc / 10) + (mnc%10)<<4)
+	i[4] = byte(mcc%10) | filler
+
 	binary.BigEndian.PutUint16(i[6:], uint16(lac))
 	binary.BigEndian.PutUint16(i[8:], uint16(ci))
 	return i
