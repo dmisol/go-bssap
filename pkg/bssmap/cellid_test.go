@@ -1,6 +1,7 @@
 package bssmap
 
 import (
+	"encoding/hex"
 	"fmt"
 	"testing"
 )
@@ -13,12 +14,16 @@ var (
 )
 
 func TestCI(t *testing.T) {
-	t.Skip()
+	v, _ := hex.DecodeString("05080016221400011b39")
+	tst_cis = append(tst_cis, v)
+
 	for _, v := range tst_cis {
-		ci, lac, err := v.ParseCellId()
+		mcc, mnc, ci, lac, err := v.ParseCellId()
 		if err != nil {
-			t.Fatalf(err.Error())
+			t.Error(err)
 		}
-		fmt.Printf("ci: %x, lac: %x\n", ci, lac)
+		x := NewBssmap(MSG_CMPL_LAYER_3, v)
+		fmt.Println(x)
+		fmt.Printf("mcc: %d, mnc: %d, ci: %x, lac: %x\n", mcc, mnc, ci, lac)
 	}
 }
