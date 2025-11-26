@@ -5,12 +5,12 @@ type Dtap struct {
 	Msg Msg_Type
 	IEs []IE
 
-	raw []byte
+	Raw []byte
 }
 
 // todo: fix
 func (d *Dtap) Encode() []byte {
-	return d.raw
+	return d.Raw
 }
 
 // ToDO: fix!
@@ -20,7 +20,7 @@ func DtapDecode(b []byte) (*Dtap, error) {
 		PD:  PD(b[0]),
 		Msg: mt,
 		IEs: make([]IE, 0),
-		raw: b,
+		Raw: b,
 	}
 	return d, nil
 }
