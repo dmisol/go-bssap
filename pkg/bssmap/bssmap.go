@@ -285,16 +285,24 @@ func (m *Bssmap) Remove(tag BssmapIE) {
 	}
 }
 
-func (m *Bssmap) Replace(upd IE) {
+func (m *Bssmap) NthReplace(upd IE, n uint) {
 	for i := 0; i < len(m.IEs); i++ {
 		if len(m.IEs[i]) == 0 {
 			continue
 		}
 		if m.IEs[i].Tag() == upd.Tag() {
+			if n > 0 {
+				n--
+				continue
+			}
 			m.IEs[i] = upd
 			return
 		}
 	}
+}
+
+func (m *Bssmap) Replace(upd IE) {
+	m.NthReplace(upd, 0)
 }
 
 // BssmapDecode() decodes byte stream from BSSAP(!), aauming leading [0,{len}, {Msg} etc..]
