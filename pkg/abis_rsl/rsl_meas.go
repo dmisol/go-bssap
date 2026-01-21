@@ -39,9 +39,9 @@ type SCell struct {
 	N     uint32 // todo: 7 -> 0
 }
 type NCell struct {
-	RxLev uint32
-	Freq  uint32
-	BSIC  uint32
+	RxLev   uint32
+	FreqIdx uint32
+	BSIC    uint32
 }
 
 const (
@@ -87,7 +87,7 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 
 	u = binary.BigEndian.Uint32(ie[3+2+4:]) // 10.5.2.20 Measurement Results, Octets 6+
-	nc.Freq = u >> (24 + 3) & freqMask
+	nc.FreqIdx = u >> (24 + 3) & freqMask
 	nc.BSIC = u >> (16 + 5) & bsicMask
 	ncs = append(ncs, nc)
 	if len(ncs) >= int(sc.N) {
@@ -95,9 +95,9 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 
 	nc = &NCell{ // ncell 2
-		RxLev: (u >> 15) & levMask,
-		Freq:  (u >> 10) & freqMask,
-		BSIC:  (u >> 4) & bsicMask,
+		RxLev:   (u >> 15) & levMask,
+		FreqIdx: (u >> 10) & freqMask,
+		BSIC:    (u >> 4) & bsicMask,
 	}
 	ncs = append(ncs, nc)
 	if len(ncs) >= int(sc.N) {
@@ -109,7 +109,7 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 	u = binary.BigEndian.Uint32(ie[3+2+4:]) // 10.5.2.20 Measurement Results, Octets 10+
 	nc.RxLev |= (u >> 30) & 0x3
-	nc.Freq = (u >> (24 + 1)) & freqMask
+	nc.FreqIdx = (u >> (24 + 1)) & freqMask
 	nc.BSIC = (u >> (16 + 3)) & bsicMask
 	ncs = append(ncs, nc)
 	if len(ncs) >= int(sc.N) {
@@ -117,9 +117,9 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 
 	nc = &NCell{ // ncell 4
-		RxLev: (u >> (8 + 5)) & levMask,
-		Freq:  (u >> 8) & freqMask,
-		BSIC:  (u >> 2) & bsicMask,
+		RxLev:   (u >> (8 + 5)) & levMask,
+		FreqIdx: (u >> 8) & freqMask,
+		BSIC:    (u >> 2) & bsicMask,
 	}
 	ncs = append(ncs, nc)
 	if len(ncs) >= int(sc.N) {
@@ -131,7 +131,7 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 	u = binary.BigEndian.Uint32(ie[3+2+8:]) // 10.5.2.20 Measurement Results, Octets 14+
 	nc.RxLev |= (u >> (24 + 4)) & 0xF
-	nc.Freq = (u >> (16 + 7)) & freqMask
+	nc.FreqIdx = (u >> (16 + 7)) & freqMask
 	nc.BSIC = (u >> (16 + 1)) & bsicMask
 	ncs = append(ncs, nc)
 	if len(ncs) >= int(sc.N) {
@@ -139,9 +139,9 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	}
 
 	nc = &NCell{ // ncell 6
-		RxLev: (u >> (8 + 3)) & levMask,
-		Freq:  (u >> 6) & freqMask,
-		BSIC:  u & bsicMask,
+		RxLev:   (u >> (8 + 3)) & levMask,
+		FreqIdx: (u >> 6) & freqMask,
+		BSIC:    u & bsicMask,
 	}
 	ncs = append(ncs, nc)
 
