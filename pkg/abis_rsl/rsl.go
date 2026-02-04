@@ -10,7 +10,7 @@ type RSL struct {
 }
 
 var (
-	ErrInvalidLen = errors.New("invalid lenght")
+	ErrInvalidLen = errors.New("invalid length")
 	ErrUnknownIE  = errors.New("unknown IE")
 )
 
