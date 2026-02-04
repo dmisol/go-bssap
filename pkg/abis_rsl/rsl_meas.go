@@ -67,19 +67,22 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 		return
 	}
 
+	u := binary.BigEndian.Uint32(ie[3+2:])
+	n := (u >> 6) & 0x07
+	if n == 7 {
+		return
+	}
 	sc = &SCell{}
 	ncs = make([]*NCell, 0)
-
-	u := binary.BigEndian.Uint32(ie[3+2:])
 	sc.Dtx = u&0x40000000 == 0x40000000
 	sc.Valid = u&0x400000 == 0x400000
 	sc.LevF = (u >> 24) & 0x3F
 	sc.LevS = (u >> 16) & 0x3F
 	sc.QualF = (u >> 12) & 0x07
 	sc.QualS = (u >> 9) & 0x07
-	sc.N = (u >> 6) & 0x07
-	if sc.N == 7 {
-		sc.N = 0
+	sc.N = n
+	if sc.N == 0 {
+		return
 	}
 
 	nc := &NCell{ // ncell 1
