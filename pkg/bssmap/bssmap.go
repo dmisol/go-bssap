@@ -31,15 +31,20 @@ func (i IE) String() string {
 		return i.xMSI()
 
 	case CELL_ID:
-		mcc, mnc, ci, lac, err := i.ParseCellId()
+		idType, mcc, mnc, ci, lac, err := i.ParseCellId()
 		if err != nil {
 			return err.Error()
 		}
-		if mcc == 0 || mnc == 0 {
+		switch idType {
+		case CELL_IDENT_CI:
+			return fmt.Sprintf("(ci=%d)", lac, ci)
+		case CELL_IDENT_LAC_AND_CI:
 			return fmt.Sprintf("(lac=%d,ci=%d)", lac, ci)
+		case CELL_IDENT_WHOLE_GLOBAL:
+			return fmt.Sprintf("(mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
+		default:
+			return fmt.Sprintf("(unknown identity type; mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
 		}
-		return fmt.Sprintf("(mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
-
 	default:
 		return ""
 	}
@@ -65,7 +70,7 @@ func (i IE) Int() int {
 		// todo
 		return 0
 	case CELL_ID:
-		_, _, ci, _, err := i.ParseCellId()
+		_, _, _, ci, _, err := i.ParseCellId()
 		if err != nil {
 			return 0
 		}
