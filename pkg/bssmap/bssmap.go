@@ -31,15 +31,20 @@ func (i IE) String() string {
 		return i.xMSI()
 
 	case CELL_ID:
-		mcc, mnc, ci, lac, err := i.ParseCellId()
+		idType, mcc, mnc, ci, lac, err := i.ParseCellId()
 		if err != nil {
 			return err.Error()
 		}
-		if mcc == 0 || mnc == 0 {
+		switch idType {
+		case CELL_IDENT_CI:
+			return fmt.Sprintf("(ci=%d)", lac, ci)
+		case CELL_IDENT_LAC_AND_CI:
 			return fmt.Sprintf("(lac=%d,ci=%d)", lac, ci)
+		case CELL_IDENT_WHOLE_GLOBAL:
+			return fmt.Sprintf("(mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
+		default:
+			return fmt.Sprintf("(unknown identity type; mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
 		}
-		return fmt.Sprintf("(mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
-
 	default:
 		return ""
 	}
@@ -65,7 +70,7 @@ func (i IE) Int() int {
 		// todo
 		return 0
 	case CELL_ID:
-		_, _, ci, _, err := i.ParseCellId()
+		_, _, _, ci, _, err := i.ParseCellId()
 		if err != nil {
 			return 0
 		}
@@ -225,49 +230,6 @@ func (m *Bssmap) GetIEs(tag BssmapIE) ([]IE, bool) {
 		return x, true
 	}
 	return nil, false
-}
-
-func (i IE) ParseCellId() (mcc, mnc, ci, lac uint16, err error) {
-	if i.Tag() != CELL_ID {
-		err = fmt.Errorf("error: wrong IE %s", i.Tag().String())
-		return
-	}
-	if len(i) < 3 {
-		err = fmt.Errorf("error: CELL_ID is too short %s", hex.EncodeToString(i))
-		return
-	}
-	if int(i[1]) != len(i)-2 {
-		err = fmt.Errorf("error: CELL_ID has invalid len %s", hex.EncodeToString(i))
-		return
-	}
-
-	switch i[2] {
-	case 0:
-		if len(i) != 10 {
-			err = fmt.Errorf("error: CELL_ID (whole CGI) unexpected len %d %s", len(i), hex.EncodeToString(i))
-			return
-		}
-		mcc = uint16(i[3]&0x0F)*100 + uint16(i[3]>>4)*10 + uint16(i[4]&0x0F)
-
-		mnc = uint16((i[5]&0x0F)*10 + i[5]>>4)
-		f := i[4] >> 4
-		if f != 0x0F {
-			mnc = mnc*10 + uint16(f)
-		}
-
-		lac = binary.BigEndian.Uint16(i[6:])
-		ci = binary.BigEndian.Uint16(i[8:])
-	case 1:
-		if len(i) != 7 {
-			err = fmt.Errorf("error: CELL_ID (whole CGI) unexpected len %d %s", len(i), hex.EncodeToString(i))
-			return
-		}
-		lac = binary.BigEndian.Uint16(i[3:])
-		ci = binary.BigEndian.Uint16(i[5:])
-	default:
-		err = fmt.Errorf("error: CELL_ID option %d not supported %s", int(i[2]), hex.EncodeToString(i))
-	}
-	return
 }
 
 func (m *Bssmap) Remove(tag BssmapIE) {
