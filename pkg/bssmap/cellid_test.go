@@ -24,6 +24,6 @@ func TestCI(t *testing.T) {
 		}
 		x := NewBssmap(MSG_CMPL_LAYER_3, v)
 		fmt.Println(x)
-		fmt.Printf("mcc: %d, mnc: %d, ci: %x, lac: %x\n", mcc, mnc, ci, lac)
+		fmt.Printf("mcc: %d, mnc: %s, ci: %x, lac: %x\n", mcc, mnc.String(), ci, lac)
 	}
 }

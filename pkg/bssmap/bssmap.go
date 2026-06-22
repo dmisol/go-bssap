@@ -41,9 +41,9 @@ func (i IE) String() string {
 		case CELL_IDENT_LAC_AND_CI:
 			return fmt.Sprintf("(lac=%d,ci=%d)", lac, ci)
 		case CELL_IDENT_WHOLE_GLOBAL:
-			return fmt.Sprintf("(mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
+			return fmt.Sprintf("(mcc=%d,mnc=%s,lac=%d,ci=%d)", mcc, mnc.String(), lac, ci)
 		default:
-			return fmt.Sprintf("(unknown identity type; mcc=%d,mnc=%d,lac=%d,ci=%d)", mcc, mnc, lac, ci)
+			return fmt.Sprintf("(unknown identity type; mcc=%d,mnc=%s,lac=%d,ci=%d)", mcc, mnc.String(), lac, ci)
 		}
 	default:
 		return ""
