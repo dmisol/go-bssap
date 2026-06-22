@@ -43,6 +43,8 @@ func (d Msg_Type) String() string {
 	switch d {
 	case MM_Info:
 		return "MM Info"
+	case MSG_MM_LOC_UPD_REQUEST:
+		return "LU RQST"
 	default:
 		return fmt.Sprintf("MT_%02X", int(d&0x3F))
 	}
