@@ -14,13 +14,8 @@ type MNC struct {
 	Digits uint8  // 2 or 3 digit (MNC 01 != 001)
 }
 
-func (c *MNC) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	var raw string
-	if err := d.DecodeElement(&raw, &start); err != nil {
-		return errors.New("xml DecodeElement: " + err.Error())
-	}
-
-	val, err := strconv.Atoi(raw)
+func (c *MNC) Parse(s string) error {
+	val, err := strconv.Atoi(s)
 	if err != nil {
 		return errors.New("atoi: " + err.Error())
 	}
@@ -29,8 +24,17 @@ func (c *MNC) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	}
 
 	c.Val = uint16(val)
-	c.Digits = uint8(len(raw))
+	c.Digits = uint8(len(s))
 	return nil
+}
+
+func (c *MNC) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	var raw string
+	if err := d.DecodeElement(&raw, &start); err != nil {
+		return errors.New("xml DecodeElement: " + err.Error())
+	}
+
+	return c.Parse(raw)
 }
 
 func (c MNC) String() string {
