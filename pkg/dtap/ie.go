@@ -49,3 +49,98 @@ const (
 	LSA_IDEN						DtapIE = 0x48
 	DAY_SAVING_TIME					DtapIE = 0x49
 )
+
+// format returns a length of the Information Element (IE)
+// 1. If length > 0, it means that IE has FIXED length
+// 2. If length = 0, it means that IE has VARIABLE length
+// 3. If length = -1, it means that IE is unsupported
+// 4. If length = -2, it means that IE is half byte
+
+func (ie DtapIE) format() (length int) {
+	switch ie {
+	case PROTOCOL_DISC:
+		return -2
+	case SKIP_IND:
+		return -2
+	case MSG_TYPE:
+		return 1
+	case CIPH_KEY_SEQ_NUM:
+		return -2
+	case SPARE_HALF_OCT:
+		return -2
+	case AUTH_PARAM_RAND:
+		return 16
+	case AUTH_RESP_PARAM:
+		return 4
+	case REJ_CAUSE:
+		return 1
+	case MS_CLASSMARK_2:
+		return 4
+	case M_IDENTITY_1:
+		return 0
+	case PD_AND_SAPI:
+		return 1
+	case CM_SERVICE_TYPE:
+		return -2
+	case ID_TYPE:
+		return -2
+	case MS_CLASSMARK_1:
+		return 1
+	case LOC_UPD_TYPE:
+		return -2
+	case AUTH_PARAM_AUTN:
+		return 18
+	case AUTH_RESP_PARAM_EXT:
+		return 0
+	case AUTH_FAIL_PARAM:
+		return 16
+	case LOC_AREA_ID:
+		return 6
+	case DEVICE_PROPS:
+		return 1
+	case MM_TIMER:
+		return 3
+	case PRIOR_LVL:
+		return 1
+	case ADD_UPD_PARAMS:
+		return 1
+	case P_TMSI_TYPE:
+		return 1
+	case ROUT_AREA_ID_2:
+		return 8
+	case P_TMSI_SIGN_2:
+		return 5
+	case M_IDENTITY_2:
+		return 0
+	case FLLW_ON_PROC:
+		return 1
+	case CTS_PERM:
+		return 1
+	case PLMN_LST:
+		return 0
+	case EMER_NUM_LST:
+		return 0
+	case GPRS_TIM_3:
+		return 3
+	case NON_3GPP:
+		return 1
+	case MS_CLASSMARK_UMTS:
+		return 5
+	case MS_NET_FEAT_SUP:
+		return 1
+	case FNAME_F_NET:
+		return 0
+	case SNAME_F_NET:
+		return 0
+	case TIME_ZONE:
+		return 2
+	case TIME_ZONE_AND_TIME:
+		return 8
+	case LSA_IDEN:
+		return 0
+	case DAY_SAVING_TIME:
+		return 3
+	default:
+		return -1
+	}
+}
