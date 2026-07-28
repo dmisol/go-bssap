@@ -37,6 +37,10 @@ func (c *MNC) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	return c.Parse(raw)
 }
 
+func (c *MNC) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	return e.EncodeElement(c.String(), start)
+}
+
 func (c MNC) String() string {
 	return fmt.Sprintf("%0*d", c.Digits, c.Val)
 }
