@@ -51,13 +51,6 @@ const (
 	DAY_SAVING_TIME					DtapIE = 0x49
 )
 
-// format returns a length of the Information Element (IE)
-// 1. If length > 0, it means that IE has FIXED length and V format
-// 2. If length = 0, it means that IE has VARIABLE length and LV format
-// 3. If length = -1, it means that IE is unsupported
-// 4. If length = -2, it means that IE is half byte and has TV format
-// 5. If length = -3, it means that IE has VARIABLE (or FIXED) size and has TLV format
-
 type IEFormat int
 
 const (

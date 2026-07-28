@@ -194,22 +194,27 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
             break
         }
 
-        length := expectedTag.format()
+        ieDef := expectedTag.format()
 
-		// switch {
-		// 	case length == -1:
-        //         return nil, fmt.Errorf("unsupported IE 0x%02X at offset %d", expectedTag, offset)
-		// 	case length == -2:
-        //         offset++ //TODO
-        //         continue
-		// 	case length == 0:
+        if ieDef.Format == FormatUnsupported {
+            return nil, fmt.Errorf("unsupported IE 0x%02X at offset %d", expectedTag, offset)
+        }
 
-		// 	case length > 0:
+        switch ieDef.Format {
+        case FormatT:
 
-		// 	default:
-        //     	return nil, fmt.Errorf("invalid length %d for IE 0x%02X at offset %d", length, expectedTag, offset-1)
-		// }
-	}
+        case FormatV:
+
+        case FormatTV:
+
+        case FormatLV:
+
+        case FormatTLV:
+
+        default:
+            return nil, fmt.Errorf("invalid format %v for IE 0x%02X at offset %d", ieDef.Format, expectedTag, offset)
+	    }
+    }
 
 	return dtap, nil
 }
