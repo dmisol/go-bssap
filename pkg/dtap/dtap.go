@@ -22,7 +22,7 @@ type IE struct {
 	Value []byte
 }
 
-func (msgType Msg_Type) GetExpectedTags() []DtapIE {
+func (msgType Msg_Type) GetTagsOrder() []DtapIE {
     switch msgType {
     case MSG_MM_IMSI_DETACH_IND:
         return []DtapIE{
@@ -177,32 +177,38 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
         IEs: make([]IE, 0, 10),
     }
 
-	dtap.Header.ProtocolDisc = PD_Type(rawData[0])
-    dtap.Header.SkipInd = rawData[1]
+	dtap.Header.ProtocolDisc = PD_Type(rawData[0] & 0x0F)
+    dtap.Header.SkipInd = rawData[1] >> 4
     dtap.Header.MsgType = Msg_Type(rawData[2])
 
-    offset := 3
-    for offset < len(rawData) {
+    offset := 2
+
+    tagsOrder := dtap.Header.MsgType.GetTagsOrder()
+
+    if len(tagsOrder) == 0 {
+        return dtap, nil
+    }
+
+    for _, expectedTag := range tagsOrder {
         if offset >= len(rawData) {
             break
         }
 
-		tag := DtapIE(rawData[offset])
-        length := tag.format()
+        length := expectedTag.format()
 
-		switch {
-			case length == -1:
-                return nil, fmt.Errorf("unsupported IE 0x%02X at offset %d", tag, offset)
-			case length == -2:
-                offset++ //TODO
-                continue
-			case length == 0:
+		// switch {
+		// 	case length == -1:
+        //         return nil, fmt.Errorf("unsupported IE 0x%02X at offset %d", expectedTag, offset)
+		// 	case length == -2:
+        //         offset++ //TODO
+        //         continue
+		// 	case length == 0:
 
-			case length > 0:
+		// 	case length > 0:
 
-			default:
-            	return nil, fmt.Errorf("invalid length %d for IE 0x%02X at offset %d", length, tag, offset-1)
-		}
+		// 	default:
+        //     	return nil, fmt.Errorf("invalid length %d for IE 0x%02X at offset %d", length, expectedTag, offset-1)
+		// }
 	}
 
 	return dtap, nil
