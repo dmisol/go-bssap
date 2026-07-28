@@ -202,14 +202,83 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
 
         switch ieDef.Format {
         case FormatT:
-
+            ie := IE {
+                Tag: expectedTag,
+                Value: []byte{},
+            }
+            dtap.IEs = append(dtap.IEs, ie)
+            offset += 1
         case FormatV:
-
+            if ieDef.FixedLen == 0 {
+                value := rawData[offset] & 0x0F
+                ie := IE {
+                    Tag: expectedTag,
+                    Value: []byte{value},
+                }
+                dtap.IEs = append(dtap.IEs, ie)
+                offset += 1
+            } else {
+                ie := IE {
+                    Tag: expectedTag,
+                    Value: rawData[offset : offset + ieDef.FixedLen],
+                }
+                dtap.IEs = append(dtap.IEs, ie)
+                offset += ieDef.FixedLen
+            }
         case FormatTV:
+            if ieDef.FixedLen == 0 {
 
+                tagFromData := rawData[offset] >> 4
+                if DtapIE(tagFromData) != expectedTag {
+                    continue
+                }
+
+                value := rawData[offset] & 0x0F
+                ie := IE {
+                    Tag: expectedTag,
+                    Value: []byte{value},
+                }
+                dtap.IEs = append(dtap.IEs, ie)
+                offset += 1
+            } else {
+
+                tagFromData := rawData[offset]
+                if DtapIE(tagFromData) != expectedTag {
+                    continue
+                }
+                
+                ie := IE {
+                    Tag: expectedTag,
+                    Value: rawData[offset + 1 : offset + 1 + ieDef.FixedLen],
+                }
+                dtap.IEs = append(dtap.IEs, ie)
+                offset += ieDef.FixedLen + 1
+            }
         case FormatLV:
-
+            length := int(rawData[offset])
+            offset += 1
+            ie := IE {
+                Tag: expectedTag,
+                Value: rawData[offset : offset + length],
+            }
+            dtap.IEs = append(dtap.IEs, ie)
+            offset += length
         case FormatTLV:
+
+            tagFromData := rawData[offset]
+            if DtapIE(tagFromData) != expectedTag {
+                continue
+            }
+            offset += 1
+
+            length := int(rawData[offset])
+            offset += 1
+            ie := IE{
+                Tag:   DtapIE(tagFromData),
+                Value: rawData[offset : offset+length],
+            }
+            dtap.IEs = append(dtap.IEs, ie)
+            offset += length
 
         default:
             return nil, fmt.Errorf("invalid format %v for IE 0x%02X at offset %d", ieDef.Format, expectedTag, offset)
