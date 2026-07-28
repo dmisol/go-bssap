@@ -178,8 +178,8 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
     }
 
 	dtap.Header.ProtocolDisc = PD_Type(rawData[0] & 0x0F)
-    dtap.Header.SkipInd = rawData[1] >> 4
-    dtap.Header.MsgType = Msg_Type(rawData[2])
+    dtap.Header.SkipInd = rawData[0] & 0xF0
+    dtap.Header.MsgType = Msg_Type(rawData[1] & 0x3F)
 
     offset := 2
 
@@ -188,6 +188,8 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
     if len(tagsOrder) == 0 {
         return dtap, nil
     }
+
+    pendingNibble := -1
 
     for _, expectedTag := range tagsOrder {
         if offset >= len(rawData) {
@@ -210,13 +212,23 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
             offset += 1
         case FormatV:
             if ieDef.FixedLen == 0 {
-                value := rawData[offset] & 0x0F
+                var value byte
+                if pendingNibble != -1 {
+                    value = byte(pendingNibble)
+                    pendingNibble = -1
+                } else {
+                    currentByte := rawData[offset]
+                    value = currentByte & 0x0F
+                    pendingNibble = int(currentByte >> 4)
+                    offset += 1
+                    
+                }
                 ie := IE {
                     Tag: expectedTag,
                     Value: []byte{value},
                 }
                 dtap.IEs = append(dtap.IEs, ie)
-                offset += 1
+
             } else {
                 ie := IE {
                     Tag: expectedTag,
@@ -227,26 +239,34 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
             }
         case FormatTV:
             if ieDef.FixedLen == 0 {
-
+                var value byte
+                if pendingNibble != -1 {
+                    value = byte(pendingNibble)
+                    pendingNibble = -1
+                } else {
+                    currentByte := rawData[offset]
+                    value = currentByte & 0x0F
+                    pendingNibble = int(currentByte >> 4)
+                    offset += 1
+                    
+                }
                 tagFromData := rawData[offset] >> 4
                 if DtapIE(tagFromData) != expectedTag {
                     continue
                 }
 
-                value := rawData[offset] & 0x0F
                 ie := IE {
                     Tag: expectedTag,
                     Value: []byte{value},
                 }
                 dtap.IEs = append(dtap.IEs, ie)
-                offset += 1
             } else {
 
                 tagFromData := rawData[offset]
                 if DtapIE(tagFromData) != expectedTag {
                     continue
                 }
-                
+
                 ie := IE {
                     Tag: expectedTag,
                     Value: rawData[offset + 1 : offset + 1 + ieDef.FixedLen],
