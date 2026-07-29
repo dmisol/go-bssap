@@ -3,7 +3,6 @@ package dtap
 type DtapIE byte
 
 const (
-
 	//created tags
 	PROTOCOL_DISC					DtapIE = 0x81
 	SKIP_IND						DtapIE	= 0x82
@@ -21,6 +20,7 @@ const (
 	MS_CLASSMARK_1					DtapIE = 0x8E
 	LOC_UPD_TYPE					DtapIE = 0x8F
 	LOC_AREA_ID						DtapIE = 0x90 //table 9.2.15
+	CHANNEL_DESC					DtapIE = 0x91
 
 	//embedded tags
 	AUTH_PARAM_AUTN					DtapIE = 0x20
@@ -49,6 +49,10 @@ const (
 	TIME_ZONE_AND_TIME				DtapIE = 0x47
 	LSA_IDEN						DtapIE = 0x48
 	DAY_SAVING_TIME					DtapIE = 0x49
+	MOBILE_ALLOC					DtapIE = 0x72
+	START_TIME						DtapIE = 0x7C
+	EXTEND_TSC_S					DtapIE = 0x6D
+
 )
 
 type IEFormat int
@@ -153,6 +157,14 @@ func (ie DtapIE) format() IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 0}
 	case DAY_SAVING_TIME:
 		return IEDefinition{Format: FormatTLV, FixedLen: 3}
+	case CHANNEL_DESC:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case MOBILE_ALLOC:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case START_TIME:
+		return  IEDefinition{Format: FormatTV, FixedLen: 3}
+	case EXTEND_TSC_S:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
 	}
