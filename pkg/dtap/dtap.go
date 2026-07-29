@@ -22,6 +22,8 @@ type IE struct {
 	Value []byte
 }
 
+//пропускаю все с L2PesudoLength Нужна информация про канал сверху кроме сырых байтов для того чтобы понять что есть L2PseudoLength
+// На данный момент если TV с длиной 1 то возвращает целый TV вместе с тегом а не нужный полубайт
 func DtapDecode(rawData []byte) (*Dtap, error) {
     if len(rawData) < 3 {
         return nil, errors.New("DTAP message too short: need at least 3 bytes")
@@ -51,7 +53,7 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
             break
         }
 
-        ieDef := expectedTag.format()
+        ieDef := format(expectedTag, dtap.Header.ProtocolDisc)
 
         switch ieDef.Format {
         case FormatT:

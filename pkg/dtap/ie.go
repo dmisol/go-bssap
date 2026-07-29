@@ -1,37 +1,46 @@
 package dtap
 
-type DtapIE byte
+type DtapIE uint16
+
+//Главное чтобы в рамках 1 PD не повторялись IE теги
+//для одного и того же type могут быть разный FORMAT и разные IEI поэтому для каждого делаю тег по имени в RR. В MM в основном по типу.
 
 const (
 	//created tags
-	PROTOCOL_DISC					DtapIE = 0x81
-	SKIP_IND						DtapIE	= 0x82
-	MSG_TYPE						DtapIE = 0x83
-	CIPH_KEY_SEQ_NUM				DtapIE = 0x84
-	SPARE_HALF_OCT					DtapIE = 0x85
-	AUTH_PARAM_RAND					DtapIE = 0x86
-	AUTH_RESP_PARAM					DtapIE = 0x87
-	REJ_CAUSE						DtapIE = 0x88
-	MS_CLASSMARK_2					DtapIE = 0x89
-	M_IDENTITY_1					DtapIE = 0x8A
-	PD_AND_SAPI						DtapIE = 0x8B
-	CM_SERVICE_TYPE					DtapIE = 0x8C
-	ID_TYPE							DtapIE = 0x8D
-	MS_CLASSMARK_1					DtapIE = 0x8E
-	LOC_UPD_TYPE					DtapIE = 0x8F
-	LOC_AREA_ID						DtapIE = 0x90 //table 9.2.15
-	CHANNEL_DESC					DtapIE = 0x91
+	//MM
+	PROTOCOL_DISC					DtapIE = 0x181
+	SKIP_IND						DtapIE = 0x182
+	MSG_TYPE						DtapIE = 0x183
+	CIPH_KEY_SEQ_NUM				DtapIE = 0x184
+	SPARE_HALF_OCT					DtapIE = 0x185
+	AUTH_PARAM_RAND					DtapIE = 0x186
+	AUTH_RESP_PARAM					DtapIE = 0x187
+	REJ_CAUSE						DtapIE = 0x188
+	MS_CLASSMARK_2					DtapIE = 0x189
+	M_IDENTITY_1					DtapIE = 0x18A
+	PD_AND_SAPI						DtapIE = 0x18B
+	CM_SERVICE_TYPE					DtapIE = 0x18C
+	ID_TYPE							DtapIE = 0x18D
+	MS_CLASSMARK_1					DtapIE = 0x18E
+	LOC_UPD_TYPE					DtapIE = 0x18F
+	LOC_AREA_ID						DtapIE = 0x190 //table 9.2.15
+
+	//RR
+	CHANNEL_DESC					DtapIE = 0x181
+	CHANNEL_DESC_2					DtapIE = 0x182
+	POWER_CMD						DtapIE = 0x183
 
 	//embedded tags
+	//MM
 	AUTH_PARAM_AUTN					DtapIE = 0x20
 	AUTH_RESP_PARAM_EXT				DtapIE = 0x21
 	AUTH_FAIL_PARAM					DtapIE = 0x22
 	LOC_AREA_ID_2					DtapIE = 0x13 //table 9.2.5
-	DEVICE_PROPS					DtapIE = 0x0D
+	DEVICE_PROPS					DtapIE = 0x0D		//тут аккуратно значение в младшем полубайте а IEI как D кодируется в старшем и у еще одного как D.
 	MM_TIMER						DtapIE = 0x36
 	PRIOR_LVL						DtapIE = 0x08
 	ADD_UPD_PARAMS					DtapIE = 0x0C
-	P_TMSI_TYPE						DtapIE = 0x0E
+	P_TMSI_TYPE						DtapIE = 0x0E		//тут аккуратно
 	ROUT_AREA_ID_2					DtapIE = 0x1B		
 	P_TMSI_SIGN_2					DtapIE = 0x19
 	M_IDENTITY_2					DtapIE = 0x17
@@ -49,10 +58,27 @@ const (
 	TIME_ZONE_AND_TIME				DtapIE = 0x47
 	LSA_IDEN						DtapIE = 0x48
 	DAY_SAVING_TIME					DtapIE = 0x49
+
+	//RR
 	MOBILE_ALLOC					DtapIE = 0x72
 	START_TIME						DtapIE = 0x7C
 	EXTEND_TSC_S					DtapIE = 0x6D
-
+	FREQ_LST						DtapIE = 0x05
+	CELL_CH_DESC					DtapIE = 0x62
+	MULT_ALLOC						DtapIE = 0x10
+	MODE_OF_CH_SET_1				DtapIE = 0x63
+	MODE_OF_CH_SET_2				DtapIE = 0x11
+	MODE_OF_CH_SET_3				DtapIE = 0x13
+	MODE_OF_CH_SET_4				DtapIE = 0x14
+	MODE_OF_CH_SET_5				DtapIE = 0x15
+	MODE_OF_CH_SET_6				DtapIE = 0x16
+	MODE_OF_CH_SET_7				DtapIE = 0x17
+	MODE_OF_CH_SET_8				DtapIE = 0x18
+	DESC_OF_THE_SCH					DtapIE = 0x64
+	MODE_OF_THE_SCH					DtapIE = 0x66
+	FREQ_LST_BT						DtapIE = 0x19
+	DESC_O_T_FIRST_CH_BEF_TIME		DtapIE = 0x1C
+	FREQ_CH_SEQ_BEF_TIME			DtapIE = 0x1E
 )
 
 type IEFormat int
@@ -71,7 +97,44 @@ type IEDefinition struct {
 	FixedLen int // Fixed length for V and TV. 0 means half-octet for TV OR V. Ignored for LV/TLV.
 }
 
-func (ie DtapIE) format() IEDefinition {
+func format(ie DtapIE, pd PD_Type) IEDefinition {
+    switch pd {
+    case PD_MM:
+        return formatMM(ie)
+    case PD_RR:
+        return formatRR(ie)
+    case PD_BCAST_CC:
+        return formatBCCH(ie)
+    case PD_CC:
+        return formatCC(ie)
+    case PD_SMS:
+        return formatSMS(ie)
+    case PD_GPRS_MMM:
+        return formatGPRSMM(ie)
+    case PD_GPRS_SMM:
+        return formatGPRSSM(ie)
+    case PD_LOC:
+        return formatLOC(ie)
+    case PD_GROUP_CC:
+        return formatGroupCC(ie)
+    case PD_EPS_SMM:
+        return formatEPSSMM(ie)
+    case PD_GTTP:
+        return formatGTTP(ie)
+    case PD_SS_NCL:
+        return formatNCSS(ie)
+    case PD_EXTEND:
+        return formatExtend(ie)
+    case PD_TEST:
+        return formatTest(ie)
+    case PD_EPS_MMM:
+        return formatEPSMMM(ie)
+    default:
+        return IEDefinition{Format: FormatV, FixedLen: 0}
+    }
+}
+
+func formatMM(ie DtapIE) IEDefinition {
 	switch ie {
 	case PROTOCOL_DISC:
 		return IEDefinition{Format: FormatV, FixedLen: 0}
@@ -157,6 +220,13 @@ func (ie DtapIE) format() IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 0}
 	case DAY_SAVING_TIME:
 		return IEDefinition{Format: FormatTLV, FixedLen: 3}
+	default:
+		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
+	}
+}
+
+func formatRR(ie DtapIE) IEDefinition {
+    switch ie {
 	case CHANNEL_DESC:
 		return IEDefinition{Format: FormatV, FixedLen: 3}
 	case MOBILE_ALLOC:
@@ -167,5 +237,20 @@ func (ie DtapIE) format() IEDefinition {
 		return IEDefinition{Format: FormatTV, FixedLen: 2}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
-	}
+    }
 }
+
+//ToDO
+func formatBCCH(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatCC(ie DtapIE) IEDefinition         { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatSMS(ie DtapIE) IEDefinition        { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGPRSMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGPRSSM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatLOC(ie DtapIE) IEDefinition        { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGroupCC(ie DtapIE) IEDefinition    { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatEPSSMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatEPSMMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatGTTP(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatNCSS(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatExtend(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatTest(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} } 
