@@ -63,6 +63,12 @@ const (
 	CIPH_MODE_SET_V					DtapIE = 0x197
 	CIPH_RESP						DtapIE = 0x198
 
+	//HANDOVER COMMAND
+	CELL_DESC                 		DtapIE = 0x199
+	DESC_OF_FIRST_CH_AFTER    		DtapIE = 0x19A
+	HANDOVER_REF              		DtapIE = 0x19B
+	POWER_CMD_AND_ACCESS_TYPE 		DtapIE = 0x19C
+
 	//embedded tags
 	//MM
 	AUTH_PARAM_AUTN					DtapIE = 0x20
@@ -120,8 +126,17 @@ const (
 	MULTI_RATE_CONF					DtapIE = 0x03
 	VGCS_CIPH_PARAMS				DtapIE = 0x04
 	EXTEND_TSC_S_BEFORE_TIME		DtapIE = 0x6E
-
-
+	//HANDOVER COMMAND
+	SYNC_IND                  		DtapIE = 0x0D
+	FREQ_CH_SEQ_AFTER_TIME    		DtapIE = 0x69
+	FREQ_SHORT_LST_AFTER_TIME       DtapIE = 0x02
+	REAL_TIME_DIFF           		DtapIE = 0x7B
+	TIMING_ADVANCE_TV           	DtapIE = 0x7D
+	FREQ_SHORT_LST_BEF_TIME 		DtapIE = 0x12
+	DESC_O_T_SEC_CH_BEF      		DtapIE = 0x1D
+	DYNAMIC_ARFCN_MAPPING    		DtapIE = 0x76
+	DEDICATED_SERV_INFO      		DtapIE = 0x51
+	PLMN_INDEX              		DtapIE = 0x0A
 )
 
 type IEFormat int
@@ -371,10 +386,37 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatV, FixedLen: 0}
 	case CIPH_RESP:
 		return IEDefinition{Format: FormatV, FixedLen: 0}
+	case CELL_DESC:
+		return  IEDefinition{Format: FormatV, FixedLen: 2}
+	case DESC_OF_FIRST_CH_AFTER:
+		return  IEDefinition{Format: FormatV, FixedLen: 3}
+	case HANDOVER_REF:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case POWER_CMD_AND_ACCESS_TYPE:
+		return  IEDefinition{Format: FormatV, FixedLen: 1}
+	case SYNC_IND:
+		return IEDefinition{Format: FormatTV, FixedLen: 1}
+	case FREQ_CH_SEQ_AFTER_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 10}
+	case FREQ_SHORT_LST_AFTER_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 10}
+	case REAL_TIME_DIFF:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3}
+	case TIMING_ADVANCE_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case FREQ_SHORT_LST_BEF_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 10}
+	case DYNAMIC_ARFCN_MAPPING:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case DEDICATED_SERV_INFO:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case PLMN_INDEX:
+		return IEDefinition{Format: FormatTV, FixedLen: 1}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
 }
+
 
 //ToDO
 func formatBCCH(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} }

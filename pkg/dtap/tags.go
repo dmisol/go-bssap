@@ -290,7 +290,47 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
 			RR_CAUSE,
 		}
     case MSG_RR_HANDO_CMD:
-        return []DtapIE{}
+        return []DtapIE{
+            CELL_DESC,
+            DESC_OF_FIRST_CH_AFTER,
+            HANDOVER_REF,
+            POWER_CMD_AND_ACCESS_TYPE,
+            SYNC_IND,
+            FREQ_SHORT_LST_AFTER_TIME,
+            FREQ_LST_AFTER_TIME,
+            CELL_CH_DESC,
+            DESC_OF_THE_MULT_CONF,
+            MODE_OF_CH_SET_1,
+            MODE_OF_CH_SET_2,
+            MODE_OF_CH_SET_3,
+            MODE_OF_CH_SET_4,
+            MODE_OF_CH_SET_5,
+            MODE_OF_CH_SET_6,
+            MODE_OF_CH_SET_7,
+            MODE_OF_CH_SET_8,
+            DESC_OF_THE_SCH,
+            MODE_OF_THE_SCH,
+            FREQ_CH_SEQ_AFTER_TIME,
+            MOBILE_ALLOC,
+            START_TIME,
+            REAL_TIME_DIFF,
+            TIMING_ADVANCE_TV,
+            FREQ_SHORT_LST_BEF_TIME,
+            FREQ_LST_BEF_TIME,
+            DESC_O_T_FIRST_CH_BEF_TIME,
+            DESC_O_T_SEC_CH_BEF_TIME,
+            FREQ_CH_SEQ_BEF_TIME,
+            MOB_ALLOC_BEFORE_TIME,
+            CIPH_MODE_SET,
+            VGCS_TARGET_MODE_IND,
+            MULTI_RATE_CONF,
+            DYNAMIC_ARFCN_MAPPING,
+            VGCS_CIPH_PARAMS,
+            DEDICATED_SERV_INFO,
+            PLMN_INDEX,
+            EXTEND_TSC_S,
+            EXTEND_TSC_S_BEFORE_TIME,
+        }
     case MSG_RR_HANDO_COMPL:
         return []DtapIE{}
     case MSG_RR_HANDO_FAIL:
