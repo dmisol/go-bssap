@@ -195,11 +195,34 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             EXTEND_TSC_S,
         }
     case MSG_RR_IMM_ASS:
-        return []DtapIE{}
+        return []DtapIE{
+            PAGE_MODE,
+            DEDICATED_MODE_OR_TBF,
+            CHANNEL_DESC,
+            PACKET_CH_DESC,
+            REQ_REF,
+            TIMING_ADVANCE,
+            MOBILE_ALLOC_2,
+            START_TIME,
+            IA_REST_OCTETS,
+            EXTEND_TSC_S,
+        }
     case MSG_RR_IMM_ASS_EXT:
         return []DtapIE{}
     case MSG_RR_IMM_ASS_REJ:
-        return []DtapIE{}
+        return []DtapIE{
+            PAGE_MODE,
+            FEATURE_IND,
+            REQ_REF_1,
+            WAIT_IND_1,
+            REQ_REF_2,
+            WAIT_IND_2,
+            REQ_REF_3,
+            WAIT_IND_3,
+            REQ_REF_4,
+            WAIT_IND_4,
+            IAR_REST_OCTETS,
+        }
     case MSG_RR_DTM_ASS_FAIL:
         return []DtapIE{}
     case MSG_RR_DTM_REJECT:
@@ -211,9 +234,12 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
 
     // Ciphering
     case MSG_RR_CIPH_M_CMD:
-        return []DtapIE{}
+        return []DtapIE{
+            CIPH_MODE_SET_V,
+            CIPH_RESP,
+        }
     case MSG_RR_CIPH_M_COMPL:
-        return []DtapIE{}
+        return []DtapIE{M_IDENTITY_2}
 
     // Configuration Change
     case MSG_RR_CFG_CHG_CMD:

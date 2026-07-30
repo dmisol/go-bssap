@@ -27,13 +27,41 @@ const (
 
 	//RR
 	CHANNEL_DESC					DtapIE = 0x181
+
 	//ASSIGNMENT CMD
 	DESC_OF_THE_F_CH_AFTER_TIME		DtapIE = 0x182
 	POWER_CMD						DtapIE = 0x183
+
 	//ASSIGNMENT COMPLETE
 	RR_CAUSE						DtapIE = 0x184
-	//Channel mode modify
+
+	//CHANNEL MODE MODIFY
 	CHANNEL_MODE					DtapIE = 0x185
+
+	//IMMEDIATE ASSIGNMENT
+	PAGE_MODE              			DtapIE = 0x186
+	DEDICATED_MODE_OR_TBF  			DtapIE = 0x187
+	PACKET_CH_DESC         			DtapIE = 0x188
+	REQ_REF                			DtapIE = 0x189
+	TIMING_ADVANCE         			DtapIE = 0x18A
+	MOBILE_ALLOC_2           		DtapIE = 0x18B
+	IA_REST_OCTETS         			DtapIE = 0x18C
+
+	//IMMEDIATE ASSIGNMENT REJECT
+	FEATURE_IND       				DtapIE = 0x18D
+	REQ_REF_1         				DtapIE = 0x18E
+	WAIT_IND_1        				DtapIE = 0x18F
+	REQ_REF_2         				DtapIE = 0x190
+	WAIT_IND_2        				DtapIE = 0x191
+	REQ_REF_3         				DtapIE = 0x192
+	WAIT_IND_3        				DtapIE = 0x193
+	REQ_REF_4         				DtapIE = 0x194
+	WAIT_IND_4        				DtapIE = 0x195
+	IAR_REST_OCTETS   				DtapIE = 0x196
+
+	//CIPHERING MODE COMMAND
+	CIPH_MODE_SET_V					DtapIE = 0x197
+	CIPH_RESP						DtapIE = 0x198
 
 	//embedded tags
 	//MM
@@ -92,7 +120,7 @@ const (
 	MULTI_RATE_CONF					DtapIE = 0x03
 	VGCS_CIPH_PARAMS				DtapIE = 0x04
 	EXTEND_TSC_S_BEFORE_TIME		DtapIE = 0x6E
-	//Channel mode modify
+
 
 )
 
@@ -304,6 +332,45 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatV, FixedLen: 1}
 	case CHANNEL_MODE:
 		return  IEDefinition{Format: FormatV, FixedLen: 1}
+
+	case PAGE_MODE:
+		return IEDefinition{Format: FormatV, FixedLen: 0}
+	case DEDICATED_MODE_OR_TBF:
+		return IEDefinition{Format: FormatV, FixedLen: 0}
+	case PACKET_CH_DESC:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case REQ_REF:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case TIMING_ADVANCE:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case MOBILE_ALLOC_2:
+		return IEDefinition{Format: FormatLV, FixedLen: 0}
+	case IA_REST_OCTETS:
+		return IEDefinition{Format: FormatV, FixedLen: 0} //!! на данный момент не работает тк нет длины и нужно отдельно парсить стр 400
+	case FEATURE_IND:
+		return IEDefinition{Format: FormatV, FixedLen: 0}
+	case REQ_REF_1:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case WAIT_IND_1:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case REQ_REF_2:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case WAIT_IND_2:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case REQ_REF_3:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case WAIT_IND_3:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case REQ_REF_4:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case WAIT_IND_4:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case IAR_REST_OCTETS:
+		return IEDefinition{Format: FormatV, FixedLen: 3}
+	case CIPH_MODE_SET_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0}
+	case CIPH_RESP:
+		return IEDefinition{Format: FormatV, FixedLen: 0}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
