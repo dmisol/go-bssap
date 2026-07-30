@@ -225,11 +225,44 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
 
     // Assignment & Handover
     case MSG_RR_ASS_CMD:
-        return []DtapIE{}
+    	return []DtapIE{
+			DESC_OF_THE_F_CH_AFTER_TIME,
+			POWER_CMD,
+			FREQ_LST_AFTER_TIME,
+			CELL_CH_DESC,
+			DESC_OF_THE_MULT_CONF,
+			MODE_OF_CH_SET_1,
+			MODE_OF_CH_SET_2,
+			MODE_OF_CH_SET_3,
+			MODE_OF_CH_SET_4,
+			MODE_OF_CH_SET_5,
+			MODE_OF_CH_SET_6,
+			MODE_OF_CH_SET_7,
+			MODE_OF_CH_SET_8,
+			DESC_OF_THE_SCH,
+			MODE_OF_THE_SCH,
+			MOBILE_ALLOC,
+			START_TIME,
+			FREQ_LST_BEF_TIME,
+			DESC_O_T_FIRST_CH_BEF_TIME,
+			DESC_O_T_SEC_CH_BEF_TIME,
+			FREQ_CH_SEQ_BEF_TIME,
+			MOB_ALLOC_BEFORE_TIME,
+			CIPH_MODE_SET,
+			VGCS_TARGET_MODE_IND,
+			MULTI_RATE_CONF,
+			VGCS_CIPH_PARAMS,
+			EXTEND_TSC_S,
+			EXTEND_TSC_S_BEFORE_TIME,
+    }
     case MSG_RR_ASS_COMPL:
-        return []DtapIE{}
+        return []DtapIE{
+			RR_CAUSE,
+		}
     case MSG_RR_ASS_FAIL:
-        return []DtapIE{}
+        return []DtapIE{
+			RR_CAUSE,
+		}
     case MSG_RR_HANDO_CMD:
         return []DtapIE{}
     case MSG_RR_HANDO_COMPL:
@@ -333,11 +366,20 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
 
     // Miscellaneous
     case MSG_RR_CHAN_MODE_MODIF:
-        return []DtapIE{}
+        return []DtapIE{
+			VGCS_TARGET_MODE_IND,
+			MULTI_RATE_CONF,
+			VGCS_CIPH_PARAMS,
+			EXTEND_TSC_S,
+		}
     case MSG_RR_STATUS:
         return []DtapIE{}
     case MSG_RR_CHAN_MODE_MODIF_ACK:
-        return []DtapIE{}
+        return []DtapIE{
+			CHANNEL_DESC,
+			CHANNEL_MODE,
+			EXTEND_TSC_S,
+		}
     case MSG_RR_FREQ_REDEF:
         return []DtapIE{}
     case MSG_RR_MEAS_REP:

@@ -27,8 +27,13 @@ const (
 
 	//RR
 	CHANNEL_DESC					DtapIE = 0x181
-	CHANNEL_DESC_2					DtapIE = 0x182
+	//ASSIGNMENT CMD
+	DESC_OF_THE_F_CH_AFTER_TIME		DtapIE = 0x182
 	POWER_CMD						DtapIE = 0x183
+	//ASSIGNMENT COMPLETE
+	RR_CAUSE						DtapIE = 0x184
+	//Channel mode modify
+	CHANNEL_MODE					DtapIE = 0x185
 
 	//embedded tags
 	//MM
@@ -63,9 +68,10 @@ const (
 	MOBILE_ALLOC					DtapIE = 0x72
 	START_TIME						DtapIE = 0x7C
 	EXTEND_TSC_S					DtapIE = 0x6D
-	FREQ_LST						DtapIE = 0x05
+	//ASSIGNMENT CMD
+	FREQ_LST_AFTER_TIME				DtapIE = 0x05
 	CELL_CH_DESC					DtapIE = 0x62
-	MULT_ALLOC						DtapIE = 0x10
+	DESC_OF_THE_MULT_CONF			DtapIE = 0x10
 	MODE_OF_CH_SET_1				DtapIE = 0x63
 	MODE_OF_CH_SET_2				DtapIE = 0x11
 	MODE_OF_CH_SET_3				DtapIE = 0x13
@@ -76,9 +82,18 @@ const (
 	MODE_OF_CH_SET_8				DtapIE = 0x18
 	DESC_OF_THE_SCH					DtapIE = 0x64
 	MODE_OF_THE_SCH					DtapIE = 0x66
-	FREQ_LST_BT						DtapIE = 0x19
+	FREQ_LST_BEF_TIME				DtapIE = 0x19
 	DESC_O_T_FIRST_CH_BEF_TIME		DtapIE = 0x1C
+	DESC_O_T_SEC_CH_BEF_TIME		DtapIE = 0x1D
 	FREQ_CH_SEQ_BEF_TIME			DtapIE = 0x1E
+	MOB_ALLOC_BEFORE_TIME			DtapIE = 0x21
+	CIPH_MODE_SET					DtapIE = 0x09
+	VGCS_TARGET_MODE_IND 			DtapIE = 0x01
+	MULTI_RATE_CONF					DtapIE = 0x03
+	VGCS_CIPH_PARAMS				DtapIE = 0x04
+	EXTEND_TSC_S_BEFORE_TIME		DtapIE = 0x6E
+	//Channel mode modify
+
 )
 
 type IEFormat int
@@ -235,6 +250,60 @@ func formatRR(ie DtapIE) IEDefinition {
 		return  IEDefinition{Format: FormatTV, FixedLen: 3}
 	case EXTEND_TSC_S:
 		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case DESC_OF_THE_F_CH_AFTER_TIME:
+		return  IEDefinition{Format: FormatV, FixedLen: 3}
+	case POWER_CMD:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case FREQ_LST_AFTER_TIME:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case CELL_CH_DESC:
+		return IEDefinition{Format: FormatTV, FixedLen: 17}
+	case DESC_OF_THE_MULT_CONF:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case MODE_OF_CH_SET_1:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_2:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_3:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_4:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_5:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_6:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_7:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case MODE_OF_CH_SET_8:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case DESC_OF_THE_SCH:
+		return IEDefinition{Format: FormatTV, FixedLen: 4}
+	case MODE_OF_THE_SCH:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case FREQ_LST_BEF_TIME:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case DESC_O_T_FIRST_CH_BEF_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 4}
+	case DESC_O_T_SEC_CH_BEF_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 4}
+	case FREQ_CH_SEQ_BEF_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 10}
+	case MOB_ALLOC_BEFORE_TIME:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case CIPH_MODE_SET:
+		return IEDefinition{Format: FormatTV, FixedLen: 1}
+	case VGCS_TARGET_MODE_IND:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case MULTI_RATE_CONF:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case VGCS_CIPH_PARAMS:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0}
+	case EXTEND_TSC_S_BEFORE_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 2}
+	case RR_CAUSE:
+		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case CHANNEL_MODE:
+		return  IEDefinition{Format: FormatV, FixedLen: 1}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
