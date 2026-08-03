@@ -36,6 +36,16 @@ const (
 	TIMING_ADVANCE_V                        DtapIE = 0x119
 	MOBILE_ALLOC_LV                         DtapIE = 0x11A
 	IA_REST_OCTETS_V                        DtapIE = 0x11B
+	FEATURE_INDICATOR_V                     DtapIE = 0x11C
+	REQUEST_REF_1_V                         DtapIE = 0x11D
+	WAIT_INDICATION_1_V                     DtapIE = 0x11E
+	REQUEST_REF_2_V                         DtapIE = 0x11F
+	WAIT_INDICATION_2_V                     DtapIE = 0x120
+	REQUEST_REF_3_V                         DtapIE = 0x121
+	WAIT_INDICATION_3_V                     DtapIE = 0x122
+	REQUEST_REF_4_V                         DtapIE = 0x123
+	WAIT_INDICATION_4_V                     DtapIE = 0x124
+	IAR_REST_OCTETS_V                       DtapIE = 0x125
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -249,6 +259,26 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V}
     case EXTENDED_TSC_SET_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
+	case FEATURE_INDICATOR_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: FEATURE_INDICATOR_V}
+    case REQUEST_REF_1_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_1_V}
+    case WAIT_INDICATION_1_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_1_V}
+    case REQUEST_REF_2_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_2_V}
+    case WAIT_INDICATION_2_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_2_V}
+    case REQUEST_REF_3_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_3_V}
+    case WAIT_INDICATION_3_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_3_V}
+    case REQUEST_REF_4_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_4_V}
+    case WAIT_INDICATION_4_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_4_V}
+    case IAR_REST_OCTETS_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: IAR_REST_OCTETS_V}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
