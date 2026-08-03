@@ -46,6 +46,8 @@ const (
 	REQUEST_REF_4_V                         DtapIE = 0x123
 	WAIT_INDICATION_4_V                     DtapIE = 0x124
 	IAR_REST_OCTETS_V                       DtapIE = 0x125
+	CIPHERING_MODE_SETTING_V                DtapIE = 0x126
+	CIPHER_RESPONSE_V                       DtapIE = 0x127
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -279,6 +281,10 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_4_V}
     case IAR_REST_OCTETS_V:
         return IEDefinition{Format: FormatV, FixedLen: 3, Tag: IAR_REST_OCTETS_V}
+	case CIPHERING_MODE_SETTING_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_MODE_SETTING_V}
+    case CIPHER_RESPONSE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHER_RESPONSE_V}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

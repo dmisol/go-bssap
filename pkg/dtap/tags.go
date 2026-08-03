@@ -199,7 +199,7 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             EXTENDED_TSC_SET_TV,
         }
     case MSG_RR_IMM_ASS_REJ:
-        return []DtapIE {
+        return []DtapIE{
             PAGE_MODE_V,
             FEATURE_INDICATOR_V,
             REQUEST_REF_1_V,
@@ -211,6 +211,11 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             REQUEST_REF_4_V,
             WAIT_INDICATION_4_V,
             IAR_REST_OCTETS_V,
+        }
+    case MSG_RR_CIPH_M_CMD:
+        return []DtapIE{
+            CIPHERING_MODE_SETTING_V,
+            CIPHER_RESPONSE_V,
         }
     default:
         return []DtapIE{}
