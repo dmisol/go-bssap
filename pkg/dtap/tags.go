@@ -221,6 +221,14 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
         return []DtapIE {
             ME_IDENTITY_TLV,
         }
+    case MSG_RR_ASS_COMPL:
+        return []DtapIE{
+            RR_CAUSE_V,
+        }
+    case MSG_RR_ASS_FAIL:
+        return []DtapIE {
+            RR_CAUSE_V,
+        }
     default:
         return []DtapIE{}
     }
