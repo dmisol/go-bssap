@@ -217,6 +217,10 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             CIPHERING_MODE_SETTING_V,
             CIPHER_RESPONSE_V,
         }
+    case MSG_RR_CIPH_M_COMPL:
+        return []DtapIE {
+            ME_IDENTITY_TLV,
+        }
     default:
         return []DtapIE{}
     }

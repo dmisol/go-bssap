@@ -48,6 +48,7 @@ const (
 	IAR_REST_OCTETS_V                       DtapIE = 0x125
 	CIPHERING_MODE_SETTING_V                DtapIE = 0x126
 	CIPHER_RESPONSE_V                       DtapIE = 0x127
+
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -76,6 +77,7 @@ const (
 	//embedded tags
 	STARTING_TIME_TV                        DtapIE = 0x7C
 	EXTENDED_TSC_SET_TV                     DtapIE = 0x6D
+	ME_IDENTITY_TLV                         DtapIE = 0x17	
 )
 
 type IEFormat int
@@ -285,6 +287,8 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_MODE_SETTING_V}
     case CIPHER_RESPONSE_V:
         return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHER_RESPONSE_V}
+	case ME_IDENTITY_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: ME_IDENTITY_TLV}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
