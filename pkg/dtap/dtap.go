@@ -22,8 +22,7 @@ type IE struct {
 	Value []byte
 }
 
-//пропускаю все с L2PesudoLength Нужна информация про канал сверху кроме сырых байтов для того чтобы понять что есть ли L2PseudoLength
-func DtapDecode(rawData []byte) (*Dtap, error) {
+func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
     if len(rawData) < 3 {
         return nil, errors.New("DTAP message too short: need at least 3 bytes")
     }
@@ -33,7 +32,10 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
         IEs: make([]IE, 0, 10),
     }
 
-    offset := 0
+    var offset int = 0
+    if(isL2PseudoLengthExist) {
+        offset = 1
+    }
 
 	dtap.Header.ProtocolDisc = PD_Type(rawData[offset] & 0x0F)
     dtap.Header.SkipInd = rawData[offset] & 0xF0
@@ -51,11 +53,16 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
 
     pendingNibble := -1
 
-    for _, expectedTag := range tagsOrder {
+    skipTags := make([]int, len(tagsOrder))
+
+    for i, expectedTag := range tagsOrder {
         if offset >= len(rawData) {
             break
         }
 
+        if skipTags[i] == 1 {
+            continue
+        }
         ieDef := format(expectedTag, dtap.Header.ProtocolDisc)
         expectedTag = ieDef.Tag
 
@@ -79,6 +86,13 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
                     pendingNibble = int(currentByte >> 4)
                     offset += 1
                     
+                }
+                if(ieDef.SpecialHandling == 1) {
+                    if value & 0x01 == 0x01 {
+                        skipTags[i + 1] = 1
+                    } else {
+                        skipTags[i + 2] = 1
+                    }
                 }
                 ie := IE {
                     Tag: expectedTag,

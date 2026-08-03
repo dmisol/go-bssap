@@ -28,6 +28,14 @@ const (
 	NON_3GPP								DtapIE = 0x111
 	P_TMSI_TYPE								DtapIE = 0x112
 	DEVICE_PROPS							DtapIE = 0x113
+	PAGE_MODE_V                             DtapIE = 0x114
+	DEDICATED_MODE_OR_TBF_V                 DtapIE = 0x115
+	CHANNEL_DESC_V                          DtapIE = 0x116
+	PACKET_CHANNEL_DESC_V                   DtapIE = 0x117
+	REQUEST_REF_V                           DtapIE = 0x118
+	TIMING_ADVANCE_V                        DtapIE = 0x119
+	MOBILE_ALLOC_LV                         DtapIE = 0x11A
+	IA_REST_OCTETS_V                        DtapIE = 0x11B
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -54,7 +62,8 @@ const (
 	DAY_SAVING_TIME							DtapIE = 0x49
 	//RR
 	//embedded tags
-
+	STARTING_TIME_TV                        DtapIE = 0x7C
+	EXTENDED_TSC_SET_TV                     DtapIE = 0x6D
 )
 
 type IEFormat int
@@ -68,16 +77,20 @@ const (
     FormatTLV                         	// Type + Length + Value (variable length). Length is read from the second byte.
 )
 
-/*	Fixed length for V and TV. 0 means half-octet for  V, there are always 2 consecutive nibbles 
-	Ignored for LV/TLV.
- 	-2 means for TV that V in lower nibble of 1 byte of TV
-	-3 means for V that the lower nibble contains information indicating which of the following conditional fields to include.	
+/*	
+	Fixed length for V and TV. 
+	0 means half-octet for  V, there are always 2 consecutive nibbles 
+	Ignored for LV/TLV.	
+	SpecialHandling
+	0 means nothing
+	1 means that The high nibble determines which of the following conditional fields exists.
 */
 
 type IEDefinition struct {
 	Format   IEFormat
-	FixedLen int 						
-	Tag DtapIE							
+	FixedLen int			
+	Tag DtapIE
+	SpecialHandling int	
 }
 
 func format(ie DtapIE, pd PD_Type) IEDefinition {
@@ -216,7 +229,26 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatV, FixedLen: 0}
 	case MSG_TYPE:
 		return IEDefinition{Format: FormatV, FixedLen: 1}
-
+	case PAGE_MODE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PAGE_MODE_V}
+    case DEDICATED_MODE_OR_TBF_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: DEDICATED_MODE_OR_TBF_V, SpecialHandling: 1} // table 9.1.18.1 IMM ASSiGNMENT
+    case CHANNEL_DESC_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: CHANNEL_DESC_V}
+    case PACKET_CHANNEL_DESC_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: PACKET_CHANNEL_DESC_V}
+    case REQUEST_REF_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_V}
+    case TIMING_ADVANCE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: TIMING_ADVANCE_V}
+    case MOBILE_ALLOC_LV:
+        return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_ALLOC_LV}
+    case STARTING_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 3, Tag: STARTING_TIME_TV}
+    case IA_REST_OCTETS_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V}
+    case EXTENDED_TSC_SET_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

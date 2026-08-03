@@ -184,7 +184,20 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
 
 func getRRTagsOrder(msgType Msg_Type) []DtapIE {
     switch msgType {
-        
+    
+    case MSG_RR_IMM_ASS:
+        return []DtapIE{
+            PAGE_MODE_V,
+            DEDICATED_MODE_OR_TBF_V,
+            CHANNEL_DESC_V,
+            PACKET_CHANNEL_DESC_V,
+            REQUEST_REF_V,
+            TIMING_ADVANCE_V,
+            MOBILE_ALLOC_LV,
+            STARTING_TIME_TV,
+            //IA_REST_OCTETS_V пока не поддерживается V переменной длины
+            EXTENDED_TSC_SET_TV,
+        }
     default:
         return []DtapIE{}
     }

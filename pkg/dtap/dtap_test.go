@@ -15,7 +15,7 @@ func TestRealLocationUpdatingRequest(t *testing.T) {
     }
 
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, false)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -38,7 +38,7 @@ func TestIdentityRequest(t *testing.T) {
     }
 
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, false)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -61,7 +61,7 @@ func TestIdentityResponse(t *testing.T) {
     }
 
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, false)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -83,7 +83,7 @@ func TestServiceRequest(t *testing.T) {
     }
 
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, false)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -98,12 +98,12 @@ func TestServiceRequest(t *testing.T) {
     }
 }
 
-func TestChannelRelease(t *testing.T) {
+func TestRRChannelRelease(t *testing.T) {
 
     rawData := []byte{0x6, 0xd, 0x0, 0x77, 0x4, 0x70, 0xd1, 0x6b, 0x0}
     
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, false)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -115,5 +115,25 @@ func TestChannelRelease(t *testing.T) {
 
     for i, ie := range dtap.IEs {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
+    }    
+}
+
+func TestRRImmAss(t *testing.T) {
+
+    rawData := []byte{0x2d, 0x6, 0x3f, 0x3, 0x41, 0xa3, 0x66, 0x7, 0xbc, 0x27, 0x0, 0x0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b}
+    
+    t.Logf("Raw data length: %d bytes", len(rawData))
+    dtap, err := DtapDecode(rawData, true)
+    if err != nil {
+        t.Fatalf("DtapDecode failed: %v", err)
+    }
+
+    t.Logf("=== HEADER ===")
+    t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
+    t.Logf("SkipInd: 0x%02X", dtap.Header.SkipInd)
+    t.Logf("MsgType: %d", dtap.Header.MsgType)
+
+    for i, ie := range dtap.IEs {
+        t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value) //для MObile Alloc вернет пустой срез так как там LV с L=0 и без V
     }    
 }
