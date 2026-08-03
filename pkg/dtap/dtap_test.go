@@ -97,3 +97,23 @@ func TestServiceRequest(t *testing.T) {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
     }
 }
+
+func TestChannelRelease(t *testing.T) {
+
+    rawData := []byte{0x6, 0xd, 0x0, 0x77, 0x4, 0x70, 0xd1, 0x6b, 0x0}
+    
+    t.Logf("Raw data length: %d bytes", len(rawData))
+    dtap, err := DtapDecode(rawData)
+    if err != nil {
+        t.Fatalf("DtapDecode failed: %v", err)
+    }
+
+    t.Logf("=== HEADER ===")
+    t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
+    t.Logf("SkipInd: 0x%02X", dtap.Header.SkipInd)
+    t.Logf("MsgType: %d", dtap.Header.MsgType)
+
+    for i, ie := range dtap.IEs {
+        t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
+    }    
+}

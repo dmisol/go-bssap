@@ -22,8 +22,7 @@ type IE struct {
 	Value []byte
 }
 
-//пропускаю все с L2PesudoLength Нужна информация про канал сверху кроме сырых байтов для того чтобы понять что есть L2PseudoLength
-// На данный момент если TV с длиной 1 то возвращает целый TV вместе с тегом а не нужный полубайт
+//пропускаю все с L2PesudoLength Нужна информация про канал сверху кроме сырых байтов для того чтобы понять что есть ли L2PseudoLength
 func DtapDecode(rawData []byte) (*Dtap, error) {
     if len(rawData) < 3 {
         return nil, errors.New("DTAP message too short: need at least 3 bytes")
@@ -34,11 +33,15 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
         IEs: make([]IE, 0, 10),
     }
 
-	dtap.Header.ProtocolDisc = PD_Type(rawData[0] & 0x0F)
-    dtap.Header.SkipInd = rawData[0] & 0xF0
-    dtap.Header.MsgType = Msg_Type(rawData[1] & 0x3F)
+    offset := 0
 
-    offset := 2
+	dtap.Header.ProtocolDisc = PD_Type(rawData[offset] & 0x0F)
+    dtap.Header.SkipInd = rawData[offset] & 0xF0
+    offset++
+
+    dtap.Header.MsgType = Msg_Type(rawData[offset] & 0x3F)
+    offset++
+    
 
     tagsOrder := GetTagsOrder(dtap.Header.ProtocolDisc, dtap.Header.MsgType)
 
@@ -54,6 +57,7 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
         }
 
         ieDef := format(expectedTag, dtap.Header.ProtocolDisc)
+        expectedTag = ieDef.Tag
 
         switch ieDef.Format {
         case FormatT:
@@ -91,18 +95,8 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
                 offset += ieDef.FixedLen
             }
         case FormatTV:
-            if ieDef.FixedLen == 0 {
-                var value byte
-                if pendingNibble != -1 {
-                    value = byte(pendingNibble)
-                    pendingNibble = -1
-                } else {
-                    currentByte := rawData[offset]
-                    value = currentByte & 0x0F
-                    pendingNibble = int(currentByte >> 4)
-                    offset += 1
-                    
-                }
+            if ieDef.FixedLen == -2 {
+                value := rawData[offset] & 0x0F
                 tagFromData := rawData[offset] >> 4
                 if DtapIE(tagFromData) != expectedTag {
                     continue
