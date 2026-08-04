@@ -57,8 +57,7 @@ const (
 	POWER_COMMAND_AND_ACCESS_TYPE_V                         DtapIE = 0x12E
 	SYNCHRONIZATION_INDICATION_TV                           DtapIE = 0x12F
 	PLMN_INDEX_TV                                           DtapIE = 0x130
-
-
+	PS_CAUSE_TV												DtapIE = 0x131
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -118,6 +117,8 @@ const (
 	FREQUENCY_SHORT_LIST_BEFORE_TIME_TV                     DtapIE = 0x12
 	DYNAMIC_ARFCN_MAPPING_TLV                               DtapIE = 0x76
 	DEDICATED_SERVICE_INFORMATION_TV                        DtapIE = 0x51
+	MOBILE_OBSERVED_TIME_DIFF_TLV							DtapIE = 0x77
+	MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV			DtapIE = 0x67
 
 	//duplicated iei in one PD
 	//RR
@@ -412,6 +413,12 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: DEDICATED_SERVICE_INFORMATION_TV}
     case PLMN_INDEX_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 1, Tag: 0x0A}
+	case MOBILE_OBSERVED_TIME_DIFF_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_TLV}
+	case MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV}
+	case PS_CAUSE_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

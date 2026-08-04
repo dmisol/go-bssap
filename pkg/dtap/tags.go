@@ -302,6 +302,17 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             EXTENDED_TSC_SET_TV,
             EXTENDED_TSC_SET_BEFORE_TIME_TV,
         }
+    case MSG_RR_HANDO_COMPL:
+        return []DtapIE{
+            RR_CAUSE_V,
+            MOBILE_OBSERVED_TIME_DIFF_TLV,
+            MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV,
+        }
+    case MSG_RR_HANDO_FAIL:
+        return []DtapIE{
+            RR_CAUSE_V,
+            PS_CAUSE_TV,
+        }
     default:
         return []DtapIE{}
     }
