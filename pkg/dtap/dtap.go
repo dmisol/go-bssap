@@ -65,7 +65,6 @@ func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
         }
         ieDef := format(expectedTag, dtap.Header.ProtocolDisc)
         expectedTag = ieDef.Tag
-
         switch ieDef.Format {
         case FormatT:
             ie := IE {
@@ -130,7 +129,7 @@ func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
 
                 ie := IE {
                     Tag: expectedTag,
-                    Value: rawData[offset + 1 : offset + 1 + ieDef.FixedLen],
+                    Value: rawData[offset + 1 : offset + ieDef.FixedLen],
                 }
                 dtap.IEs = append(dtap.IEs, ie)
                 offset += ieDef.FixedLen + 1
@@ -156,7 +155,7 @@ func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
             offset += 1
             ie := IE{
                 Tag:   DtapIE(tagFromData),
-                Value: rawData[offset : offset+length],
+                Value: rawData[offset : offset + length],
             }
             dtap.IEs = append(dtap.IEs, ie)
             offset += length

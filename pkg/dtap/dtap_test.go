@@ -141,3 +141,23 @@ func TestRRImmAss(t *testing.T) {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value) //для MObile Alloc вернет пустой срез так как там LV с L=0 и без V
     }    
 }
+
+func TestRRAssCmd(t *testing.T) {
+
+    rawData := []byte{0x6, 0x2e, 0xa, 0xe2, 0x15, 0x7, 0x63, 0x1}
+    
+    t.Logf("Raw data length: %d bytes", len(rawData))
+    dtap, err := DtapDecode(rawData, false)
+    if err != nil {
+        t.Fatalf("DtapDecode failed: %v", err)
+    }
+
+    t.Logf("=== HEADER ===")
+    t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
+    t.Logf("SkipInd: 0x%02X", dtap.Header.SkipInd)
+    t.Logf("MsgType: %d", dtap.Header.MsgType)
+
+    for i, ie := range dtap.IEs {
+        t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
+    }    
+}

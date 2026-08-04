@@ -52,7 +52,11 @@ const (
 	DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V               DtapIE = 0x129
 	POWER_COMMAND_V                                         DtapIE = 0x12A
 	CIPHER_MODE_SETTING_TV                                  DtapIE = 0x12B
-	CELL_DESCRIPTION_V                                      DtapIE = 0x164
+	CELL_DESCRIPTION_V                                      DtapIE = 0x12C
+	HANDOVER_REFERENCE_V                                    DtapIE = 0x12D
+	POWER_COMMAND_AND_ACCESS_TYPE_V                         DtapIE = 0x12E
+	SYNCHRONIZATION_INDICATION_TV                           DtapIE = 0x12F
+	PLMN_INDEX_TV                                           DtapIE = 0x130
 
 
 	//MM
@@ -107,6 +111,13 @@ const (
 	MULTI_RATE_CONFIGURATION_TLV                            DtapIE = 0x03
 	VGCS_CIPHERING_PARAMETERS_TLV                           DtapIE = 0x04
 	EXTENDED_TSC_SET_BEFORE_TIME_TV                         DtapIE = 0x6E
+	FREQUENCY_SHORT_LIST_AFTER_TIME_TV                      DtapIE = 0x02
+	FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV                DtapIE = 0x69
+	REAL_TIME_DIFFERENCE_TLV                                DtapIE = 0x7B
+	TIMING_ADVANCE_TV                                       DtapIE = 0x7D
+	FREQUENCY_SHORT_LIST_BEFORE_TIME_TV                     DtapIE = 0x12
+	DYNAMIC_ARFCN_MAPPING_TLV                               DtapIE = 0x76
+	DEDICATED_SERVICE_INFORMATION_TV                        DtapIE = 0x51
 
 	//duplicated iei in one PD
 	//RR
@@ -377,6 +388,30 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: VGCS_CIPHERING_PARAMETERS_TLV}
     case EXTENDED_TSC_SET_BEFORE_TIME_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_BEFORE_TIME_TV}
+	case CELL_DESCRIPTION_V:
+        return IEDefinition{Format: FormatV, FixedLen: 2, Tag: CELL_DESCRIPTION_V}
+    case HANDOVER_REFERENCE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: HANDOVER_REFERENCE_V}
+    case POWER_COMMAND_AND_ACCESS_TYPE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_AND_ACCESS_TYPE_V}
+    case SYNCHRONIZATION_INDICATION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+    case FREQUENCY_SHORT_LIST_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_AFTER_TIME_TV}
+    case FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV}
+    case REAL_TIME_DIFFERENCE_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: REAL_TIME_DIFFERENCE_TLV}
+    case TIMING_ADVANCE_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: TIMING_ADVANCE_TV}
+    case FREQUENCY_SHORT_LIST_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_BEFORE_TIME_TV}
+    case DYNAMIC_ARFCN_MAPPING_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DYNAMIC_ARFCN_MAPPING_TLV}
+    case DEDICATED_SERVICE_INFORMATION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: DEDICATED_SERVICE_INFORMATION_TV}
+    case PLMN_INDEX_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 1, Tag: 0x0A}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
