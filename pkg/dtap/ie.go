@@ -67,6 +67,14 @@ const (
 	MOBILE_IDENTITY_1_V                                 	DtapIE = 0x138
 	MOBILE_IDENTITY_2_V                                 	DtapIE = 0x139
 	P2_REST_OCTETS_V                                    	DtapIE = 0x13A
+	MOBILE_IDENTITY_3_V                                 	DtapIE = 0x13B
+	MOBILE_IDENTITY_4_V                                 	DtapIE = 0x13C
+	P3_REST_OCTETS_V                                    	DtapIE = 0x13D
+	CIPHERING_KEY_SEQUENCE_NUMBER_V                     	DtapIE = 0x13E
+	SPARE_HALF_OCTET_V                                  	DtapIE = 0x13F
+	MOBILE_STATION_CLASSMARK_LV                         	DtapIE = 0x140
+	MOBILE_IDENTITY_LV                                  	DtapIE = 0x141
+	ADDITIONAL_UPDATE_PARAMETERS_TV                     	DtapIE = 0x142
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN											DtapIE = 0x20
@@ -488,6 +496,22 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P2_REST_OCTETS_V:
 		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V}
+	case MOBILE_IDENTITY_3_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_3_V}
+	case MOBILE_IDENTITY_4_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_4_V}
+	case P3_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: P3_REST_OCTETS_V}
+	case CIPHERING_KEY_SEQUENCE_NUMBER_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
+	case SPARE_HALF_OCTET_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCTET_V}
+	case MOBILE_STATION_CLASSMARK_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MOBILE_STATION_CLASSMARK_LV}
+	case MOBILE_IDENTITY_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_LV}
+	case ADDITIONAL_UPDATE_PARAMETERS_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

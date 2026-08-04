@@ -349,6 +349,24 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             MOBILE_IDENTITY_3_TLV,
             //P2_REST_OCTETS_V, не поддерживается еще
         }
+    case MSG_RR_PAG_REQ_3:
+        return []DtapIE{
+            PAGE_MODE_V,
+            CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V,
+            MOBILE_IDENTITY_1_V,
+            MOBILE_IDENTITY_2_V,
+            MOBILE_IDENTITY_3_V,
+            MOBILE_IDENTITY_4_V,
+            P3_REST_OCTETS_V,
+        }
+    case MSG_RR_PAG_RESP:
+        return []DtapIE {
+            CIPHERING_KEY_SEQUENCE_NUMBER_V,
+            SPARE_HALF_OCTET_V,
+            MOBILE_STATION_CLASSMARK_LV,
+            MOBILE_IDENTITY_LV,
+            ADDITIONAL_UPDATE_PARAMETERS_TV,
+        }
     default:
         return []DtapIE{}
     }
