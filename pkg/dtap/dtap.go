@@ -45,7 +45,11 @@ func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
     offset++
     
 
-    tagsOrder := GetTagsOrder(dtap.Header.ProtocolDisc, dtap.Header.MsgType)
+    tagsOrder, err := GetTagsOrder(dtap.Header.ProtocolDisc, dtap.Header.MsgType)
+    if err != nil {
+        return dtap, fmt.Errorf("unsupported message: PD=0x%02X, MsgType=0x%02X: %w", 
+            dtap.Header.ProtocolDisc, dtap.Header.MsgType, err)
+    }
 
     if len(tagsOrder) == 0 {
         return dtap, nil

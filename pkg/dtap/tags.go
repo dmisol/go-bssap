@@ -1,6 +1,10 @@
 package dtap
 
-func GetTagsOrder(pd PD_Type, msgType Msg_Type) []DtapIE {
+import (
+    "fmt"
+)
+
+func GetTagsOrder(pd PD_Type, msgType Msg_Type) ([]DtapIE, error) {
     switch pd {
     case PD_MM:
         return getMMTagsOrder(msgType)
@@ -33,17 +37,17 @@ func GetTagsOrder(pd PD_Type, msgType Msg_Type) []DtapIE {
     case PD_EPS_MMM:
         return getEPSMMMTagsOrder(msgType)
     default:
-        return []DtapIE{}
+        return nil, fmt.Errorf("unsupported protocol discriminator: 0x%02X", pd)
     }
 }
 
-func getMMTagsOrder(msgType Msg_Type) []DtapIE {
+func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
     switch msgType {
     case MSG_MM_IMSI_DETACH_IND:
         return []DtapIE{
             MS_CLASSMARK_1,
             M_IDENTITY_1,
-        }
+        }, nil
 
     case MSG_MM_LOC_UPD_ACCEPT:
         return []DtapIE{
@@ -55,13 +59,13 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             EMER_NUM_LST,
             GPRS_TIM_3,
             NON_3GPP,
-        }
+        }, nil
 
     case MSG_MM_LOC_UPD_REJECT:
         return []DtapIE{
             REJ_CAUSE,
             MM_TIMER,
-        }
+        }, nil
 
     case MSG_MM_LOC_UPD_REQUEST:
         return []DtapIE{
@@ -74,7 +78,7 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             ADD_UPD_PARAMS,
             DEVICE_PROPS,
             MS_NET_FEAT_SUP,
-        }
+        }, nil
 
     case MSG_MM_AUTH_REQ:
         return []DtapIE{
@@ -82,28 +86,28 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             SPARE_HALF_OCT,
             AUTH_PARAM_RAND,
             AUTH_PARAM_AUTN,
-        }
+        }, nil
 
     case MSG_MM_AUTH_RESP:
         return []DtapIE{
             AUTH_RESP_PARAM,
             AUTH_RESP_PARAM_EXT,
-        }
+        }, nil
 
     case MSG_MM_AUTH_REJ:
-        return []DtapIE{}
+        return []DtapIE{}, nil
 
     case MSG_MM_AUTH_FAIL:
         return []DtapIE{
             REJ_CAUSE,
             AUTH_FAIL_PARAM,
-        }
+        }, nil
 
     case MSG_MM_ID_REQ:
         return []DtapIE{
             ID_TYPE,
             SPARE_HALF_OCT,
-        }
+        }, nil
 
     case MSG_MM_ID_RESP:
         return []DtapIE{
@@ -111,28 +115,28 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             P_TMSI_TYPE,
             ROUT_AREA_ID_2,
             P_TMSI_SIGN_2,
-        }
+        }, nil
 
     case MSG_MM_TMSI_REALL_CMD:
         return []DtapIE{
             LOC_AREA_ID,
             M_IDENTITY_1,
-        }
+        }, nil
 
     case MSG_MM_TMSI_REALL_COMPL:
-        return []DtapIE{}
+        return []DtapIE{}, nil
 
     case MSG_MM_CM_SERV_ACC:
-        return []DtapIE{}
+        return []DtapIE{}, nil
 
     case MSG_MM_CM_SERV_REJ:
         return []DtapIE{
             REJ_CAUSE,
             MM_TIMER,
-        }
+        }, nil
 
     case MSG_MM_CM_SERV_ABORT:
-        return []DtapIE{}
+        return []DtapIE{}, nil
 
     case MSG_MM_CM_SERV_REQ:
         return []DtapIE{
@@ -143,10 +147,10 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             PRIOR_LVL,
             ADD_UPD_PARAMS,
             DEVICE_PROPS,
-        }
+        }, nil
 
     case MSG_MM_CM_SERV_PROMPT:
-        return []DtapIE{PD_AND_SAPI}
+        return []DtapIE{PD_AND_SAPI}, nil
 
     case MSG_MM_CM_REEST_REQ:
         return []DtapIE{
@@ -156,35 +160,35 @@ func getMMTagsOrder(msgType Msg_Type) []DtapIE {
             M_IDENTITY_1,
             LOC_AREA_ID,
             DEVICE_PROPS,
-        }
+        }, nil
 
     case MSG_MM_ABORT:
-        return []DtapIE{REJ_CAUSE}
+        return []DtapIE{REJ_CAUSE}, nil
 
     case MSG_MM_NULL:
-        return []DtapIE{}
-    
+        return []DtapIE{}, nil
+
     case MSG_MM_STATUS:
-        return []DtapIE{REJ_CAUSE}
+        return []DtapIE{REJ_CAUSE}, nil
 
     case MSG_MM_INFO:
-        return  []DtapIE{
+        return []DtapIE{
             FNAME_F_NET,
             SNAME_F_NET,
             TIME_ZONE,
             TIME_ZONE_AND_TIME,
             LSA_IDEN,
             DAY_SAVING_TIME,
-        }
+        }, nil
 
     default:
-        return []DtapIE{}
+        return nil, fmt.Errorf("unsupported MM message type: 0x%02X", msgType)
     }
 }
 
-func getRRTagsOrder(msgType Msg_Type) []DtapIE {
+func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
     switch msgType {
-    
+
     case MSG_RR_IMM_ASS:
         return []DtapIE{
             PAGE_MODE_V,
@@ -197,7 +201,8 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             STARTING_TIME_TV,
             //IA_REST_OCTETS_V пока не поддерживается V переменной длины
             EXTENDED_TSC_SET_TV,
-        }
+        }, nil
+
     case MSG_RR_IMM_ASS_REJ:
         return []DtapIE{
             PAGE_MODE_V,
@@ -211,24 +216,29 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             REQUEST_REF_4_V,
             WAIT_INDICATION_4_V,
             IAR_REST_OCTETS_V,
-        }
+        }, nil
+
     case MSG_RR_CIPH_M_CMD:
         return []DtapIE{
             CIPHERING_MODE_SETTING_V,
             CIPHER_RESPONSE_V,
-        }
+        }, nil
+
     case MSG_RR_CIPH_M_COMPL:
-        return []DtapIE {
+        return []DtapIE{
             ME_IDENTITY_TLV,
-        }
+        }, nil
+
     case MSG_RR_ASS_COMPL:
         return []DtapIE{
             RR_CAUSE_V,
-        }
+        }, nil
+
     case MSG_RR_ASS_FAIL:
         return []DtapIE{
             RR_CAUSE_V,
-        }
+        }, nil
+
     case MSG_RR_ASS_CMD:
         return []DtapIE{
             DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V,
@@ -259,9 +269,10 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             VGCS_CIPHERING_PARAMETERS_TLV,
             EXTENDED_TSC_SET_TV,
             EXTENDED_TSC_SET_BEFORE_TIME_TV,
-        }
+        }, nil
+
     case MSG_RR_HANDO_CMD:
-        return []DtapIE {
+        return []DtapIE{
             CELL_DESCRIPTION_V,
             DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V,
             HANDOVER_REFERENCE_V,
@@ -301,18 +312,21 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             PLMN_INDEX_TV,
             EXTENDED_TSC_SET_TV,
             EXTENDED_TSC_SET_BEFORE_TIME_TV,
-        }
+        }, nil
+
     case MSG_RR_HANDO_COMPL:
         return []DtapIE{
             RR_CAUSE_V,
             MOBILE_OBSERVED_TIME_DIFF_TLV,
             MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV,
-        }
+        }, nil
+
     case MSG_RR_HANDO_FAIL:
         return []DtapIE{
             RR_CAUSE_V,
             PS_CAUSE_TV,
-        }
+        }, nil
+
     case MSG_RR_CHAN_REL:
         return []DtapIE{
             RR_CAUSE_V,
@@ -331,7 +345,8 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             TALKER_PRIORITY_STATUS_TLV,
             VGCS_AMR_CONFIGURATION_TLV,
             INDIVIDUAL_PRIORITIES_TLV,
-        }
+        }, nil
+
     case MSG_RR_PAG_REQ_1:
         return []DtapIE{
             PAGE_MODE_V,
@@ -339,16 +354,18 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             MOBILE_IDENTITY_1_LV,
             MOBILE_IDENTITY_2_TLV,
             //P1_REST_OCTETS_V, не поддерживается еще
-        }
+        }, nil
+
     case MSG_RR_PAG_REQ_2:
-        return []DtapIE {
+        return []DtapIE{
             PAGE_MODE_V,
             CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V,
             MOBILE_IDENTITY_1_V,
             MOBILE_IDENTITY_2_V,
             MOBILE_IDENTITY_3_TLV,
             //P2_REST_OCTETS_V, не поддерживается еще
-        }
+        }, nil
+
     case MSG_RR_PAG_REQ_3:
         return []DtapIE{
             PAGE_MODE_V,
@@ -358,31 +375,71 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             MOBILE_IDENTITY_3_V,
             MOBILE_IDENTITY_4_V,
             P3_REST_OCTETS_V,
-        }
+        }, nil
+
     case MSG_RR_PAG_RESP:
-        return []DtapIE {
+        return []DtapIE{
             CIPHERING_KEY_SEQUENCE_NUMBER_V,
             SPARE_HALF_OCTET_V,
             MOBILE_STATION_CLASSMARK_LV,
             MOBILE_IDENTITY_LV,
             ADDITIONAL_UPDATE_PARAMETERS_TV,
-        }
+        }, nil
+
     default:
-        return []DtapIE{}
+        return nil, fmt.Errorf("unsupported RR message type: 0x%02X", msgType)
     }
 }
 
 //ToDO
-func getBCCHTagsOrder(msgType Msg_Type) []DtapIE       { return nil }
-func getCCTagsOrder(msgType Msg_Type) []DtapIE         { return nil }
-func getSMSTagsOrder(msgType Msg_Type) []DtapIE        { return nil }
-func getGPRSMMTagsOrder(msgType Msg_Type) []DtapIE     { return nil }
-func getGPRSSMTagsOrder(msgType Msg_Type) []DtapIE     { return nil }
-func getLOCTagsOrder(msgType Msg_Type) []DtapIE        { return nil }
-func getGroupCCTagsOrder(msgType Msg_Type) []DtapIE    { return nil }
-func getEPSSMMTagsOrder(msgType Msg_Type) []DtapIE     { return nil }
-func getEPSMMMTagsOrder(msgType Msg_Type) []DtapIE     { return nil }
-func getGTTTTagsOrder(msgType Msg_Type) []DtapIE       { return nil }
-func getNCSSTagsOrder(msgType Msg_Type) []DtapIE       { return nil }
-func getExtendTagsOrder(msgType Msg_Type) []DtapIE     { return nil }
-func getTestTagsOrder(msgType Msg_Type) []DtapIE       { return nil } 
+func getBCCHTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("BCCH not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getCCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("CC not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getSMSTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("SMS not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getGPRSMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("GPRS MM not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getGPRSSMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("GPRS SM not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getLOCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("LOC not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getGroupCCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("Group CC not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getEPSSMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("EPS SM not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getEPSMMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("EPS MM not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getGTTTTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("GTTP not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getNCSSTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("SS NC not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getExtendTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("EXTEND not implemented yet for msg type: 0x%02X", msgType)
+}
+
+func getTestTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
+    return nil, fmt.Errorf("TEST not implemented yet for msg type: 0x%02X", msgType)
+}
