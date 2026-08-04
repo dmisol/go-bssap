@@ -58,6 +58,9 @@ const (
 	SYNCHRONIZATION_INDICATION_TV                           DtapIE = 0x12F
 	PLMN_INDEX_TV                                           DtapIE = 0x130
 	PS_CAUSE_TV												DtapIE = 0x131
+	GROUP_CIPHER_KEY_NUMBER_TV                          	DtapIE = 0x132
+	GPRS_RESUMPTION_TV                                  	DtapIE = 0x133
+	ENHANCED_DTM_CS_RELEASE_INDICATION_TV               	DtapIE = 0x134
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN							DtapIE = 0x20
@@ -119,10 +122,23 @@ const (
 	DEDICATED_SERVICE_INFORMATION_TV                        DtapIE = 0x51
 	MOBILE_OBSERVED_TIME_DIFF_TLV							DtapIE = 0x77
 	MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV			DtapIE = 0x67
-
+	BA_RANGE_TLV                                        	DtapIE = 0x73
+	GROUP_CHANNEL_DESCRIPTION_TLV                       	DtapIE = 0x74
+	BA_LIST_PREF_TLV                                    	DtapIE = 0x75
+	//UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x76
+	//CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x77
+	GROUP_CHANNEL_DESCRIPTION_2_TLV                     	DtapIE = 0x78
+	TALKER_IDENTITY_TLV                                 	DtapIE = 0x79
+	TALKER_PRIORITY_STATUS_TLV                          	DtapIE = 0x7A
+	//VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x7B
+	//INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x7C
 	//duplicated iei in one PD
 	//RR
 	MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x400
+	VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x401
+	INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x402
+	UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x403
+	CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x404
 )
 
 type IEFormat int
@@ -419,6 +435,32 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV}
 	case PS_CAUSE_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+	case BA_RANGE_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_RANGE_TLV}
+	case GROUP_CHANNEL_DESCRIPTION_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: GROUP_CHANNEL_DESCRIPTION_TLV}
+	case GROUP_CIPHER_KEY_NUMBER_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+	case GPRS_RESUMPTION_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+	case BA_LIST_PREF_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_LIST_PREF_TLV}
+	case UTRAN_FREQ_LIST_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x76}
+	case CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x77}
+	case ENHANCED_DTM_CS_RELEASE_INDICATION_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0A}
+	case GROUP_CHANNEL_DESCRIPTION_2_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 13, Tag: GROUP_CHANNEL_DESCRIPTION_2_TLV}
+	case TALKER_IDENTITY_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: TALKER_IDENTITY_TLV}
+	case TALKER_PRIORITY_STATUS_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: TALKER_PRIORITY_STATUS_TLV}
+	case VGCS_AMR_CONFIGURATION_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: 0x7B}
+	case INDIVIDUAL_PRIORITIES_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

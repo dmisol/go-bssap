@@ -313,6 +313,25 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             RR_CAUSE_V,
             PS_CAUSE_TV,
         }
+    case MSG_RR_CHAN_REL:
+        return []DtapIE{
+            RR_CAUSE_V,
+            BA_RANGE_TLV,
+            GROUP_CHANNEL_DESCRIPTION_TLV,
+            GROUP_CIPHER_KEY_NUMBER_TV,
+            GPRS_RESUMPTION_TV,
+            BA_LIST_PREF_TLV,
+            UTRAN_FREQ_LIST_TLV,
+            CELL_CHANNEL_DESCRIPTION_TV,
+            CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV,
+            ENHANCED_DTM_CS_RELEASE_INDICATION_TV,
+            VGCS_CIPHERING_PARAMETERS_TLV,
+            GROUP_CHANNEL_DESCRIPTION_2_TLV,
+            TALKER_IDENTITY_TLV,
+            TALKER_PRIORITY_STATUS_TLV,
+            VGCS_AMR_CONFIGURATION_TLV,
+            INDIVIDUAL_PRIORITIES_TLV,
+        }
     default:
         return []DtapIE{}
     }

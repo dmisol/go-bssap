@@ -6,7 +6,7 @@ import (
 
 //go test -v -run TestRealLocationUpdatingRequest 
 //12 пакет
-func TestRealLocationUpdatingRequest(t *testing.T) {
+func TestMMRealLocationUpdatingRequest(t *testing.T) {
 
     rawData := []byte{
 		0x05, 0x08, 0x70, 0x16, 0xf2,
@@ -31,7 +31,7 @@ func TestRealLocationUpdatingRequest(t *testing.T) {
   
 }
 
-func TestIdentityRequest(t *testing.T) {
+func TestMMIdentityRequest(t *testing.T) {
 
     rawData := []byte{
 		0x05, 0x18, 0x01,
@@ -53,7 +53,7 @@ func TestIdentityRequest(t *testing.T) {
     }
 }
 
-func TestIdentityResponse(t *testing.T) {
+func TestMMIdentityResponse(t *testing.T) {
 
         rawData := []byte{
         0x05, 0x59, 0x08, 0x29, 0x05, 0x10, 0x39, 0x30, 0x55, 0x25,
@@ -76,7 +76,7 @@ func TestIdentityResponse(t *testing.T) {
     }
 }
 //18
-func TestServiceRequest(t *testing.T) {	
+func TestMMServiceRequest(t *testing.T) {	
 
     rawData := []byte{
 		0x5, 0x24, 0x1, 0x3, 0x53, 0x59, 0x86, 0x5, 0xf4, 0xbe, 0x8f, 0x54, 0xc1,
@@ -161,3 +161,25 @@ func TestRRAssCmd(t *testing.T) {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
     }    
 }
+
+func TestRRHandoCmd(t *testing.T) {
+
+    rawData := []byte{0x6, 0x2b, 0x3f, 0x32, 0xa, 0xe0, 0x32, 0x2, 0x6, 0x63, 0x1}
+    
+    t.Logf("Raw data length: %d bytes", len(rawData))
+    dtap, err := DtapDecode(rawData, false)
+    if err != nil {
+        t.Fatalf("DtapDecode failed: %v", err)
+    }
+
+    t.Logf("=== HEADER ===")
+    t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
+    t.Logf("SkipInd: 0x%02X", dtap.Header.SkipInd)
+    t.Logf("MsgType: %d", dtap.Header.MsgType)
+
+    for i, ie := range dtap.IEs {
+        t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
+    }    
+}
+
+
