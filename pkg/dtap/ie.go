@@ -61,10 +61,12 @@ const (
 	GROUP_CIPHER_KEY_NUMBER_TV                          	DtapIE = 0x132
 	GPRS_RESUMPTION_TV                                  	DtapIE = 0x133
 	ENHANCED_DTM_CS_RELEASE_INDICATION_TV               	DtapIE = 0x134
-	PAGING_REQUEST_TYPE_1_MSG_TYPE_V                    	DtapIE = 0x135
-	CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V               	DtapIE = 0x136
-	MOBILE_IDENTITY_1_LV                                	DtapIE = 0x137
-	P1_REST_OCTETS_V                                    	DtapIE = 0x138
+	CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V               	DtapIE = 0x135
+	MOBILE_IDENTITY_1_LV                                	DtapIE = 0x136
+	P1_REST_OCTETS_V                                    	DtapIE = 0x137
+	MOBILE_IDENTITY_1_V                                 	DtapIE = 0x138
+	MOBILE_IDENTITY_2_V                                 	DtapIE = 0x139
+	P2_REST_OCTETS_V                                    	DtapIE = 0x13A
 	//MM
 	//embedded tags
 	AUTH_PARAM_AUTN											DtapIE = 0x20
@@ -137,6 +139,7 @@ const (
 	//VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x7B
 	//INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x7C
 	//MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x17
+	//MOBILE_IDENTITY_3_TLV                               	DtapIE = 0x17
 
 	//duplicated iei in one PD
 	//RR
@@ -146,6 +149,7 @@ const (
 	UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x403
 	CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x404
 	MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x405
+	MOBILE_IDENTITY_3_TLV                               	DtapIE = 0x406
 )
 
 type IEFormat int
@@ -468,8 +472,6 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: 0x7B}
 	case INDIVIDUAL_PRIORITIES_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
-	case PAGING_REQUEST_TYPE_1_MSG_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PAGING_REQUEST_TYPE_1_MSG_TYPE_V}
 	case CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V:
 		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V}
 	case MOBILE_IDENTITY_1_LV:
@@ -478,6 +480,14 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P1_REST_OCTETS_V:
 		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V}
+	case MOBILE_IDENTITY_1_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_1_V}
+	case MOBILE_IDENTITY_2_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_2_V}
+	case MOBILE_IDENTITY_3_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+	case P2_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
