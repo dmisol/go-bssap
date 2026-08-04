@@ -8,47 +8,47 @@ type DtapIE uint16
 
 const (
 	//general created Tags
-	PROTOCOL_DISC							DtapIE = 0x100
-	SKIP_IND								DtapIE = 0x101
-	MSG_TYPE								DtapIE = 0x102
-	CIPH_KEY_SEQ_NUM						DtapIE = 0x103
-	SPARE_HALF_OCT							DtapIE = 0x104
-	AUTH_PARAM_RAND							DtapIE = 0x105
-	AUTH_RESP_PARAM							DtapIE = 0x106
-	REJ_CAUSE								DtapIE = 0x107
-	MS_CLASSMARK_2							DtapIE = 0x108
-	M_IDENTITY_1							DtapIE = 0x109
-	PD_AND_SAPI								DtapIE = 0x10A
-	CM_SERVICE_TYPE							DtapIE = 0x10B
-	ID_TYPE									DtapIE = 0x10C
-	MS_CLASSMARK_1							DtapIE = 0x10D
-	LOC_UPD_TYPE							DtapIE = 0x10E
-	LOC_AREA_ID								DtapIE = 0x10F //table 9.2.15
-	MS_NET_FEAT_SUP							DtapIE = 0x110
-	NON_3GPP								DtapIE = 0x111
-	P_TMSI_TYPE								DtapIE = 0x112
-	DEVICE_PROPS							DtapIE = 0x113
-	PAGE_MODE_V                             DtapIE = 0x114
-	DEDICATED_MODE_OR_TBF_V                 DtapIE = 0x115
-	CHANNEL_DESC_V                          DtapIE = 0x116
-	PACKET_CHANNEL_DESC_V                   DtapIE = 0x117
-	REQUEST_REF_V                           DtapIE = 0x118
-	TIMING_ADVANCE_V                        DtapIE = 0x119
-	MOBILE_ALLOC_LV                         DtapIE = 0x11A
-	IA_REST_OCTETS_V                        DtapIE = 0x11B
-	FEATURE_INDICATOR_V                     DtapIE = 0x11C
-	REQUEST_REF_1_V                         DtapIE = 0x11D
-	WAIT_INDICATION_1_V                     DtapIE = 0x11E
-	REQUEST_REF_2_V                         DtapIE = 0x11F
-	WAIT_INDICATION_2_V                     DtapIE = 0x120
-	REQUEST_REF_3_V                         DtapIE = 0x121
-	WAIT_INDICATION_3_V                     DtapIE = 0x122
-	REQUEST_REF_4_V                         DtapIE = 0x123
-	WAIT_INDICATION_4_V                     DtapIE = 0x124
-	IAR_REST_OCTETS_V                       DtapIE = 0x125
-	CIPHERING_MODE_SETTING_V                DtapIE = 0x126
-	CIPHER_RESPONSE_V                       DtapIE = 0x127
-	RR_CAUSE_V                              DtapIE = 0x128
+	PROTOCOL_DISC_V											DtapIE = 0x100
+	SKIP_IND_V												DtapIE = 0x101
+	MSG_TYPE_V												DtapIE = 0x102
+	CIPH_KEY_SEQ_NUM										DtapIE = 0x103
+	SPARE_HALF_OCT											DtapIE = 0x104
+	AUTH_PARAM_RAND											DtapIE = 0x105
+	AUTH_RESP_PARAM											DtapIE = 0x106
+	REJ_CAUSE												DtapIE = 0x107
+	MS_CLASSMARK_2											DtapIE = 0x108
+	M_IDENTITY_1											DtapIE = 0x109
+	PD_AND_SAPI												DtapIE = 0x10A
+	CM_SERVICE_TYPE											DtapIE = 0x10B
+	ID_TYPE													DtapIE = 0x10C
+	MS_CLASSMARK_1											DtapIE = 0x10D
+	LOC_UPD_TYPE											DtapIE = 0x10E
+	LOC_AREA_ID												DtapIE = 0x10F //table 9.2.15
+	MS_NET_FEAT_SUP											DtapIE = 0x110
+	NON_3GPP												DtapIE = 0x111
+	P_TMSI_TYPE												DtapIE = 0x112
+	DEVICE_PROPS											DtapIE = 0x113
+	PAGE_MODE_V                            					DtapIE = 0x114
+	DEDICATED_MODE_OR_TBF_V                 				DtapIE = 0x115
+	CHANNEL_DESC_V                          				DtapIE = 0x116
+	PACKET_CHANNEL_DESC_V                   				DtapIE = 0x117
+	REQUEST_REF_V                           				DtapIE = 0x118
+	TIMING_ADVANCE_V                        				DtapIE = 0x119
+	MOBILE_ALLOC_LV                         				DtapIE = 0x11A
+	IA_REST_OCTETS_V                        				DtapIE = 0x11B
+	FEATURE_INDICATOR_V                     				DtapIE = 0x11C
+	REQUEST_REF_1_V                         				DtapIE = 0x11D
+	WAIT_INDICATION_1_V                     				DtapIE = 0x11E
+	REQUEST_REF_2_V                         				DtapIE = 0x11F
+	WAIT_INDICATION_2_V                     				DtapIE = 0x120
+	REQUEST_REF_3_V                         				DtapIE = 0x121
+	WAIT_INDICATION_3_V                     				DtapIE = 0x122
+	REQUEST_REF_4_V                         				DtapIE = 0x123
+	WAIT_INDICATION_4_V                     				DtapIE = 0x124
+	IAR_REST_OCTETS_V                       				DtapIE = 0x125
+	CIPHERING_MODE_SETTING_V                				DtapIE = 0x126
+	CIPHER_RESPONSE_V                       				DtapIE = 0x127
+	RR_CAUSE_V                              				DtapIE = 0x128
 	DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V               DtapIE = 0x129
 	POWER_COMMAND_V                                         DtapIE = 0x12A
 	CIPHER_MODE_SETTING_TV                                  DtapIE = 0x12B
@@ -61,30 +61,34 @@ const (
 	GROUP_CIPHER_KEY_NUMBER_TV                          	DtapIE = 0x132
 	GPRS_RESUMPTION_TV                                  	DtapIE = 0x133
 	ENHANCED_DTM_CS_RELEASE_INDICATION_TV               	DtapIE = 0x134
+	PAGING_REQUEST_TYPE_1_MSG_TYPE_V                    	DtapIE = 0x135
+	CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V               	DtapIE = 0x136
+	MOBILE_IDENTITY_1_LV                                	DtapIE = 0x137
+	P1_REST_OCTETS_V                                    	DtapIE = 0x138
 	//MM
 	//embedded tags
-	AUTH_PARAM_AUTN							DtapIE = 0x20
-	AUTH_RESP_PARAM_EXT						DtapIE = 0x21
-	AUTH_FAIL_PARAM							DtapIE = 0x22
-	LOC_AREA_ID_2							DtapIE = 0x13 //table 9.2.5
-	MM_TIMER								DtapIE = 0x36
-	PRIOR_LVL								DtapIE = 0x08
-	ADD_UPD_PARAMS							DtapIE = 0x0C
-	ROUT_AREA_ID_2							DtapIE = 0x1B		
-	P_TMSI_SIGN_2							DtapIE = 0x19
-	M_IDENTITY_2							DtapIE = 0x17
-	FLLW_ON_PROC							DtapIE = 0xA1
-	CTS_PERM								DtapIE = 0xA2
-	PLMN_LST								DtapIE = 0x4A
-	EMER_NUM_LST							DtapIE = 0x34
-	GPRS_TIM_3								DtapIE = 0x35
-	MS_CLASSMARK_UMTS						DtapIE = 0x33
-	FNAME_F_NET								DtapIE = 0x43
-	SNAME_F_NET								DtapIE = 0x45
-	TIME_ZONE								DtapIE = 0x46
-	TIME_ZONE_AND_TIME						DtapIE = 0x47
-	LSA_IDEN								DtapIE = 0x48
-	DAY_SAVING_TIME							DtapIE = 0x49
+	AUTH_PARAM_AUTN											DtapIE = 0x20
+	AUTH_RESP_PARAM_EXT										DtapIE = 0x21
+	AUTH_FAIL_PARAM											DtapIE = 0x22
+	LOC_AREA_ID_2											DtapIE = 0x13 //table 9.2.5
+	MM_TIMER												DtapIE = 0x36
+	PRIOR_LVL												DtapIE = 0x08
+	ADD_UPD_PARAMS											DtapIE = 0x0C
+	ROUT_AREA_ID_2											DtapIE = 0x1B		
+	P_TMSI_SIGN_2											DtapIE = 0x19
+	M_IDENTITY_2											DtapIE = 0x17
+	FLLW_ON_PROC											DtapIE = 0xA1
+	CTS_PERM												DtapIE = 0xA2
+	PLMN_LST												DtapIE = 0x4A
+	EMER_NUM_LST											DtapIE = 0x34
+	GPRS_TIM_3												DtapIE = 0x35
+	MS_CLASSMARK_UMTS										DtapIE = 0x33
+	FNAME_F_NET												DtapIE = 0x43
+	SNAME_F_NET												DtapIE = 0x45
+	TIME_ZONE												DtapIE = 0x46
+	TIME_ZONE_AND_TIME										DtapIE = 0x47
+	LSA_IDEN												DtapIE = 0x48
+	DAY_SAVING_TIME											DtapIE = 0x49
 	//RR
 	//embedded tags
 	STARTING_TIME_TV                        				DtapIE = 0x7C
@@ -99,7 +103,7 @@ const (
 	MODE_OF_CHANNEL_SET_4_TV                                DtapIE = 0x14
 	MODE_OF_CHANNEL_SET_5_TV                                DtapIE = 0x15
 	MODE_OF_CHANNEL_SET_6_TV                                DtapIE = 0x16
-	//MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x17
+	//MODE_OF_CHANNEL_SET_7_TV                              DtapIE = 0x17
 	MODE_OF_CHANNEL_SET_8_TV                                DtapIE = 0x18
 	DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV             DtapIE = 0x64
 	MODE_OF_SECOND_CHANNEL_TV                               DtapIE = 0x66
@@ -132,6 +136,8 @@ const (
 	TALKER_PRIORITY_STATUS_TLV                          	DtapIE = 0x7A
 	//VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x7B
 	//INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x7C
+	//MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x17
+
 	//duplicated iei in one PD
 	//RR
 	MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x400
@@ -139,6 +145,7 @@ const (
 	INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x402
 	UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x403
 	CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x404
+	MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x405
 )
 
 type IEFormat int
@@ -208,12 +215,12 @@ func format(ie DtapIE, pd PD_Type) IEDefinition {
 
 func formatMM(ie DtapIE) IEDefinition {
 	switch ie {
-	case PROTOCOL_DISC:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC}
-	case SKIP_IND:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND}
-	case MSG_TYPE:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE}
+	case PROTOCOL_DISC_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+	case SKIP_IND_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+	case MSG_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
 	case CIPH_KEY_SEQ_NUM:
 		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPH_KEY_SEQ_NUM}
 	case SPARE_HALF_OCT:
@@ -299,12 +306,12 @@ func formatMM(ie DtapIE) IEDefinition {
 
 func formatRR(ie DtapIE) IEDefinition {
     switch ie {
-	case PROTOCOL_DISC:
-		return IEDefinition{Format: FormatV, FixedLen: 0}
-	case SKIP_IND:
-		return IEDefinition{Format: FormatV, FixedLen: 0}
-	case MSG_TYPE:
-		return IEDefinition{Format: FormatV, FixedLen: 1}
+	case PROTOCOL_DISC_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+	case SKIP_IND_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+	case MSG_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
 	case PAGE_MODE_V:
         return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PAGE_MODE_V}
     case DEDICATED_MODE_OR_TBF_V:
@@ -461,6 +468,16 @@ func formatRR(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: 0x7B}
 	case INDIVIDUAL_PRIORITIES_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
+	case PAGING_REQUEST_TYPE_1_MSG_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PAGING_REQUEST_TYPE_1_MSG_TYPE_V}
+	case CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V}
+	case MOBILE_IDENTITY_1_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_1_LV}
+	case MOBILE_IDENTITY_2_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+	case P1_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }

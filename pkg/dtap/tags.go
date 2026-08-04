@@ -332,6 +332,14 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             VGCS_AMR_CONFIGURATION_TLV,
             INDIVIDUAL_PRIORITIES_TLV,
         }
+    case MSG_RR_PAG_REQ_1:
+        return []DtapIE{
+            PAGE_MODE_V,
+            CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V,
+            MOBILE_IDENTITY_1_LV,
+            MOBILE_IDENTITY_2_TLV,
+            //P1_REST_OCTETS_V, не поддерживается еще
+        }
     default:
         return []DtapIE{}
     }
