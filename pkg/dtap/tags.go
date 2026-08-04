@@ -226,8 +226,39 @@ func getRRTagsOrder(msgType Msg_Type) []DtapIE {
             RR_CAUSE_V,
         }
     case MSG_RR_ASS_FAIL:
-        return []DtapIE {
+        return []DtapIE{
             RR_CAUSE_V,
+        }
+    case MSG_RR_ASS_CMD:
+        return []DtapIE{
+            DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V,
+            POWER_COMMAND_V,
+            FREQUENCY_LIST_AFTER_TIME_TLV,
+            CELL_CHANNEL_DESCRIPTION_TV,
+            DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV,
+            MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV,
+            MODE_OF_CHANNEL_SET_2_TV,
+            MODE_OF_CHANNEL_SET_3_TV,
+            MODE_OF_CHANNEL_SET_4_TV,
+            MODE_OF_CHANNEL_SET_5_TV,
+            MODE_OF_CHANNEL_SET_6_TV,
+            MODE_OF_CHANNEL_SET_7_TV,
+            MODE_OF_CHANNEL_SET_8_TV,
+            DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV,
+            MODE_OF_SECOND_CHANNEL_TV,
+            MOBILE_ALLOCATION_AFTER_TIME_TLV,
+            STARTING_TIME_TV,
+            FREQUENCY_LIST_BEFORE_TIME_TLV,
+            DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV,
+            DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV,
+            FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV,
+            MOBILE_ALLOCATION_BEFORE_TIME_TLV,
+            CIPHER_MODE_SETTING_TV,
+            VGCS_TARGET_MODE_INDICATION_TLV,
+            MULTI_RATE_CONFIGURATION_TLV,
+            VGCS_CIPHERING_PARAMETERS_TLV,
+            EXTENDED_TSC_SET_TV,
+            EXTENDED_TSC_SET_BEFORE_TIME_TV,
         }
     default:
         return []DtapIE{}

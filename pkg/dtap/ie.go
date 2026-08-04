@@ -49,6 +49,11 @@ const (
 	CIPHERING_MODE_SETTING_V                DtapIE = 0x126
 	CIPHER_RESPONSE_V                       DtapIE = 0x127
 	RR_CAUSE_V                              DtapIE = 0x128
+	DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V               DtapIE = 0x129
+	POWER_COMMAND_V                                         DtapIE = 0x12A
+	CIPHER_MODE_SETTING_TV                                  DtapIE = 0x12B
+	CELL_DESCRIPTION_V                                      DtapIE = 0x164
+
 
 	//MM
 	//embedded tags
@@ -76,9 +81,36 @@ const (
 	DAY_SAVING_TIME							DtapIE = 0x49
 	//RR
 	//embedded tags
-	STARTING_TIME_TV                        DtapIE = 0x7C
-	EXTENDED_TSC_SET_TV                     DtapIE = 0x6D
-	ME_IDENTITY_TLV                         DtapIE = 0x17	
+	STARTING_TIME_TV                        				DtapIE = 0x7C
+	EXTENDED_TSC_SET_TV                     				DtapIE = 0x6D
+	ME_IDENTITY_TLV                         				DtapIE = 0x17	
+	FREQUENCY_LIST_AFTER_TIME_TLV                           DtapIE = 0x05
+	CELL_CHANNEL_DESCRIPTION_TV                             DtapIE = 0x62
+	DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV              DtapIE = 0x10
+	MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV                  DtapIE = 0x63
+	MODE_OF_CHANNEL_SET_2_TV                                DtapIE = 0x11
+	MODE_OF_CHANNEL_SET_3_TV                                DtapIE = 0x13
+	MODE_OF_CHANNEL_SET_4_TV                                DtapIE = 0x14
+	MODE_OF_CHANNEL_SET_5_TV                                DtapIE = 0x15
+	MODE_OF_CHANNEL_SET_6_TV                                DtapIE = 0x16
+	//MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x17
+	MODE_OF_CHANNEL_SET_8_TV                                DtapIE = 0x18
+	DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV             DtapIE = 0x64
+	MODE_OF_SECOND_CHANNEL_TV                               DtapIE = 0x66
+	MOBILE_ALLOCATION_AFTER_TIME_TLV                        DtapIE = 0x72
+	FREQUENCY_LIST_BEFORE_TIME_TLV                          DtapIE = 0x19
+	DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV             DtapIE = 0x1C
+	DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV            DtapIE = 0x1D
+	FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV               DtapIE = 0x1E
+	MOBILE_ALLOCATION_BEFORE_TIME_TLV                       DtapIE = 0x21
+	VGCS_TARGET_MODE_INDICATION_TLV                         DtapIE = 0x01
+	MULTI_RATE_CONFIGURATION_TLV                            DtapIE = 0x03
+	VGCS_CIPHERING_PARAMETERS_TLV                           DtapIE = 0x04
+	EXTENDED_TSC_SET_BEFORE_TIME_TV                         DtapIE = 0x6E
+
+	//duplicated iei in one PD
+	//RR
+	MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x400
 )
 
 type IEFormat int
@@ -95,6 +127,7 @@ const (
 /*	
 	Fixed length for V and TV. 
 	0 means half-octet for  V, there are always 2 consecutive nibbles 
+	-2 means The value is in the lower nibble, and the TV field length is 1 byte.
 	Ignored for LV/TLV.	
 	SpecialHandling
 	0 means nothing
@@ -292,6 +325,58 @@ func formatRR(ie DtapIE) IEDefinition {
         return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: ME_IDENTITY_TLV}
 	case RR_CAUSE_V:
         return IEDefinition{Format: FormatV, FixedLen: 1, Tag: RR_CAUSE_V}
+	case DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V}
+    case POWER_COMMAND_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_V}
+    case FREQUENCY_LIST_AFTER_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_AFTER_TIME_TLV}
+    case CELL_CHANNEL_DESCRIPTION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 17, Tag: CELL_CHANNEL_DESCRIPTION_TV}
+    case DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV}
+    case MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV}
+    case MODE_OF_CHANNEL_SET_2_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_2_TV}
+    case MODE_OF_CHANNEL_SET_3_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_3_TV}
+    case MODE_OF_CHANNEL_SET_4_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_4_TV}
+    case MODE_OF_CHANNEL_SET_5_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_5_TV}
+    case MODE_OF_CHANNEL_SET_6_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_6_TV}
+    case MODE_OF_CHANNEL_SET_7_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: 0x17}
+    case MODE_OF_CHANNEL_SET_8_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_8_TV}
+    case DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV}
+    case MODE_OF_SECOND_CHANNEL_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_SECOND_CHANNEL_TV}
+    case MOBILE_ALLOCATION_AFTER_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_AFTER_TIME_TLV}
+    case FREQUENCY_LIST_BEFORE_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_BEFORE_TIME_TLV}
+    case DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV}
+    case DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV}
+    case FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV}
+    case MOBILE_ALLOCATION_BEFORE_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_BEFORE_TIME_TLV}
+    case CIPHER_MODE_SETTING_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+    case VGCS_TARGET_MODE_INDICATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: VGCS_TARGET_MODE_INDICATION_TLV}
+    case MULTI_RATE_CONFIGURATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MULTI_RATE_CONFIGURATION_TLV}
+    case VGCS_CIPHERING_PARAMETERS_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: VGCS_CIPHERING_PARAMETERS_TLV}
+    case EXTENDED_TSC_SET_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_BEFORE_TIME_TV}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
     }
