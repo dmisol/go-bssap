@@ -4,23 +4,23 @@ import "fmt"
 
 type PD_Type byte
 
+//ETSI TS 124 007 V19.5.0 Table 11.2
 const (
 	PD_GROUP_CC PD_Type = 0x00
 	PD_BCAST_CC PD_Type = 0x01
-	PD_PDSS1    PD_Type = 0x02
+	PD_EPS_SMM  PD_Type = 0x02
 	PD_CC       PD_Type = 0x03
-	PD_PDSS2    PD_Type = 0x04
 	PD_GTTP     PD_Type = 0x04
 	PD_MM       PD_Type = 0x05
 	PD_RR       PD_Type = 0x06
-	PD_MM_GPRS  PD_Type = 0x08
+	PD_EPS_MMM  PD_Type = 0x07
+	PD_GPRS_MMM PD_Type = 0x08
 	PD_SMS      PD_Type = 0x09
-	PD_SM_GPRS  PD_Type = 0x0a
-	PD_NC_SS    PD_Type = 0x0b
+	PD_GPRS_SMM PD_Type = 0x0a
+	PD_SS_NCL   PD_Type = 0x0b
 	PD_LOC      PD_Type = 0x0c
 	PD_EXTEND   PD_Type = 0x0e
 	PD_TEST     PD_Type = 0x0f
-	PD_MASK     PD_Type = 0x0f
 )
 
 func PD(b byte) PD_Type {
@@ -96,6 +96,8 @@ const (
 	MSG_RR_CDMA2K_CLSM_CHG    Msg_Type = 0x62
 	MSG_RR_IS_TO_UTRAN_HANDO  Msg_Type = 0x63
 	MSG_RR_IS_TO_CDMA2K_HANDO Msg_Type = 0x64
+	MSG_RR_GERAN_IU_MODE_CLASSMARK_CHANGE Msg_Type = 0x65
+	MSG_RR_INTER_SYS_TO_E_UTRAN_HANDO_CMD Msg_Type = 0x66
 
 	MSG_RR_SYSINFO_8 Msg_Type = 0x18
 	MSG_RR_SYSINFO_1 Msg_Type = 0x19
@@ -141,7 +143,7 @@ const (
 
 	MSG_RR_APP_INFO Msg_Type = 0x38
 
-	/* 3GPP TS 44.018 Table 10.4.2 */
+	/* 3GPP TS 44.018 Table 10.4.2 */  // пока нет в getRRTagsOrder
 	MSG_RR_SH_SI10        Msg_Type = 0x0
 	MSG_RR_SH_FACCH       Msg_Type = 0x1
 	MSG_RR_SH_UL_FREE     Msg_Type = 0x2

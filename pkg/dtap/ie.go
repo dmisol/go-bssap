@@ -1,7 +1,534 @@
 package dtap
 
-type IE []byte
+type DtapIE uint16
+
+
+//для одного и того же type  и имени могут быть разный FORMAT и разные IEI поэтому для каждого делаю тег по имени в RR + формат. 
+//В MM в основном по типу.
 
 const (
+	//general created Tags
+	PROTOCOL_DISC_V											DtapIE = 0x100
+	SKIP_IND_V												DtapIE = 0x101
+	MSG_TYPE_V												DtapIE = 0x102
+	CIPH_KEY_SEQ_NUM										DtapIE = 0x103
+	SPARE_HALF_OCT											DtapIE = 0x104
+	AUTH_PARAM_RAND											DtapIE = 0x105
+	AUTH_RESP_PARAM											DtapIE = 0x106
+	REJ_CAUSE												DtapIE = 0x107
+	MS_CLASSMARK_2											DtapIE = 0x108
+	M_IDENTITY_1											DtapIE = 0x109
+	PD_AND_SAPI												DtapIE = 0x10A
+	CM_SERVICE_TYPE											DtapIE = 0x10B
+	ID_TYPE													DtapIE = 0x10C
+	MS_CLASSMARK_1											DtapIE = 0x10D
+	LOC_UPD_TYPE											DtapIE = 0x10E
+	LOC_AREA_ID												DtapIE = 0x10F //table 9.2.15
+	MS_NET_FEAT_SUP											DtapIE = 0x110
+	NON_3GPP												DtapIE = 0x111
+	P_TMSI_TYPE												DtapIE = 0x112
+	DEVICE_PROPS											DtapIE = 0x113
+	PAGE_MODE_V                            					DtapIE = 0x114
+	DEDICATED_MODE_OR_TBF_V                 				DtapIE = 0x115
+	CHANNEL_DESC_V                          				DtapIE = 0x116
+	PACKET_CHANNEL_DESC_V                   				DtapIE = 0x117
+	REQUEST_REF_V                           				DtapIE = 0x118
+	TIMING_ADVANCE_V                        				DtapIE = 0x119
+	MOBILE_ALLOC_LV                         				DtapIE = 0x11A
+	IA_REST_OCTETS_V                        				DtapIE = 0x11B
+	FEATURE_INDICATOR_V                     				DtapIE = 0x11C
+	REQUEST_REF_1_V                         				DtapIE = 0x11D
+	WAIT_INDICATION_1_V                     				DtapIE = 0x11E
+	REQUEST_REF_2_V                         				DtapIE = 0x11F
+	WAIT_INDICATION_2_V                     				DtapIE = 0x120
+	REQUEST_REF_3_V                         				DtapIE = 0x121
+	WAIT_INDICATION_3_V                     				DtapIE = 0x122
+	REQUEST_REF_4_V                         				DtapIE = 0x123
+	WAIT_INDICATION_4_V                     				DtapIE = 0x124
+	IAR_REST_OCTETS_V                       				DtapIE = 0x125
+	CIPHERING_MODE_SETTING_V                				DtapIE = 0x126
+	CIPHER_RESPONSE_V                       				DtapIE = 0x127
+	RR_CAUSE_V                              				DtapIE = 0x128
+	DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V               DtapIE = 0x129
+	POWER_COMMAND_V                                         DtapIE = 0x12A
+	CIPHER_MODE_SETTING_TV                                  DtapIE = 0x12B
+	CELL_DESCRIPTION_V                                      DtapIE = 0x12C
+	HANDOVER_REFERENCE_V                                    DtapIE = 0x12D
+	POWER_COMMAND_AND_ACCESS_TYPE_V                         DtapIE = 0x12E
+	SYNCHRONIZATION_INDICATION_TV                           DtapIE = 0x12F
+	PLMN_INDEX_TV                                           DtapIE = 0x130
+	PS_CAUSE_TV												DtapIE = 0x131
+	GROUP_CIPHER_KEY_NUMBER_TV                          	DtapIE = 0x132
+	GPRS_RESUMPTION_TV                                  	DtapIE = 0x133
+	ENHANCED_DTM_CS_RELEASE_INDICATION_TV               	DtapIE = 0x134
+	CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V               	DtapIE = 0x135
+	MOBILE_IDENTITY_1_LV                                	DtapIE = 0x136
+	P1_REST_OCTETS_V                                    	DtapIE = 0x137
+	MOBILE_IDENTITY_1_V                                 	DtapIE = 0x138
+	MOBILE_IDENTITY_2_V                                 	DtapIE = 0x139
+	P2_REST_OCTETS_V                                    	DtapIE = 0x13A
+	MOBILE_IDENTITY_3_V                                 	DtapIE = 0x13B
+	MOBILE_IDENTITY_4_V                                 	DtapIE = 0x13C
+	P3_REST_OCTETS_V                                    	DtapIE = 0x13D
+	CIPHERING_KEY_SEQUENCE_NUMBER_V                     	DtapIE = 0x13E
+	SPARE_HALF_OCTET_V                                  	DtapIE = 0x13F
+	MOBILE_STATION_CLASSMARK_LV                         	DtapIE = 0x140
+	MOBILE_IDENTITY_LV                                  	DtapIE = 0x141
+	ADDITIONAL_UPDATE_PARAMETERS_TV                     	DtapIE = 0x142
+	//MM
+	//embedded tags
+	AUTH_PARAM_AUTN											DtapIE = 0x20
+	AUTH_RESP_PARAM_EXT										DtapIE = 0x21
+	AUTH_FAIL_PARAM											DtapIE = 0x22
+	LOC_AREA_ID_2											DtapIE = 0x13 //table 9.2.5
+	MM_TIMER												DtapIE = 0x36
+	PRIOR_LVL												DtapIE = 0x08
+	ADD_UPD_PARAMS											DtapIE = 0x0C
+	ROUT_AREA_ID_2											DtapIE = 0x1B		
+	P_TMSI_SIGN_2											DtapIE = 0x19
+	M_IDENTITY_2											DtapIE = 0x17
+	FLLW_ON_PROC											DtapIE = 0xA1
+	CTS_PERM												DtapIE = 0xA2
+	PLMN_LST												DtapIE = 0x4A
+	EMER_NUM_LST											DtapIE = 0x34
+	GPRS_TIM_3												DtapIE = 0x35
+	MS_CLASSMARK_UMTS										DtapIE = 0x33
+	FNAME_F_NET												DtapIE = 0x43
+	SNAME_F_NET												DtapIE = 0x45
+	TIME_ZONE												DtapIE = 0x46
+	TIME_ZONE_AND_TIME										DtapIE = 0x47
+	LSA_IDEN												DtapIE = 0x48
+	DAY_SAVING_TIME											DtapIE = 0x49
+	//RR
+	//embedded tags
+	STARTING_TIME_TV                        				DtapIE = 0x7C
+	EXTENDED_TSC_SET_TV                     				DtapIE = 0x6D
+	ME_IDENTITY_TLV                         				DtapIE = 0x17	
+	FREQUENCY_LIST_AFTER_TIME_TLV                           DtapIE = 0x05
+	CELL_CHANNEL_DESCRIPTION_TV                             DtapIE = 0x62
+	DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV              DtapIE = 0x10
+	MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV                  DtapIE = 0x63
+	MODE_OF_CHANNEL_SET_2_TV                                DtapIE = 0x11
+	MODE_OF_CHANNEL_SET_3_TV                                DtapIE = 0x13
+	MODE_OF_CHANNEL_SET_4_TV                                DtapIE = 0x14
+	MODE_OF_CHANNEL_SET_5_TV                                DtapIE = 0x15
+	MODE_OF_CHANNEL_SET_6_TV                                DtapIE = 0x16
+	//MODE_OF_CHANNEL_SET_7_TV                              DtapIE = 0x17
+	MODE_OF_CHANNEL_SET_8_TV                                DtapIE = 0x18
+	DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV             DtapIE = 0x64
+	MODE_OF_SECOND_CHANNEL_TV                               DtapIE = 0x66
+	MOBILE_ALLOCATION_AFTER_TIME_TLV                        DtapIE = 0x72
+	FREQUENCY_LIST_BEFORE_TIME_TLV                          DtapIE = 0x19
+	DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV             DtapIE = 0x1C
+	DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV            DtapIE = 0x1D
+	FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV               DtapIE = 0x1E
+	MOBILE_ALLOCATION_BEFORE_TIME_TLV                       DtapIE = 0x21
+	VGCS_TARGET_MODE_INDICATION_TLV                         DtapIE = 0x01
+	MULTI_RATE_CONFIGURATION_TLV                            DtapIE = 0x03
+	VGCS_CIPHERING_PARAMETERS_TLV                           DtapIE = 0x04
+	EXTENDED_TSC_SET_BEFORE_TIME_TV                         DtapIE = 0x6E
+	FREQUENCY_SHORT_LIST_AFTER_TIME_TV                      DtapIE = 0x02
+	FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV                DtapIE = 0x69
+	REAL_TIME_DIFFERENCE_TLV                                DtapIE = 0x7B
+	TIMING_ADVANCE_TV                                       DtapIE = 0x7D
+	FREQUENCY_SHORT_LIST_BEFORE_TIME_TV                     DtapIE = 0x12
+	DYNAMIC_ARFCN_MAPPING_TLV                               DtapIE = 0x76
+	DEDICATED_SERVICE_INFORMATION_TV                        DtapIE = 0x51
+	MOBILE_OBSERVED_TIME_DIFF_TLV							DtapIE = 0x77
+	MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV			DtapIE = 0x67
+	BA_RANGE_TLV                                        	DtapIE = 0x73
+	GROUP_CHANNEL_DESCRIPTION_TLV                       	DtapIE = 0x74
+	BA_LIST_PREF_TLV                                    	DtapIE = 0x75
+	//UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x76
+	//CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x77
+	GROUP_CHANNEL_DESCRIPTION_2_TLV                     	DtapIE = 0x78
+	TALKER_IDENTITY_TLV                                 	DtapIE = 0x79
+	TALKER_PRIORITY_STATUS_TLV                          	DtapIE = 0x7A
+	//VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x7B
+	//INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x7C
+	//MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x17
+	//MOBILE_IDENTITY_3_TLV                               	DtapIE = 0x17
 
+	//duplicated iei in one PD
+	//RR
+	MODE_OF_CHANNEL_SET_7_TV                                DtapIE = 0x400
+	VGCS_AMR_CONFIGURATION_TLV                          	DtapIE = 0x401
+	INDIVIDUAL_PRIORITIES_TLV                           	DtapIE = 0x402
+	UTRAN_FREQ_LIST_TLV                                 	DtapIE = 0x403
+	CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV          	DtapIE = 0x404
+	MOBILE_IDENTITY_2_TLV                               	DtapIE = 0x405
+	MOBILE_IDENTITY_3_TLV                               	DtapIE = 0x406
 )
+
+type IEFormat int
+
+const (
+    FormatUnsupported 	IEFormat = -1	// Unsupported element
+	FormatT				IEFormat = iota	// TAG
+    FormatV           				 	// Value only (fixed length). Length is known in advance.
+    FormatTV                          	// Type + Value (fixed length, half-octet or full). Length is known.
+    FormatLV                          	// Length + Value (variable length). Length is read from the first byte.
+    FormatTLV                         	// Type + Length + Value (variable length). Length is read from the second byte.
+)
+
+/*	
+	Fixed length for V and TV. 
+	0 means half-octet for  V, there are always 2 consecutive nibbles 
+	-2 means The value is in the lower nibble, and the TV field length is 1 byte.
+	Ignored for LV/TLV.	
+	SpecialHandling
+	0 means nothing
+	1 means that The high nibble determines which of the following conditional fields exists.
+*/
+
+type IEDefinition struct {
+	Format   IEFormat
+	FixedLen int			
+	Tag DtapIE
+	SpecialHandling int	
+}
+
+func format(ie DtapIE, pd PD_Type) IEDefinition {
+    switch pd {
+    case PD_MM:
+        return formatMM(ie)
+    case PD_RR:
+        return formatRR(ie)
+    case PD_BCAST_CC:
+        return formatBCCH(ie)
+    case PD_CC:
+        return formatCC(ie)
+    case PD_SMS:
+        return formatSMS(ie)
+    case PD_GPRS_MMM:
+        return formatGPRSMM(ie)
+    case PD_GPRS_SMM:
+        return formatGPRSSM(ie)
+    case PD_LOC:
+        return formatLOC(ie)
+    case PD_GROUP_CC:
+        return formatGroupCC(ie)
+    case PD_EPS_SMM:
+        return formatEPSSMM(ie)
+    case PD_GTTP:
+        return formatGTTP(ie)
+    case PD_SS_NCL:
+        return formatNCSS(ie)
+    case PD_EXTEND:
+        return formatExtend(ie)
+    case PD_TEST:
+        return formatTest(ie)
+    case PD_EPS_MMM:
+        return formatEPSMMM(ie)
+    default:
+        return IEDefinition{Format: FormatV, FixedLen: 0}
+    }
+}
+
+func formatMM(ie DtapIE) IEDefinition {
+	switch ie {
+	case PROTOCOL_DISC_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+	case SKIP_IND_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+	case MSG_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
+	case CIPH_KEY_SEQ_NUM:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPH_KEY_SEQ_NUM}
+	case SPARE_HALF_OCT:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCT}
+	case AUTH_PARAM_RAND:
+		return IEDefinition{Format: FormatV, FixedLen: 16, Tag: AUTH_PARAM_RAND}
+	case AUTH_RESP_PARAM:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: AUTH_RESP_PARAM}
+	case REJ_CAUSE:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: REJ_CAUSE}
+	case MS_CLASSMARK_2:
+		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MS_CLASSMARK_2}
+	case M_IDENTITY_1:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: M_IDENTITY_1}
+	case PD_AND_SAPI:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PD_AND_SAPI}
+	case CM_SERVICE_TYPE:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CM_SERVICE_TYPE}
+	case ID_TYPE:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: ID_TYPE}
+	case MS_CLASSMARK_1:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MS_CLASSMARK_1}
+	case LOC_UPD_TYPE:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: LOC_UPD_TYPE}
+	case AUTH_PARAM_AUTN:
+		return IEDefinition{Format: FormatTLV, FixedLen: 18, Tag: AUTH_PARAM_AUTN}
+	case AUTH_RESP_PARAM_EXT:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: AUTH_RESP_PARAM_EXT}
+	case AUTH_FAIL_PARAM:
+		return IEDefinition{Format: FormatTLV, FixedLen: 16, Tag: AUTH_FAIL_PARAM}
+	case LOC_AREA_ID:
+		return IEDefinition{Format: FormatV, FixedLen: 5, Tag: LOC_AREA_ID}
+	case LOC_AREA_ID_2:
+		return IEDefinition{Format: FormatTV, FixedLen: 6, Tag: LOC_AREA_ID_2}
+	case DEVICE_PROPS:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+	case MM_TIMER:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: MM_TIMER}
+	case PRIOR_LVL:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+	case ADD_UPD_PARAMS:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+	case P_TMSI_TYPE:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
+	case ROUT_AREA_ID_2:
+		return IEDefinition{Format: FormatTLV, FixedLen: 8, Tag: ROUT_AREA_ID_2}
+	case P_TMSI_SIGN_2:
+		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: P_TMSI_SIGN_2}
+	case M_IDENTITY_2:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: M_IDENTITY_2}
+	case FLLW_ON_PROC:
+		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: FLLW_ON_PROC}
+	case CTS_PERM:
+		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CTS_PERM}
+	case PLMN_LST:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: PLMN_LST}
+	case EMER_NUM_LST:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EMER_NUM_LST}
+	case GPRS_TIM_3:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: GPRS_TIM_3}
+	case NON_3GPP:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+	case MS_CLASSMARK_UMTS:
+		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: MS_CLASSMARK_UMTS}
+	case MS_NET_FEAT_SUP:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
+	case FNAME_F_NET:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FNAME_F_NET}
+	case SNAME_F_NET:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SNAME_F_NET}
+	case TIME_ZONE:
+		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: TIME_ZONE}
+	case TIME_ZONE_AND_TIME:
+		return IEDefinition{Format: FormatTV, FixedLen: 8, Tag: TIME_ZONE_AND_TIME}
+	case LSA_IDEN:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: LSA_IDEN}
+	case DAY_SAVING_TIME:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: DAY_SAVING_TIME}
+	default:
+		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
+	}
+}
+
+func formatRR(ie DtapIE) IEDefinition {
+    switch ie {
+	case PROTOCOL_DISC_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+	case SKIP_IND_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+	case MSG_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
+	case PAGE_MODE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PAGE_MODE_V}
+    case DEDICATED_MODE_OR_TBF_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: DEDICATED_MODE_OR_TBF_V, SpecialHandling: 1} // table 9.1.18.1 IMM ASSiGNMENT
+    case CHANNEL_DESC_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: CHANNEL_DESC_V}
+    case PACKET_CHANNEL_DESC_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: PACKET_CHANNEL_DESC_V}
+    case REQUEST_REF_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_V}
+    case TIMING_ADVANCE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: TIMING_ADVANCE_V}
+    case MOBILE_ALLOC_LV:
+        return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_ALLOC_LV}
+    case STARTING_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 3, Tag: STARTING_TIME_TV}
+    case IA_REST_OCTETS_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V}
+    case EXTENDED_TSC_SET_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
+	case FEATURE_INDICATOR_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: FEATURE_INDICATOR_V}
+    case REQUEST_REF_1_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_1_V}
+    case WAIT_INDICATION_1_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_1_V}
+    case REQUEST_REF_2_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_2_V}
+    case WAIT_INDICATION_2_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_2_V}
+    case REQUEST_REF_3_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_3_V}
+    case WAIT_INDICATION_3_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_3_V}
+    case REQUEST_REF_4_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_4_V}
+    case WAIT_INDICATION_4_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_4_V}
+    case IAR_REST_OCTETS_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: IAR_REST_OCTETS_V}
+	case CIPHERING_MODE_SETTING_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_MODE_SETTING_V}
+    case CIPHER_RESPONSE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHER_RESPONSE_V}
+	case ME_IDENTITY_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: ME_IDENTITY_TLV}
+	case RR_CAUSE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: RR_CAUSE_V}
+	case DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V:
+        return IEDefinition{Format: FormatV, FixedLen: 3, Tag: DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V}
+    case POWER_COMMAND_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_V}
+    case FREQUENCY_LIST_AFTER_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_AFTER_TIME_TLV}
+    case CELL_CHANNEL_DESCRIPTION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 17, Tag: CELL_CHANNEL_DESCRIPTION_TV}
+    case DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV}
+    case MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV}
+    case MODE_OF_CHANNEL_SET_2_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_2_TV}
+    case MODE_OF_CHANNEL_SET_3_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_3_TV}
+    case MODE_OF_CHANNEL_SET_4_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_4_TV}
+    case MODE_OF_CHANNEL_SET_5_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_5_TV}
+    case MODE_OF_CHANNEL_SET_6_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_6_TV}
+    case MODE_OF_CHANNEL_SET_7_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: 0x17}
+    case MODE_OF_CHANNEL_SET_8_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_8_TV}
+    case DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV}
+    case MODE_OF_SECOND_CHANNEL_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_SECOND_CHANNEL_TV}
+    case MOBILE_ALLOCATION_AFTER_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_AFTER_TIME_TLV}
+    case FREQUENCY_LIST_BEFORE_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_BEFORE_TIME_TLV}
+    case DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV}
+    case DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV}
+    case FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV}
+    case MOBILE_ALLOCATION_BEFORE_TIME_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_BEFORE_TIME_TLV}
+    case CIPHER_MODE_SETTING_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+    case VGCS_TARGET_MODE_INDICATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: VGCS_TARGET_MODE_INDICATION_TLV}
+    case MULTI_RATE_CONFIGURATION_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MULTI_RATE_CONFIGURATION_TLV}
+    case VGCS_CIPHERING_PARAMETERS_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: VGCS_CIPHERING_PARAMETERS_TLV}
+    case EXTENDED_TSC_SET_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_BEFORE_TIME_TV}
+	case CELL_DESCRIPTION_V:
+        return IEDefinition{Format: FormatV, FixedLen: 2, Tag: CELL_DESCRIPTION_V}
+    case HANDOVER_REFERENCE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: HANDOVER_REFERENCE_V}
+    case POWER_COMMAND_AND_ACCESS_TYPE_V:
+        return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_AND_ACCESS_TYPE_V}
+    case SYNCHRONIZATION_INDICATION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+    case FREQUENCY_SHORT_LIST_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_AFTER_TIME_TV}
+    case FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV}
+    case REAL_TIME_DIFFERENCE_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: REAL_TIME_DIFFERENCE_TLV}
+    case TIMING_ADVANCE_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: TIMING_ADVANCE_TV}
+    case FREQUENCY_SHORT_LIST_BEFORE_TIME_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_BEFORE_TIME_TV}
+    case DYNAMIC_ARFCN_MAPPING_TLV:
+        return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DYNAMIC_ARFCN_MAPPING_TLV}
+    case DEDICATED_SERVICE_INFORMATION_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: DEDICATED_SERVICE_INFORMATION_TV}
+    case PLMN_INDEX_TV:
+        return IEDefinition{Format: FormatTV, FixedLen: 1, Tag: 0x0A}
+	case MOBILE_OBSERVED_TIME_DIFF_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_TLV}
+	case MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV}
+	case PS_CAUSE_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+	case BA_RANGE_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_RANGE_TLV}
+	case GROUP_CHANNEL_DESCRIPTION_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: GROUP_CHANNEL_DESCRIPTION_TLV}
+	case GROUP_CIPHER_KEY_NUMBER_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+	case GPRS_RESUMPTION_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+	case BA_LIST_PREF_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_LIST_PREF_TLV}
+	case UTRAN_FREQ_LIST_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x76}
+	case CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x77}
+	case ENHANCED_DTM_CS_RELEASE_INDICATION_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0A}
+	case GROUP_CHANNEL_DESCRIPTION_2_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 13, Tag: GROUP_CHANNEL_DESCRIPTION_2_TLV}
+	case TALKER_IDENTITY_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: TALKER_IDENTITY_TLV}
+	case TALKER_PRIORITY_STATUS_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: TALKER_PRIORITY_STATUS_TLV}
+	case VGCS_AMR_CONFIGURATION_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: 0x7B}
+	case INDIVIDUAL_PRIORITIES_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
+	case CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V}
+	case MOBILE_IDENTITY_1_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_1_LV}
+	case MOBILE_IDENTITY_2_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+	case P1_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V}
+	case MOBILE_IDENTITY_1_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_1_V}
+	case MOBILE_IDENTITY_2_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_2_V}
+	case MOBILE_IDENTITY_3_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+	case P2_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V}
+	case MOBILE_IDENTITY_3_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_3_V}
+	case MOBILE_IDENTITY_4_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_4_V}
+	case P3_REST_OCTETS_V:
+		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: P3_REST_OCTETS_V}
+	case CIPHERING_KEY_SEQUENCE_NUMBER_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
+	case SPARE_HALF_OCTET_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCTET_V}
+	case MOBILE_STATION_CLASSMARK_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MOBILE_STATION_CLASSMARK_LV}
+	case MOBILE_IDENTITY_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_LV}
+	case ADDITIONAL_UPDATE_PARAMETERS_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+	default:
+		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
+    }
+}
+
+
+//ToDO
+func formatBCCH(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatCC(ie DtapIE) IEDefinition         { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatSMS(ie DtapIE) IEDefinition        { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGPRSMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGPRSSM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatLOC(ie DtapIE) IEDefinition        { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatGroupCC(ie DtapIE) IEDefinition    { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatEPSSMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatEPSMMM(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatGTTP(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatNCSS(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} }
+func formatExtend(ie DtapIE) IEDefinition     { return IEDefinition{Format: FormatV, FixedLen: 0} } 
+func formatTest(ie DtapIE) IEDefinition       { return IEDefinition{Format: FormatV, FixedLen: 0} } 
