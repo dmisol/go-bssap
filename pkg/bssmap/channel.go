@@ -121,3 +121,59 @@ func (i IE) ChannelType() (BSSMAP_SDI, ChType, error) {
 
 	return sdi, ct, nil
 }
+
+//go:generate go run golang.org/x/tools/cmd/stringer -type=BSSMAPChannelMode --output=channel_mode_string.go
+
+// https://www.etsi.org/deliver/etsi_ts/148000_148099/148008/19.00.00_60/ts_148008v190000p.pdf
+// 3.2.2.33 Chosen Channel
+type BSSMAPChannelMode int
+
+const (
+	CM_NO_MODE        BSSMAPChannelMode = 0
+	CM_SPEECH         BSSMAPChannelMode = 9
+	CM_DATA_14_5_14_5 BSSMAPChannelMode = 14
+	CM_DATA_12_0_12_0 BSSMAPChannelMode = 11
+	CM_DATA_6_0_6_0   BSSMAPChannelMode = 12
+	CM_DATA_3_6_3_6   BSSMAPChannelMode = 13
+	CM_SIGNALLING     BSSMAPChannelMode = 8
+	CM_DATA_29_0_29_0 BSSMAPChannelMode = 1
+	CM_DATA_32_0_32_0 BSSMAPChannelMode = 2
+	CM_DATA_43_5_43_5 BSSMAPChannelMode = 3
+	CM_DATA_43_5_14_5 BSSMAPChannelMode = 4
+	CM_DATA_29_0_14_5 BSSMAPChannelMode = 5
+	CM_DATA_43_5_29_0 BSSMAPChannelMode = 6
+	CM_DATA_14_5_43_5 BSSMAPChannelMode = 7
+	CM_DATA_14_5_29_0 BSSMAPChannelMode = 10
+	CM_DATA_29_0_43_5 BSSMAPChannelMode = 15
+)
+
+//go:generate go run golang.org/x/tools/cmd/stringer -type=BSSMAPChosenChannel --output=chosen_channel_string.go
+
+// https://www.etsi.org/deliver/etsi_ts/148000_148099/148008/19.00.00_60/ts_148008v190000p.pdf
+// 3.2.2.33 Chosen Channel
+type BSSMAPChosenChannel int
+
+const (
+	CHANNEL_NONE    BSSMAPChosenChannel = 0
+	CHANNEL_SDCCH   BSSMAPChosenChannel = 1
+	CHANNEL_TCH_F   BSSMAPChosenChannel = 8
+	CHANNEL_TCH_H   BSSMAPChosenChannel = 9
+	CHANNEL_2_TCH_F BSSMAPChosenChannel = 10
+	CHANNEL_3_TCH_F BSSMAPChosenChannel = 11
+	CHANNEL_4_TCH_F BSSMAPChosenChannel = 12
+	CHANNEL_5_TCH_F BSSMAPChosenChannel = 13
+	CHANNEL_6_TCH_F BSSMAPChosenChannel = 14
+	CHANNEL_7_TCH_F BSSMAPChosenChannel = 15
+	CHANNEL_8_TCH_F BSSMAPChosenChannel = 4
+)
+
+func (i IE) ChosenChannel() (BSSMAPChannelMode, BSSMAPChosenChannel, error) {
+	if i.Tag() != CHOSEN_CHANNEL {
+		return 0, 0, errors.New("not Chosen Channel IE")
+	}
+	if len(i) < 2 {
+		return 0, 0, errors.New("too short Chosen Channel IE")
+	}
+
+	return BSSMAPChannelMode((i[1] >> 4) & 0xF), BSSMAPChosenChannel(i[1] & 0xF), nil
+}

@@ -145,6 +145,7 @@ const (
 	SELECTED_OPERATOR                   BssmapIE = 0x98
 	PS_REGISTERED_OPERATOR              BssmapIE = 0x99
 	CS_REGISTERED_OPERATOR              BssmapIE = 0x9a
+	FAST_RETURN_TRIGGER                 BssmapIE = 0xff
 )
 
 // format returns a length of the Information Element (IE)
@@ -419,6 +420,8 @@ func (ie BssmapIE) format() (length int) {
 		return 4
 	case CS_REGISTERED_OPERATOR:
 		return 4
+	case FAST_RETURN_TRIGGER:
+		return 0
 	// case RSVD_0: // Reserved
 	// case RSVD_1: // Reserved
 	// case RSVD_2: // Reserved
@@ -713,6 +716,8 @@ func (ie BssmapIE) String() string {
 		return "PsRegOper" // PS Registered Operator
 	case CS_REGISTERED_OPERATOR:
 		return "CsRegOper" // CS Registered Operator
+	case FAST_RETURN_TRIGGER:
+		return "FastReturnTrigger"
 	default:
 		return fmt.Sprintf("IE_0x%02x", int(ie))
 	}
