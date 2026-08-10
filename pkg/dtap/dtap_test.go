@@ -181,5 +181,3 @@ func TestRRHandoCmd(t *testing.T) {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
     }    
 }
-
-

@@ -1,7 +1,5 @@
 package dtap
 
-import "fmt"
-
 type PD_Type byte
 
 //ETSI TS 124 007 V19.5.0 Table 11.2
@@ -33,21 +31,6 @@ func Mt(b byte) (seq int, mt Msg_Type) {
 	seq = int(b >> 6)
 	mt = Msg_Type(b & 0x3F)
 	return
-}
-
-const (
-	MM_Info Msg_Type = 0x032
-)
-
-func (d Msg_Type) String() string {
-	switch d {
-	case MM_Info:
-		return "MM Info"
-	case MSG_MM_LOC_UPD_REQUEST:
-		return "LU RQST"
-	default:
-		return fmt.Sprintf("MT_%02X", int(d&0x3F))
-	}
 }
 
 const (
