@@ -37,7 +37,7 @@ func GetTagsOrder(pd PD_Type, msgType Msg_Type) ([]DtapIE, error) {
     case PD_EPS_MMM:
         return getEPSMMMTagsOrder(msgType)
     default:
-        return nil, fmt.Errorf("unsupported protocol discriminator: 0x%02X", pd)
+        return nil, fmt.Errorf("%w: 0x%02X", ErrProtocolDiscNotExist, pd)
     }
 }
 
@@ -182,7 +182,7 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
         }, nil
 
     default:
-        return nil, fmt.Errorf("unsupported MM message type: 0x%02X", msgType)
+        return nil, fmt.Errorf("%w: 0x%02X", ErrMsgTypeNotExist, msgType)
     }
 }
 
@@ -387,59 +387,59 @@ func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
         }, nil
 
     default:
-        return nil, fmt.Errorf("unsupported RR message type: 0x%02X", msgType)
+        return nil, fmt.Errorf("%w: 0x%02X", ErrUnsupportedMsgType, msgType)
     }
 }
 
 //ToDO
 func getBCCHTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("BCCH not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: BCCH protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getCCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("CC not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: CC/SS protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getSMSTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("SMS not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: SMS protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getGPRSMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("GPRS MM not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: GPRS MM protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getGPRSSMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("GPRS SM not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: GPRS SM protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getLOCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("LOC not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: LOC protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getGroupCCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("Group CC not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: Group CC protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getEPSSMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("EPS SM not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: EPS SM protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getEPSMMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("EPS MM not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: EPS MM protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getGTTTTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("GTTP not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: GTTP protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getNCSSTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("SS NC not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: SS NC protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getExtendTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("EXTEND not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: EXTEND protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }
 
 func getTestTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-    return nil, fmt.Errorf("TEST not implemented yet for msg type: 0x%02X", msgType)
+    return nil, fmt.Errorf("%w: TEST protocol not implemented yet", ErrUnsupportedProtocolDisc)
 }

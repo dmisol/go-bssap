@@ -6,7 +6,6 @@ import (
 
 //go test -v -run TestRealLocationUpdatingRequest 
 //12 пакет
-
 func decodeAndLogDTAP(t *testing.T, rawData []byte, isL2PseudoLengthExist bool) {
     
     t.Logf("Raw data length: %d bytes", len(rawData))
@@ -66,7 +65,7 @@ func TestRRImmAss(t *testing.T) {
         0x27, 0x0, 0x0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
         0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
     }
-    decodeAndLogDTAP(t, rawData, true) // hasL3 = true для этого теста
+    decodeAndLogDTAP(t, rawData, true)
 }
 
 func TestRRAssCmd(t *testing.T) {
@@ -75,6 +74,6 @@ func TestRRAssCmd(t *testing.T) {
 }
 
 func TestRRHandoCmd(t *testing.T) {
-    rawData := []byte{0x6, 0x2b, 0x3f, 0x32, 0xa, 0xe0, 0x32, 0x2, 0x6, 0x63, 0x1}
+    rawData := []byte{0x6, 0x2b, 0x3f, 0x3c, 0xb, 0xe0, 0x3c, 0x2, 0xe, 0xd0, 0x63, 0x1, 0x90}
     decodeAndLogDTAP(t, rawData, false)
 }
