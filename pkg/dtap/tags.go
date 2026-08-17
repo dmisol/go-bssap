@@ -45,53 +45,53 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
     switch msgType {
     case MSG_MM_IMSI_DETACH_IND:
         return []DtapIE{
-            MS_CLASSMARK_1,
-            M_IDENTITY_1,
+            MOBILE_STATION_CLASSMARK_V,
+            MOBILE_IDENTITY_LV,
         }, nil
 
     case MSG_MM_LOC_UPD_ACCEPT:
         return []DtapIE{
-            LOC_AREA_ID,
-            M_IDENTITY_2,
-            FLLW_ON_PROC,
-            CTS_PERM,
-            PLMN_LST,
-            EMER_NUM_LST,
-            GPRS_TIM_3,
-            NON_3GPP,
+            LOCATION_AREA_ID_V,
+            MOBILE_IDENTITY_TLV,
+            FOLLOW_ON_PROCEED_T,
+            CTS_PERMISSION_T,
+            EQUIVALENT_PLMNS_TLV,
+            EMERGENCY_NUMBER_LIST_TLV,
+            PER_MS_T3212_TLV,
+            NON_3GPP_NW_PROVIDED_POLICIES_TV,
         }, nil
 
     case MSG_MM_LOC_UPD_REJECT:
         return []DtapIE{
-            REJ_CAUSE,
-            MM_TIMER,
+            REJ_CAUSE_V,
+            MM_TIMER_TLV,
         }, nil
 
     case MSG_MM_LOC_UPD_REQUEST:
         return []DtapIE{
-            LOC_UPD_TYPE,
-            CIPH_KEY_SEQ_NUM,
-            LOC_AREA_ID,
-            MS_CLASSMARK_1,
-            M_IDENTITY_1,
-            MS_CLASSMARK_UMTS,
-            ADD_UPD_PARAMS,
-            DEVICE_PROPS,
-            MS_NET_FEAT_SUP,
+            LOCATION_UPDATING_TYPE_V,
+            CIPHERING_KEY_SEQUENCE_NUMBER_V,
+            LOCATION_AREA_ID_V,
+            MOBILE_STATION_CLASSMARK_V,
+            MOBILE_IDENTITY_LV,
+            MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV,
+            ADDITIONAL_UPDATE_PARAMETERS_TV,
+            DEVICE_PROPS_TV,
+            MS_NETWORK_FEATURE_SUPPORT_TV,
         }, nil
 
     case MSG_MM_AUTH_REQ:
         return []DtapIE{
-            CIPH_KEY_SEQ_NUM,
-            SPARE_HALF_OCT,
-            AUTH_PARAM_RAND,
-            AUTH_PARAM_AUTN,
+            CIPHERING_KEY_SEQUENCE_NUMBER_V,
+            SPARE_HALF_OCTET_V,
+            AUTH_PARAM_RAND_V,
+            AUTH_PARAM_AUTN_TLV,
         }, nil
 
     case MSG_MM_AUTH_RESP:
         return []DtapIE{
-            AUTH_RESP_PARAM,
-            AUTH_RESP_PARAM_EXT,
+            AUTH_RESP_PARAM_V,
+            AUTH_RESP_PARAM_EXT_TLV,
         }, nil
 
     case MSG_MM_AUTH_REJ:
@@ -99,28 +99,28 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
 
     case MSG_MM_AUTH_FAIL:
         return []DtapIE{
-            REJ_CAUSE,
-            AUTH_FAIL_PARAM,
+            REJ_CAUSE_V,
+            AUTH_FAILURE_PARAM_TLV,
         }, nil
 
     case MSG_MM_ID_REQ:
         return []DtapIE{
-            ID_TYPE,
-            SPARE_HALF_OCT,
+            IDENTITY_TYPE_V,
+            SPARE_HALF_OCTET_V,
         }, nil
 
     case MSG_MM_ID_RESP:
         return []DtapIE{
-            M_IDENTITY_1,
-            P_TMSI_TYPE,
-            ROUT_AREA_ID_2,
-            P_TMSI_SIGN_2,
+            MOBILE_IDENTITY_LV,
+            P_TMSI_TYPE_TV,
+            ROUTING_AREA_IDENTIFICATION_TLV,
+            P_TMSI_SIGNATURE_TLV,
         }, nil
 
     case MSG_MM_TMSI_REALL_CMD:
         return []DtapIE{
-            LOC_AREA_ID,
-            M_IDENTITY_1,
+            LOCATION_AREA_ID_V,
+            MOBILE_IDENTITY_LV,
         }, nil
 
     case MSG_MM_TMSI_REALL_COMPL:
@@ -131,8 +131,8 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
 
     case MSG_MM_CM_SERV_REJ:
         return []DtapIE{
-            REJ_CAUSE,
-            MM_TIMER,
+            REJ_CAUSE_V,
+            MM_TIMER_TLV,
         }, nil
 
     case MSG_MM_CM_SERV_ABORT:
@@ -140,45 +140,45 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
 
     case MSG_MM_CM_SERV_REQ:
         return []DtapIE{
-            CM_SERVICE_TYPE,
-            CIPH_KEY_SEQ_NUM,
-            MS_CLASSMARK_2,
-            M_IDENTITY_1,
-            PRIOR_LVL,
-            ADD_UPD_PARAMS,
-            DEVICE_PROPS,
+            CM_SERVICE_TYPE_V,
+            CIPHERING_KEY_SEQUENCE_NUMBER_V,
+            MOBILE_STATION_CLASSMARK_LV,
+            MOBILE_IDENTITY_LV,
+            PRIORITY_TV,
+            ADDITIONAL_UPDATE_PARAMETERS_TV,
+            DEVICE_PROPS_TV,
         }, nil
 
     case MSG_MM_CM_SERV_PROMPT:
-        return []DtapIE{PD_AND_SAPI}, nil
+        return []DtapIE{PD_AND_SAPI_V}, nil
 
     case MSG_MM_CM_REEST_REQ:
         return []DtapIE{
-            CIPH_KEY_SEQ_NUM,
-            SPARE_HALF_OCT,
-            MS_CLASSMARK_2,
-            M_IDENTITY_1,
-            LOC_AREA_ID,
-            DEVICE_PROPS,
+            CIPHERING_KEY_SEQUENCE_NUMBER_V,
+            SPARE_HALF_OCTET_V,
+            MOBILE_STATION_CLASSMARK_LV,
+            MOBILE_IDENTITY_LV,
+            LOCATION_AREA_ID_TV,
+            DEVICE_PROPS_TV,
         }, nil
 
     case MSG_MM_ABORT:
-        return []DtapIE{REJ_CAUSE}, nil
+        return []DtapIE{REJ_CAUSE_V}, nil
 
     case MSG_MM_NULL:
         return []DtapIE{}, nil
 
     case MSG_MM_STATUS:
-        return []DtapIE{REJ_CAUSE}, nil
+        return []DtapIE{REJ_CAUSE_V}, nil
 
     case MSG_MM_INFO:
         return []DtapIE{
-            FNAME_F_NET,
-            SNAME_F_NET,
-            TIME_ZONE,
-            TIME_ZONE_AND_TIME,
-            LSA_IDEN,
-            DAY_SAVING_TIME,
+            FULL_NAME_FOR_NETWORK_TLV,
+            SHORT_NAME_FOR_NETWORK_TLV,
+            LOCAL_TIME_ZONE_TV,
+            UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV,
+            LSA_IDENTITY_TLV,
+            NETWORK_DAYLIGHT_SAVING_TIME_TLV,
         }, nil
 
     default:

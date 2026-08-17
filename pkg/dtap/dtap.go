@@ -161,12 +161,11 @@ func decodeFormatTLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) e
             length, *offset-1)
     }
 
-    *offset++
-
-    if *offset+length > len(data) {
+    if *offset+length+1 > len(data) {
         return fmt.Errorf("%w: need %d bytes for TLV value at offset %d",
             ErrUnexpectedEOF, length, *offset)
     }
+    *offset++
   
     value := data[*offset : *offset+length]
     *offset += length
@@ -255,7 +254,7 @@ func decodeFormatTVRegular(data []byte, offset *int, ieDef *IEDefinition, expect
     return nil
 }
 
-func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
+func DtapDecode(rawData []byte) (*Dtap, error) {
 	if len(rawData) < 2 {
 		return nil, errors.New("DTAP message too short: need at least 2 bytes")
 	}
@@ -266,9 +265,6 @@ func DtapDecode(rawData []byte, isL2PseudoLengthExist bool) (*Dtap, error) {
 	}
 
 	var offset int = 0
-	if isL2PseudoLengthExist {
-		offset = 1
-	}
 
 	header, newOffset, err := decodeHeader(rawData, offset)
     if err != nil {
