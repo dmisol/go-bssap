@@ -52,12 +52,12 @@ func ParseBssap(b []byte) (*bssmap.Bssmap, *dtap.Dtap, error) {
 	if x == BssapTypeDtap {
 		// dlci := b[1]
 		l := int(b[2])
-		pl := b[3:]
+		pl := b[3:l+3]
 		if l != len(pl) {
 			return nil, nil, fmt.Errorf("error wrong dtap data len(%d), %v", int(b[1]), pl)
 		}
 
-		dt, err := dtap.DtapDecode(pl, false)
+		dt, err := dtap.DtapDecode(pl)
 		return nil, dt, err
 	}
 	return nil, nil, fmt.Errorf("error unknown bssap payload type")

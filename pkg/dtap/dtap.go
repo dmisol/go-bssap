@@ -7,8 +7,10 @@ import (
 
 type Dtap struct {
 	IEs    []IE
-	Raw    []byte
 	Header DtapHeader
+    Raw    []byte   //
+    PD PD_Type      //временно для совместимости
+    Msg Msg_Type    //
 }
 
 type DtapHeader struct {
@@ -62,14 +64,14 @@ func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, expectedTag Dt
     dtap *Dtap, pendingNibble *int, skipTags []int, idx int) error {
     
     if ieDef.FixedLen == 0 {
-        return decodeFormatVVariable(data, offset, ieDef, expectedTag, dtap, pendingNibble, skipTags, idx)
+        return decodeFormatVNibble(data, offset, ieDef, expectedTag, dtap, pendingNibble, skipTags, idx)
     }
     
     return decodeFormatVFixedLen(data, offset, ieDef, expectedTag, dtap)
 }
 
 
-func decodeFormatVVariable(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
+func decodeFormatVNibble(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
     dtap *Dtap, pendingNibble *int, skipTags []int, idx int) error {
     
     value, err := getNextNibble(data, offset, pendingNibble)
@@ -328,7 +330,7 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
 	return dtap, nil
 }
 
-func (d *Dtap) GetIE(tag DtapIE) ([]byte, bool) {
+func (d *Dtap) GetIEValue(tag DtapIE) ([]byte, bool) {
 	for _, ie := range d.IEs {
 		if ie.Tag == tag {
 			return ie.Value, true
@@ -337,7 +339,7 @@ func (d *Dtap) GetIE(tag DtapIE) ([]byte, bool) {
 	return nil, false
 }
 
-func (d *Dtap) GetIEs(tag DtapIE) [][]byte {
+func (d *Dtap) GetIEsValue(tag DtapIE) [][]byte {
 	var result [][]byte
 	for _, ie := range d.IEs {
 		if ie.Tag == tag {

@@ -24,7 +24,7 @@ const (
 	IE_MS_POWER
 	IE_PAGING_GROUP
 	IE_PAGING_LOAD
-	IE_PYHS_CONTEXT
+	IE_PHYS_CONTEXT
 	IE_ACCESS_DELAY
 	IE_RACH_LOAD
 	IE_REQ_REFERENCE
@@ -69,7 +69,7 @@ const (
 	IE_RTD
 	IE_TFO_STATUS
 	IE_LLP_APDU
-
+	IE_TFO_TRANS_CONT
 	// Osmocom specific
 	RSL_IE_OSMO_REP_ACCH_CAP	= 0x60
 	RSL_IE_OSMO_TRAINING_SEQUENCE	= 0x61
@@ -100,7 +100,7 @@ func (ie TAG) format() int {
 	case IE_ENCR_INFO:
 		return -1 // GSM 08.58 -> 9.3.7
 	case IE_FRAME_NUMBER:
-		return 2 // GSM 08.58 -> 9.3.8
+		return 3 // GSM 08.58 -> 9.3.8
 	case IE_HANDO_REF:
 		return 2 // GSM 08.58 -> 9.3.9
 	case IE_L1_INFO:
@@ -114,8 +114,8 @@ func (ie TAG) format() int {
 	case IE_PAGING_GROUP:
 		return 2 // GSM 08.58 -> 9.3.14
 	case IE_PAGING_LOAD:
-		return 2 // GSM 08.58 -> 9.3.15
-	case IE_PYHS_CONTEXT:
+		return 3 // GSM 08.58 -> 9.3.15
+	case IE_PHYS_CONTEXT:
 		return -1 // GSM 08.58 -> 9.3.16
 	case IE_ACCESS_DELAY:
 		return 2 // GSM 08.58 -> 9.3.17
@@ -130,7 +130,7 @@ func (ie TAG) format() int {
 	case IE_RLM_CAUSE:
 		return -1 // GSM 08.58 -> 9.3.22
 	case IE_STARTNG_TIME:
-		return 2 // GSM 08.58 -> 9.3.23
+		return 3 // GSM 08.58 -> 9.3.23
 	case IE_TIMING_ADVANCE:
 		return 2 // GSM 08.58 -> 9.3.24
 	case IE_UPLINK_MEAS:
@@ -156,7 +156,7 @@ func (ie TAG) format() int {
 		// Not exist in phase 2
 		return 0 // GSM 08.58 -> (not exist)
 	case IE_SMSCB_INFO:
-		return 2 // GSM 08.58 -> 9.3.36
+		return 24 // GSM 08.58 -> 9.3.36
 	case IE_MS_TIMING_OFFSET:
 		return 2 // GSM 08.58 -> 9.3.37
 	case IE_ERR_MSG:
@@ -205,6 +205,8 @@ func (ie TAG) format() int {
 		return 2 // GSM 08.58 -> 9.3.57
 	case IE_LLP_APDU:
 		return -1 // GSM 08.58 -> 9.3.58
+	case IE_TFO_TRANS_CONT: 
+		return -1 // GSM 9.0.0 -> 9.3.59
 
 	//osmocom specific
 	case RSL_IE_OSMO_REP_ACCH_CAP:
