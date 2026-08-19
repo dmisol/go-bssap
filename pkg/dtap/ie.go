@@ -176,6 +176,7 @@ const (
 	SpecialHandling
 	0 means nothing
 	1 means that The high nibble determines which of the following conditional fields exists.
+	2 means that This is a variable-length field in V-format.
 */
 
 type IEDefinition struct {
@@ -338,7 +339,7 @@ func formatRR(ie DtapIE) IEDefinition {
     case STARTING_TIME_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 3, Tag: STARTING_TIME_TV}
     case IA_REST_OCTETS_V:
-        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V}
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V, SpecialHandling: 2}
     case EXTENDED_TSC_SET_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
 	case FEATURE_INDICATOR_V:
@@ -484,7 +485,7 @@ func formatRR(ie DtapIE) IEDefinition {
 	case MOBILE_IDENTITY_2_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P1_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V}
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_1_V:
 		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_1_V}
 	case MOBILE_IDENTITY_2_V:
@@ -492,7 +493,7 @@ func formatRR(ie DtapIE) IEDefinition {
 	case MOBILE_IDENTITY_3_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P2_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V}
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_3_V:
 		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_3_V}
 	case MOBILE_IDENTITY_4_V:

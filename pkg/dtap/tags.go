@@ -199,7 +199,7 @@ func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
             TIMING_ADVANCE_V,
             MOBILE_ALLOC_LV,
             STARTING_TIME_TV,
-            //IA_REST_OCTETS_V пока не поддерживается V переменной длины
+            IA_REST_OCTETS_V,
             EXTENDED_TSC_SET_TV,
         }, nil
 
@@ -353,7 +353,7 @@ func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
             CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V,
             MOBILE_IDENTITY_1_LV,
             MOBILE_IDENTITY_2_TLV,
-            //P1_REST_OCTETS_V, не поддерживается еще
+            P1_REST_OCTETS_V,
         }, nil
 
     case MSG_RR_PAG_REQ_2:
@@ -363,7 +363,7 @@ func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
             MOBILE_IDENTITY_1_V,
             MOBILE_IDENTITY_2_V,
             MOBILE_IDENTITY_3_TLV,
-            //P2_REST_OCTETS_V, не поддерживается еще
+            P2_REST_OCTETS_V,
         }, nil
 
     case MSG_RR_PAG_REQ_3:

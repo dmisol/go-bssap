@@ -28,12 +28,14 @@ type Option func(*DecodeOptions)
 
 type DecodeOptions struct {
     L3TotalLength int
-    IsL2PseudoLengthExist bool //mb future
+    IsL2PseudoLengthExist bool
+    WasL3TotalLengthSet   bool
 }
 
 func WithL3TotalLength(length int) Option {
     return func(opts *DecodeOptions) {
         opts.L3TotalLength = length
+        opts.WasL3TotalLengthSet = true
     }
 }
 
@@ -82,8 +84,12 @@ func decodeFormatT(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) err
 
 
 func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE, 
-    dtap *Dtap, pendingNibble *int, skipTags []int, idx int) error {
-    
+    dtap *Dtap, pendingNibble *int, skipTags []int, idx int, options *DecodeOptions, l2PseudoLength int) error {
+
+    if ieDef.SpecialHandling == 2 {
+        return decodeFormatVVariableLength(data, offset, expectedTag, dtap, options, l2PseudoLength)
+    }
+
     if ieDef.FixedLen == 0 {
         return decodeFormatVNibble(data, offset, ieDef, expectedTag, dtap, pendingNibble, skipTags, idx)
     }
@@ -91,6 +97,35 @@ func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, expectedTag Dt
     return decodeFormatVFixedLen(data, offset, ieDef, expectedTag, dtap)
 }
 
+func decodeFormatVVariableLength(data []byte, offset *int, expectedTag DtapIE, 
+    dtap *Dtap, options *DecodeOptions, l2PseudoLength int) error {
+
+    if options == nil || options.L3TotalLength <= 0 {
+        return fmt.Errorf("%w, L3TotalLength is required for variable length FormatV", ErrL3LengthWasNotProvided)
+    }
+
+    vLength := options.L3TotalLength - 1 - l2PseudoLength
+
+    if vLength < 0 {
+        return fmt.Errorf("%w, invalid negative length %d for LV at offset %d",
+            ErrInvalidLength, vLength, *offset-1)
+    }
+
+    if *offset+vLength > len(data) {
+        return fmt.Errorf("%w: need %d bytes for FormatV at offset %d",
+            ErrUnexpectedEOF, vLength, *offset)
+    }
+
+    value := data[*offset : *offset+vLength]
+
+    dtap.IEs = append(dtap.IEs, IE{
+        Tag:    expectedTag,
+        Value:  value,
+    })
+
+    *offset += vLength
+    return nil
+}
 
 func decodeFormatVNibble(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
     dtap *Dtap, pendingNibble *int, skipTags []int, idx int) error {
@@ -180,8 +215,8 @@ func decodeFormatTLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) e
     length := int(data[*offset])
 
 	if length < 0 {
-        return fmt.Errorf("invalid negative length %d for LV at offset %d",
-            length, *offset-1)
+        return fmt.Errorf("%w, invalid negative length %d for LV at offset %d",
+            ErrInvalidLength, length, *offset-1)
     }
 
     if *offset+length+1 > len(data) {
@@ -207,8 +242,8 @@ func decodeFormatLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) er
     *offset++
     
     if length < 0 {
-        return fmt.Errorf("invalid negative length %d for LV at offset %d",
-            length, *offset-1)
+        return fmt.Errorf("%w, invalid negative length %d for LV at offset %d",
+            ErrInvalidLength, length, *offset-1)
     }
     
     if *offset+length > len(data) {
@@ -293,18 +328,19 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
     options := &DecodeOptions{
         L3TotalLength:  defaultLength,
         IsL2PseudoLengthExist: false,
+        WasL3TotalLengthSet: false,
     }
     
     for _, opt := range opts {
         opt(options)
     }
 
-    if options.L3TotalLength < 0 {
+    if options.WasL3TotalLengthSet && options.L3TotalLength < 1 {
         return nil, fmt.Errorf("L3 total length: %w", ErrInvalidLength)
     }
 
     if options.IsL2PseudoLengthExist {
-        l2PseudoLength = int(rawData[offset])
+        l2PseudoLength = int(rawData[offset]) >> 2
         offset++
     }
 
@@ -316,6 +352,9 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
     if err != nil {
         return nil, err
     }
+
+    dtap.PD = header.ProtocolDisc   //временно для совместимости
+    dtap.Msg = header.MsgType       //
 
     dtap.Header = header
     offset = newOffset
@@ -350,7 +389,7 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
 			}
 		case FormatV:
 			if err := decodeFormatV(rawData, &offset, &ieDef, expectedTag, 
-                dtap, &pendingNibble, skipTags, i); err != nil {
+                dtap, &pendingNibble, skipTags, i, options, l2PseudoLength); err != nil {
                 return nil, fmt.Errorf("decoding IE 0x%02X (FormatV): %w", expectedTag, err)
             }
 		case FormatTV:
@@ -383,7 +422,7 @@ func (d *Dtap) GetIEValue(tag DtapIE) ([]byte, bool) {
 	return nil, false
 }
 
-func (d *Dtap) GetIEsValue(tag DtapIE) [][]byte {
+func (d *Dtap) getIEsValue(tag DtapIE) [][]byte { //maybe will be used in future
 	var result [][]byte
 	for _, ie := range d.IEs {
 		if ie.Tag == tag {

@@ -65,7 +65,7 @@ func TestRRImmAss(t *testing.T) {
         0x27, 0x0, 0x0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
         0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
     }
-    decodeAndLogDTAP(t, rawData, WithL2PseudoLength())//L2 Pseudo Length
+    decodeAndLogDTAP(t, rawData, WithL2PseudoLength(), WithL3TotalLength(0x17))//L2 Pseudo Length
 }
 
 func TestRRAssCmd(t *testing.T) {

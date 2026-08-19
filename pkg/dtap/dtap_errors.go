@@ -18,4 +18,5 @@ var (
 	ErrUnexpectedEOF = errors.New("unexpected end of data")
 	
 	ErrInvalidLength = errors.New("Invalid Length")
+	ErrL3LengthWasNotProvided = errors.New("L3 Length was not provided")
 )
