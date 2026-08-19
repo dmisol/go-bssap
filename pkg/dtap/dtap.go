@@ -24,6 +24,27 @@ type IE struct {
 	Value []byte
 }
 
+type Option func(*DecodeOptions)
+
+type DecodeOptions struct {
+    L3TotalLength int
+    IsL2PseudoLengthExist bool //mb future
+}
+
+func WithL3TotalLength(length int) Option {
+    return func(opts *DecodeOptions) {
+        opts.L3TotalLength = length
+    }
+}
+
+func WithL2PseudoLength() Option {
+    return func(opts *DecodeOptions) {
+        opts.IsL2PseudoLengthExist = true;
+    }
+}
+
+var defaultLength = 0
+
 func decodeHeader(rawData []byte, offset int) (DtapHeader, int, error) {
     var header DtapHeader
 
@@ -256,7 +277,7 @@ func decodeFormatTVRegular(data []byte, offset *int, ieDef *IEDefinition, expect
     return nil
 }
 
-func DtapDecode(rawData []byte) (*Dtap, error) {
+func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
 	if len(rawData) < 2 {
 		return nil, errors.New("DTAP message too short: need at least 2 bytes")
 	}
@@ -266,7 +287,30 @@ func DtapDecode(rawData []byte) (*Dtap, error) {
 		IEs: make([]IE, 0, 10),
 	}
 
-	var offset int = 0
+    var l2PseudoLength int = 0
+    var offset int = 0
+
+    options := &DecodeOptions{
+        L3TotalLength:  defaultLength,
+        IsL2PseudoLengthExist: false,
+    }
+    
+    for _, opt := range opts {
+        opt(options)
+    }
+
+    if options.L3TotalLength < 0 {
+        return nil, fmt.Errorf("L3 total length: %w", ErrInvalidLength)
+    }
+
+    if options.IsL2PseudoLengthExist {
+        l2PseudoLength = int(rawData[offset])
+        offset++
+    }
+
+    if l2PseudoLength < 0 {
+        return nil, fmt.Errorf("decoding IE L2 Pseudo Length (FormatV): %w", ErrInvalidLengthIE)
+    }
 
 	header, newOffset, err := decodeHeader(rawData, offset)
     if err != nil {

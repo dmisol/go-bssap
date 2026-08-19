@@ -16,4 +16,6 @@ var (
 
 	ErrInvalidFormat = errors.New("invalid format for IE")
 	ErrUnexpectedEOF = errors.New("unexpected end of data")
+	
+	ErrInvalidLength = errors.New("Invalid Length")
 )

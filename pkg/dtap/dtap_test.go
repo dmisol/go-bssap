@@ -6,10 +6,10 @@ import (
 
 //go test -v -run TestRealLocationUpdatingRequest 
 //12 пакет
-func decodeAndLogDTAP(t *testing.T, rawData []byte) {
+func decodeAndLogDTAP(t *testing.T, rawData []byte, opts ...Option) {
     
     t.Logf("Raw data length: %d bytes", len(rawData))
-    dtap, err := DtapDecode(rawData)
+    dtap, err := DtapDecode(rawData, opts...)
     if err != nil {
         t.Fatalf("DtapDecode failed: %v", err)
     }
@@ -65,7 +65,7 @@ func TestRRImmAss(t *testing.T) {
         0x27, 0x0, 0x0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
         0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
     }
-    decodeAndLogDTAP(t, rawData[1:])//L2 Pseudo Length
+    decodeAndLogDTAP(t, rawData, WithL2PseudoLength())//L2 Pseudo Length
 }
 
 func TestRRAssCmd(t *testing.T) {
