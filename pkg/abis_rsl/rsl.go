@@ -82,3 +82,22 @@ func Get(ies []IE, tag TAG) (IE, bool) {
 	}
 	return nil, false
 }
+
+func GetDtap(ies []IE, tag TAG) (IE, int, bool) {
+	v, b := Get(ies, tag)
+	var length int
+	if !b {
+		return nil, 0, false
+	}
+
+	if tag == IE_FULL_IMM_ASS_INFO {
+		length = int(v[1])
+		v = v[2:]
+	}
+
+	if tag == IE_L3_INFO {
+		length = int(v[1]) << 8 + int(v[2])
+		v = v[3:]
+	}
+	return v, length, true
+}
