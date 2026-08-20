@@ -45,6 +45,12 @@ func WithL2PseudoLength() Option {
     }
 }
 
+func SetL2PseudoLength(exists bool) Option {
+    return func(opts *DecodeOptions) {
+        opts.IsL2PseudoLengthExist = exists
+    }
+}
+
 var defaultLength = 0
 
 func decodeHeader(rawData []byte, offset int) (DtapHeader, int, error) {

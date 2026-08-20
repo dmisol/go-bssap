@@ -8,6 +8,9 @@ import (
 var (
 	ErrWrongIE    = errors.New("invalid IE for request")
 	ErrWrongPload = errors.New("unexpected l3 payload")
+	ErrInvalidLength = errors.New("Invalid length")
+	ErrRslIsNil = errors.New("RSL is nil")
+	ErrNoDtapIEFound = errors.New("No Dtap")
 )
 
 // fixme: there should be a way to do it better
