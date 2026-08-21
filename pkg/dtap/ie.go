@@ -3,31 +3,29 @@ package dtap
 type DtapIE uint16
 
 
-//для одного и того же type  и имени могут быть разный FORMAT и разные IEI поэтому для каждого делаю тег по имени в RR + формат. 
-//В MM в основном по типу.
+/*	
+	The same Type/Reference and Information Element can have different FORMATs and IEIs.
+	Therefore, each tag is identified by name + format. For example, REJ_CAUSE_V.
+*/
 
 const (
 	//general created Tags
 	PROTOCOL_DISC_V											DtapIE = 0x100
 	SKIP_IND_V												DtapIE = 0x101
 	MSG_TYPE_V												DtapIE = 0x102
-	CIPH_KEY_SEQ_NUM										DtapIE = 0x103
-	SPARE_HALF_OCT											DtapIE = 0x104
-	AUTH_PARAM_RAND											DtapIE = 0x105
-	AUTH_RESP_PARAM											DtapIE = 0x106
-	REJ_CAUSE												DtapIE = 0x107
-	MS_CLASSMARK_2											DtapIE = 0x108
-	M_IDENTITY_1											DtapIE = 0x109
-	PD_AND_SAPI												DtapIE = 0x10A
-	CM_SERVICE_TYPE											DtapIE = 0x10B
-	ID_TYPE													DtapIE = 0x10C
-	MS_CLASSMARK_1											DtapIE = 0x10D
-	LOC_UPD_TYPE											DtapIE = 0x10E
-	LOC_AREA_ID												DtapIE = 0x10F //table 9.2.15
-	MS_NET_FEAT_SUP											DtapIE = 0x110
-	NON_3GPP												DtapIE = 0x111
-	P_TMSI_TYPE												DtapIE = 0x112
-	DEVICE_PROPS											DtapIE = 0x113
+	AUTH_PARAM_RAND_V										DtapIE = 0x105
+	AUTH_RESP_PARAM_V										DtapIE = 0x106
+	REJ_CAUSE_V												DtapIE = 0x107
+	PD_AND_SAPI_V											DtapIE = 0x10A
+	CM_SERVICE_TYPE_V										DtapIE = 0x10B
+	IDENTITY_TYPE_V											DtapIE = 0x10C
+	MOBILE_STATION_CLASSMARK_V								DtapIE = 0x10D
+	LOCATION_UPDATING_TYPE_V								DtapIE = 0x10E
+	LOCATION_AREA_ID_V										DtapIE = 0x10F
+	MS_NETWORK_FEATURE_SUPPORT_TV							DtapIE = 0x110
+	NON_3GPP_NW_PROVIDED_POLICIES_TV						DtapIE = 0x111
+	P_TMSI_TYPE_TV											DtapIE = 0x112
+	DEVICE_PROPS_TV											DtapIE = 0x113
 	PAGE_MODE_V                            					DtapIE = 0x114
 	DEDICATED_MODE_OR_TBF_V                 				DtapIE = 0x115
 	CHANNEL_DESC_V                          				DtapIE = 0x116
@@ -77,28 +75,27 @@ const (
 	ADDITIONAL_UPDATE_PARAMETERS_TV                     	DtapIE = 0x142
 	//MM
 	//embedded tags
-	AUTH_PARAM_AUTN											DtapIE = 0x20
-	AUTH_RESP_PARAM_EXT										DtapIE = 0x21
-	AUTH_FAIL_PARAM											DtapIE = 0x22
-	LOC_AREA_ID_2											DtapIE = 0x13 //table 9.2.5
-	MM_TIMER												DtapIE = 0x36
-	PRIOR_LVL												DtapIE = 0x08
-	ADD_UPD_PARAMS											DtapIE = 0x0C
-	ROUT_AREA_ID_2											DtapIE = 0x1B		
-	P_TMSI_SIGN_2											DtapIE = 0x19
-	M_IDENTITY_2											DtapIE = 0x17
-	FLLW_ON_PROC											DtapIE = 0xA1
-	CTS_PERM												DtapIE = 0xA2
-	PLMN_LST												DtapIE = 0x4A
-	EMER_NUM_LST											DtapIE = 0x34
-	GPRS_TIM_3												DtapIE = 0x35
-	MS_CLASSMARK_UMTS										DtapIE = 0x33
-	FNAME_F_NET												DtapIE = 0x43
-	SNAME_F_NET												DtapIE = 0x45
-	TIME_ZONE												DtapIE = 0x46
-	TIME_ZONE_AND_TIME										DtapIE = 0x47
-	LSA_IDEN												DtapIE = 0x48
-	DAY_SAVING_TIME											DtapIE = 0x49
+	AUTH_PARAM_AUTN_TLV										DtapIE = 0x20
+	AUTH_RESP_PARAM_EXT_TLV									DtapIE = 0x21
+	AUTH_FAILURE_PARAM_TLV									DtapIE = 0x22
+	LOCATION_AREA_ID_TV										DtapIE = 0x13
+	MM_TIMER_TLV											DtapIE = 0x36
+	PRIORITY_TV												DtapIE = 0x08
+	ROUTING_AREA_IDENTIFICATION_TLV							DtapIE = 0x1B		
+	P_TMSI_SIGNATURE_TLV									DtapIE = 0x19
+	MOBILE_IDENTITY_TLV										DtapIE = 0x17
+	FOLLOW_ON_PROCEED_T										DtapIE = 0xA1
+	CTS_PERMISSION_T										DtapIE = 0xA2
+	EQUIVALENT_PLMNS_TLV									DtapIE = 0x4A
+	EMERGENCY_NUMBER_LIST_TLV								DtapIE = 0x34
+	PER_MS_T3212_TLV										DtapIE = 0x35
+	MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV					DtapIE = 0x33
+	FULL_NAME_FOR_NETWORK_TLV								DtapIE = 0x43
+	SHORT_NAME_FOR_NETWORK_TLV								DtapIE = 0x45
+	LOCAL_TIME_ZONE_TV										DtapIE = 0x46
+	UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV					DtapIE = 0x47
+	LSA_IDENTITY_TLV										DtapIE = 0x48
+	NETWORK_DAYLIGHT_SAVING_TIME_TLV						DtapIE = 0x49
 	//RR
 	//embedded tags
 	STARTING_TIME_TV                        				DtapIE = 0x7C
@@ -179,6 +176,7 @@ const (
 	SpecialHandling
 	0 means nothing
 	1 means that The high nibble determines which of the following conditional fields exists.
+	2 means that This is a variable-length field in V-format.
 */
 
 type IEDefinition struct {
@@ -233,84 +231,84 @@ func formatMM(ie DtapIE) IEDefinition {
 		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
 	case MSG_TYPE_V:
 		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
-	case CIPH_KEY_SEQ_NUM:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPH_KEY_SEQ_NUM}
-	case SPARE_HALF_OCT:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCT}
-	case AUTH_PARAM_RAND:
-		return IEDefinition{Format: FormatV, FixedLen: 16, Tag: AUTH_PARAM_RAND}
-	case AUTH_RESP_PARAM:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: AUTH_RESP_PARAM}
-	case REJ_CAUSE:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: REJ_CAUSE}
-	case MS_CLASSMARK_2:
-		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MS_CLASSMARK_2}
-	case M_IDENTITY_1:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: M_IDENTITY_1}
-	case PD_AND_SAPI:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PD_AND_SAPI}
-	case CM_SERVICE_TYPE:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CM_SERVICE_TYPE}
-	case ID_TYPE:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: ID_TYPE}
-	case MS_CLASSMARK_1:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MS_CLASSMARK_1}
-	case LOC_UPD_TYPE:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: LOC_UPD_TYPE}
-	case AUTH_PARAM_AUTN:
-		return IEDefinition{Format: FormatTLV, FixedLen: 18, Tag: AUTH_PARAM_AUTN}
-	case AUTH_RESP_PARAM_EXT:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: AUTH_RESP_PARAM_EXT}
-	case AUTH_FAIL_PARAM:
-		return IEDefinition{Format: FormatTLV, FixedLen: 16, Tag: AUTH_FAIL_PARAM}
-	case LOC_AREA_ID:
-		return IEDefinition{Format: FormatV, FixedLen: 5, Tag: LOC_AREA_ID}
-	case LOC_AREA_ID_2:
-		return IEDefinition{Format: FormatTV, FixedLen: 6, Tag: LOC_AREA_ID_2}
-	case DEVICE_PROPS:
+	case CIPHERING_KEY_SEQUENCE_NUMBER_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
+	case SPARE_HALF_OCTET_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCTET_V}
+	case AUTH_PARAM_RAND_V:
+		return IEDefinition{Format: FormatV, FixedLen: 16, Tag: AUTH_PARAM_RAND_V}
+	case AUTH_RESP_PARAM_V:
+		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: AUTH_RESP_PARAM_V}
+	case REJ_CAUSE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: REJ_CAUSE_V}
+	case MOBILE_STATION_CLASSMARK_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MOBILE_STATION_CLASSMARK_LV}
+	case MOBILE_IDENTITY_LV:
+		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_LV}
+	case PD_AND_SAPI_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PD_AND_SAPI_V}
+	case CM_SERVICE_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CM_SERVICE_TYPE_V}
+	case IDENTITY_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IDENTITY_TYPE_V}
+	case MOBILE_STATION_CLASSMARK_V:
+		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MOBILE_STATION_CLASSMARK_V}
+	case LOCATION_UPDATING_TYPE_V:
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: LOCATION_UPDATING_TYPE_V}
+	case AUTH_PARAM_AUTN_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 18, Tag: AUTH_PARAM_AUTN_TLV}
+	case AUTH_RESP_PARAM_EXT_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: AUTH_RESP_PARAM_EXT_TLV}
+	case AUTH_FAILURE_PARAM_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 16, Tag: AUTH_FAILURE_PARAM_TLV}
+	case LOCATION_AREA_ID_V:
+		return IEDefinition{Format: FormatV, FixedLen: 5, Tag: LOCATION_AREA_ID_V}
+	case LOCATION_AREA_ID_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: 6, Tag: LOCATION_AREA_ID_TV}
+	case DEVICE_PROPS_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
-	case MM_TIMER:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: MM_TIMER}
-	case PRIOR_LVL:
+	case MM_TIMER_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: MM_TIMER_TLV}
+	case PRIORITY_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
-	case ADD_UPD_PARAMS:
+	case ADDITIONAL_UPDATE_PARAMETERS_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
-	case P_TMSI_TYPE:
+	case P_TMSI_TYPE_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
-	case ROUT_AREA_ID_2:
-		return IEDefinition{Format: FormatTLV, FixedLen: 8, Tag: ROUT_AREA_ID_2}
-	case P_TMSI_SIGN_2:
-		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: P_TMSI_SIGN_2}
-	case M_IDENTITY_2:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: M_IDENTITY_2}
-	case FLLW_ON_PROC:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: FLLW_ON_PROC}
-	case CTS_PERM:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CTS_PERM}
-	case PLMN_LST:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: PLMN_LST}
-	case EMER_NUM_LST:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EMER_NUM_LST}
-	case GPRS_TIM_3:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: GPRS_TIM_3}
-	case NON_3GPP:
+	case ROUTING_AREA_IDENTIFICATION_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 8, Tag: ROUTING_AREA_IDENTIFICATION_TLV}
+	case P_TMSI_SIGNATURE_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: P_TMSI_SIGNATURE_TLV}
+	case MOBILE_IDENTITY_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_IDENTITY_TLV}
+	case FOLLOW_ON_PROCEED_T:
+		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: FOLLOW_ON_PROCEED_T}
+	case CTS_PERMISSION_T:
+		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CTS_PERMISSION_T}
+	case EQUIVALENT_PLMNS_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EQUIVALENT_PLMNS_TLV}
+	case EMERGENCY_NUMBER_LIST_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EMERGENCY_NUMBER_LIST_TLV}
+	case PER_MS_T3212_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: PER_MS_T3212_TLV}
+	case NON_3GPP_NW_PROVIDED_POLICIES_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
-	case MS_CLASSMARK_UMTS:
-		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: MS_CLASSMARK_UMTS}
-	case MS_NET_FEAT_SUP:
+	case MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV}
+	case MS_NETWORK_FEATURE_SUPPORT_TV:
 		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
-	case FNAME_F_NET:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FNAME_F_NET}
-	case SNAME_F_NET:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SNAME_F_NET}
-	case TIME_ZONE:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: TIME_ZONE}
-	case TIME_ZONE_AND_TIME:
-		return IEDefinition{Format: FormatTV, FixedLen: 8, Tag: TIME_ZONE_AND_TIME}
-	case LSA_IDEN:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: LSA_IDEN}
-	case DAY_SAVING_TIME:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: DAY_SAVING_TIME}
+	case FULL_NAME_FOR_NETWORK_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FULL_NAME_FOR_NETWORK_TLV}
+	case SHORT_NAME_FOR_NETWORK_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SHORT_NAME_FOR_NETWORK_TLV}
+	case LOCAL_TIME_ZONE_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: LOCAL_TIME_ZONE_TV}
+	case UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV:
+		return IEDefinition{Format: FormatTV, FixedLen: 8, Tag: UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV}
+	case LSA_IDENTITY_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: LSA_IDENTITY_TLV}
+	case NETWORK_DAYLIGHT_SAVING_TIME_TLV:
+		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: NETWORK_DAYLIGHT_SAVING_TIME_TLV}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
 	}
@@ -341,7 +339,7 @@ func formatRR(ie DtapIE) IEDefinition {
     case STARTING_TIME_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 3, Tag: STARTING_TIME_TV}
     case IA_REST_OCTETS_V:
-        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V}
+        return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V, SpecialHandling: 2}
     case EXTENDED_TSC_SET_TV:
         return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
 	case FEATURE_INDICATOR_V:
@@ -487,7 +485,7 @@ func formatRR(ie DtapIE) IEDefinition {
 	case MOBILE_IDENTITY_2_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P1_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V}
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_1_V:
 		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_1_V}
 	case MOBILE_IDENTITY_2_V:
@@ -495,7 +493,7 @@ func formatRR(ie DtapIE) IEDefinition {
 	case MOBILE_IDENTITY_3_TLV:
 		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
 	case P2_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V}
+		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_3_V:
 		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_3_V}
 	case MOBILE_IDENTITY_4_V:
