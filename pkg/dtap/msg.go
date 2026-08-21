@@ -219,3 +219,7 @@ const (
 	CauseAbnormalTimerExpired
 	CauseAbnormalNoRadio
 )
+
+const (
+	MM_Info Msg_Type = 0x032
+)
