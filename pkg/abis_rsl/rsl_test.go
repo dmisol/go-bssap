@@ -73,7 +73,7 @@ func TestRSL_TFO(t *testing.T) {
     }
     printRSL(t, rsl)
 
-    dt1, err := ExtractDTAPFromRSL(rsl)
+    dt1, err := ExtractAndDecodeDTAPFromRSL(rsl)
     if err != nil {
         t.Logf("Extract DTAP failed: %v", err)
         return
@@ -97,7 +97,7 @@ func TestRSL_RR_PagingResponse(t *testing.T) {
     }
     printRSL(t, rsl)
 
-    dt1, err := ExtractDTAPFromRSL(rsl)
+    dt1, err := ExtractAndDecodeDTAPFromRSL(rsl)
     if err != nil {
         t.Logf("Extract DTAP failed: %v", err)
         return
@@ -119,7 +119,7 @@ func TestRSL_RR_AssComplete(t *testing.T) {
     }
     printRSL(t, rsl)
 
-    dt1, err := ExtractDTAPFromRSL(rsl)
+    dt1, err := ExtractAndDecodeDTAPFromRSL(rsl)
     if err != nil {
         t.Logf("Extract DTAP failed: %v", err)
         return
@@ -140,7 +140,7 @@ func TestRSL_MM_SerAcc(t *testing.T) {
     }
     printRSL(t, rsl)
 
-    dt1, err := ExtractDTAPFromRSL(rsl)
+    dt1, err := ExtractAndDecodeDTAPFromRSL(rsl)
     if err != nil {
         t.Logf("Extract DTAP failed: %v", err)
         return
@@ -161,7 +161,7 @@ func TestRSL_RR_AssCmd(t *testing.T) {
     }
     printRSL(t, rsl)
 
-    dt1, err := ExtractDTAPFromRSL(rsl)
+    dt1, err := ExtractAndDecodeDTAPFromRSL(rsl)
     if err != nil {
         t.Logf("Extract DTAP failed: %v", err)
         return

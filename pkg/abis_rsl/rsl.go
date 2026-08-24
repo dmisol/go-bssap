@@ -85,14 +85,14 @@ func Get(ies []IE, tag TAG) (IE, bool) {
 	return nil, false
 }
 
-func getDtap(ies []IE, tag TAG) ([]byte, int, bool, error) {
+func getDtap(ies []IE, tag TAG) ([]byte, bool, error) {
     ie, found := Get(ies, tag)
     if !found {
-        return nil, 0, false, ErrWrongIE
+        return nil, false, ErrWrongIE
     }
 
     if len(ie) < 2 {
-        return nil, 0, false, ErrInvalidLength
+        return nil, false, ErrInvalidLength
     }
 	
     var data []byte
@@ -102,25 +102,25 @@ func getDtap(ies []IE, tag TAG) ([]byte, int, bool, error) {
     switch tag {
     case IE_FULL_IMM_ASS_INFO:
         if len(ie) < 2 {
-            return nil, 0, false, ErrInvalidLength
+            return nil,  false, ErrInvalidLength
         }
         length = int(ie[1])
         if len(ie) < 2+length {
-            return nil, 0, false, ErrInvalidLength
+            return nil, false, ErrInvalidLength
         }
         data = ie[2 : 2+length]
 
     case IE_L3_INFO:
         if len(ie) < 3 {
-            return nil, 0, false, ErrInvalidLength
+            return nil,  false, ErrInvalidLength
         }
         length = int(ie[1])<<8 + int(ie[2])
         if len(ie) < 3+length {
-            return nil, 0, false, ErrInvalidLength
+            return nil, false, ErrInvalidLength
         }
         data = ie[3 : 3+length]
     default:
-        return nil, 0, false, ErrWrongIE
+        return nil, false, ErrWrongIE
     }
 
 	channelIE, found := Get(ies, IE_CHAN_NR)
@@ -129,28 +129,28 @@ func getDtap(ies []IE, tag TAG) ([]byte, int, bool, error) {
         hasL2PseudoLength = cbits.HasL2PseudoLength()
     }
 
-    return data, length, hasL2PseudoLength, nil
+    return data, hasL2PseudoLength, nil
 }
 
-func ExtractDTAPFromRSL(rsl *RSL) (*dtap.Dtap, error) {
+func ExtractAndDecodeDTAPFromRSL(rsl *RSL) (*dtap.Dtap, error) {
     if rsl == nil {
         return nil, fmt.Errorf("RSL is nil")
     }
 
     if _, found := Get(rsl.IEs, IE_L3_INFO); found {
-        ie, length, isl2, err := getDtap(rsl.IEs, IE_L3_INFO)
+        ie, isl2, err := getDtap(rsl.IEs, IE_L3_INFO)
         if err != nil {
             return nil, fmt.Errorf("getDtap IE_L3_INFO: %w", err)
         }
-        return dtap.DtapDecode(ie, dtap.SetL2PseudoLength(isl2), dtap.WithL3TotalLength(length))
+        return dtap.DtapDecode(ie, dtap.SetL2PseudoLength(isl2))
     }
     
     if _, found := Get(rsl.IEs, IE_FULL_IMM_ASS_INFO); found {
-        ie, length, isl2, err := getDtap(rsl.IEs, IE_FULL_IMM_ASS_INFO)
+        ie, isl2, err := getDtap(rsl.IEs, IE_FULL_IMM_ASS_INFO)
         if err != nil {
             return nil, fmt.Errorf("getDtap IE_FULL_IMM_ASS_INFO: %w", err)
         }
-        return dtap.DtapDecode(ie, dtap.SetL2PseudoLength(isl2), dtap.WithL3TotalLength(length))
+        return dtap.DtapDecode(ie, dtap.SetL2PseudoLength(isl2))
     }
     
     return nil, fmt.Errorf("%w, (tried: 0x%02X, 0x%02X)", ErrNoDtapIEFound, IE_L3_INFO, IE_FULL_IMM_ASS_INFO)
