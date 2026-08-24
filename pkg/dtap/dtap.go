@@ -8,9 +8,7 @@ import (
 type Dtap struct {
 	IEs    []IE
 	Header DtapHeader
-    Raw    []byte   //
-    PD PD_Type      //временно для совместимости
-    Msg Msg_Type    //
+    Raw    []byte
 }
 
 type DtapHeader struct {
@@ -29,14 +27,6 @@ type Option func(*DecodeOptions)
 type DecodeOptions struct {
     L3TotalLength int
     IsL2PseudoLengthExist bool
-    WasL3TotalLengthSet   bool
-}
-
-func WithL3TotalLength(length int) Option {
-    return func(opts *DecodeOptions) {
-        opts.L3TotalLength = length
-        opts.WasL3TotalLengthSet = true
-    }
 }
 
 func WithL2PseudoLength() Option {
@@ -50,8 +40,6 @@ func SetL2PseudoLength(exists bool) Option {
         opts.IsL2PseudoLengthExist = exists
     }
 }
-
-var defaultLength = 0
 
 func decodeHeader(rawData []byte, offset int) (DtapHeader, int, error) {
     var header DtapHeader
@@ -87,7 +75,6 @@ func decodeFormatT(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) err
     *offset++
     return nil
 }
-
 
 func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE, 
     dtap *Dtap, pendingNibble *int, skipTags []int, idx int, options *DecodeOptions, l2PseudoLength int) error {
@@ -332,17 +319,12 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
     var offset int = 0
 
     options := &DecodeOptions{
-        L3TotalLength:  defaultLength,
+        L3TotalLength:  len(rawData),
         IsL2PseudoLengthExist: false,
-        WasL3TotalLengthSet: false,
     }
     
     for _, opt := range opts {
         opt(options)
-    }
-
-    if options.WasL3TotalLengthSet && options.L3TotalLength < 1 {
-        return nil, fmt.Errorf("L3 total length: %w", ErrInvalidLength)
     }
 
     if options.IsL2PseudoLengthExist {
@@ -358,9 +340,6 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
     if err != nil {
         return nil, err
     }
-
-    dtap.PD = header.ProtocolDisc   //временно для совместимости
-    dtap.Msg = header.MsgType       //
 
     dtap.Header = header
     offset = newOffset
@@ -426,16 +405,6 @@ func (d *Dtap) GetIEValue(tag DtapIE) ([]byte, bool) {
 		}
 	}
 	return nil, false
-}
-
-func (d *Dtap) getIEsValue(tag DtapIE) [][]byte { //maybe will be used in future
-	var result [][]byte
-	for _, ie := range d.IEs {
-		if ie.Tag == tag {
-			result = append(result, ie.Value)
-		}
-	}
-	return result
 }
 
 // todo: fix

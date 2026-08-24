@@ -17,7 +17,7 @@ func decodeAndLogDTAP(t *testing.T, rawData []byte, opts ...Option) {
     t.Logf("=== HEADER ===")
     t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
     t.Logf("SkipInd: 0x%02X", dtap.Header.SkipInd)
-    t.Logf("MsgType: %d", dtap.Header.MsgType)
+    t.Logf("MsgType: 0x%02X", dtap.Header.MsgType)
 
     for i, ie := range dtap.IEs {
         t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
@@ -65,7 +65,7 @@ func TestRRImmAss(t *testing.T) {
         0x27, 0x0, 0x0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
         0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
     }
-    decodeAndLogDTAP(t, rawData, WithL2PseudoLength(), WithL3TotalLength(0x17))//L2 Pseudo Length
+    decodeAndLogDTAP(t, rawData, WithL2PseudoLength())//L2 Pseudo Length
 }
 
 func TestRRAssCmd(t *testing.T) {
@@ -76,4 +76,9 @@ func TestRRAssCmd(t *testing.T) {
 func TestRRHandoCmd(t *testing.T) {
     rawData := []byte{0x6, 0x2b, 0x3f, 0x3c, 0xb, 0xe0, 0x3c, 0x2, 0xe, 0xd0, 0x63, 0x1, 0x90}
     decodeAndLogDTAP(t, rawData)
+}
+
+func TestImmAssOs(t *testing.T) {
+    rawData := []byte{0x2d, 0x6, 0x3f, 0x30, 0xf, 0x63, 0x58, 0x7d, 0xd4, 0x51, 0x2, 0x0, 0xdc, 0xca, 0xe4, 0xa6, 0x58, 0x0, 0x23, 0x2b, 0x2b, 0x2b, 0x2b}
+    decodeAndLogDTAP(t, rawData, WithL2PseudoLength())
 }

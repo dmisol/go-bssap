@@ -20,3 +20,12 @@ var (
 	ErrInvalidLength = errors.New("Invalid Length")
 	ErrL3LengthWasNotProvided = errors.New("L3 Length was not provided")
 )
+
+// IsUnsupportedError checks whether the error represents a case of "currently unsupported functionality."
+func IsUnsupportedErrorOrNil(err error) bool {
+	if err == nil {
+		return true
+	}
+	return errors.Is(err, ErrUnsupportedMsgType) || 
+	       errors.Is(err, ErrUnsupportedProtocolDisc)
+}
