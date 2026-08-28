@@ -2,7 +2,7 @@ package dtap
 
 type PD_Type byte
 
-//ETSI TS 124 007 V19.5.0 Table 11.2
+// ETSI TS 124 007 V19.5.0 Table 11.2
 const (
 	PD_GROUP_CC PD_Type = 0x00
 	PD_BCAST_CC PD_Type = 0x01
@@ -67,18 +67,18 @@ const (
 	MSG_RR_PART_REL      Msg_Type = 0x0a
 	MSG_RR_PART_REL_COMP Msg_Type = 0x0f
 
-	MSG_RR_PAG_REQ_1          Msg_Type = 0x21
-	MSG_RR_PAG_REQ_2          Msg_Type = 0x22
-	MSG_RR_PAG_REQ_3          Msg_Type = 0x24
-	MSG_RR_PAG_RESP           Msg_Type = 0x27
-	MSG_RR_NOTIF_NCH          Msg_Type = 0x20
-	MSG_RR_NOTIF_FACCH        Msg_Type = 0x25 /* (Reserved) */
-	MSG_RR_NOTIF_RESP         Msg_Type = 0x26
-	MSG_RR_PACKET_NOTIF       Msg_Type = 0x4e
-	MSG_RR_UTRAN_CLSM_CHG     Msg_Type = 0x60
-	MSG_RR_CDMA2K_CLSM_CHG    Msg_Type = 0x62
-	MSG_RR_IS_TO_UTRAN_HANDO  Msg_Type = 0x63
-	MSG_RR_IS_TO_CDMA2K_HANDO Msg_Type = 0x64
+	MSG_RR_PAG_REQ_1                      Msg_Type = 0x21
+	MSG_RR_PAG_REQ_2                      Msg_Type = 0x22
+	MSG_RR_PAG_REQ_3                      Msg_Type = 0x24
+	MSG_RR_PAG_RESP                       Msg_Type = 0x27
+	MSG_RR_NOTIF_NCH                      Msg_Type = 0x20
+	MSG_RR_NOTIF_FACCH                    Msg_Type = 0x25 /* (Reserved) */
+	MSG_RR_NOTIF_RESP                     Msg_Type = 0x26
+	MSG_RR_PACKET_NOTIF                   Msg_Type = 0x4e
+	MSG_RR_UTRAN_CLSM_CHG                 Msg_Type = 0x60
+	MSG_RR_CDMA2K_CLSM_CHG                Msg_Type = 0x62
+	MSG_RR_IS_TO_UTRAN_HANDO              Msg_Type = 0x63
+	MSG_RR_IS_TO_CDMA2K_HANDO             Msg_Type = 0x64
 	MSG_RR_GERAN_IU_MODE_CLASSMARK_CHANGE Msg_Type = 0x65
 	MSG_RR_INTER_SYS_TO_E_UTRAN_HANDO_CMD Msg_Type = 0x66
 
@@ -126,20 +126,20 @@ const (
 
 	MSG_RR_APP_INFO Msg_Type = 0x38
 
-	/* 3GPP TS 44.018 Table 10.4.2 */  // пока нет в getRRTagsOrder
-	MSG_RR_SH_SI10        Msg_Type = 0x0
-	MSG_RR_SH_FACCH       Msg_Type = 0x1
-	MSG_RR_SH_UL_FREE     Msg_Type = 0x2
-	MSG_RR_SH_MEAS_REP    Msg_Type = 0x4
-	MSG_RR_SH_MEAS_INFO   Msg_Type = 0x5
-	MSG_RR_SH_VGCS_RECON  Msg_Type = 0x6
-	MSG_RR_SH_VGCS_RECON2 Msg_Type = 0x7
-	MSG_RR_SH_VGCS_INFO   Msg_Type = 0x8
-	MSG_RR_SH_VGCS_SMS    Msg_Type = 0x9
-	MSG_RR_SH_SI10bis     Msg_Type = 0xA
-	MSG_RR_SH_SI10ter     Msg_Type = 0xB
-	MSG_RR_SH_VGCS_NEIGH  Msg_Type = 0xC
-	MSG_RR_SH_APP_DATA    Msg_Type = 0xD
+	/* 3GPP TS 44.018 Table 10.4.2 */ // пока нет в getRRTagsOrder
+	MSG_RR_SH_SI10                    Msg_Type = 0x0
+	MSG_RR_SH_FACCH                   Msg_Type = 0x1
+	MSG_RR_SH_UL_FREE                 Msg_Type = 0x2
+	MSG_RR_SH_MEAS_REP                Msg_Type = 0x4
+	MSG_RR_SH_MEAS_INFO               Msg_Type = 0x5
+	MSG_RR_SH_VGCS_RECON              Msg_Type = 0x6
+	MSG_RR_SH_VGCS_RECON2             Msg_Type = 0x7
+	MSG_RR_SH_VGCS_INFO               Msg_Type = 0x8
+	MSG_RR_SH_VGCS_SMS                Msg_Type = 0x9
+	MSG_RR_SH_SI10bis                 Msg_Type = 0xA
+	MSG_RR_SH_SI10ter                 Msg_Type = 0xB
+	MSG_RR_SH_VGCS_NEIGH              Msg_Type = 0xC
+	MSG_RR_SH_APP_DATA                Msg_Type = 0xD
 
 	/* Table 10.2/3GPP TS 04.08 */
 	MSG_MM_IMSI_DETACH_IND Msg_Type = 0x01
