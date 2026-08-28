@@ -109,6 +109,24 @@ func (i IE) ParseCellId() (identType CELL_IDENT_TYPE, mcc uint16, mnc MNC, ci, l
 			return
 		}
 		ci = binary.BigEndian.Uint16(i[3:])
+	case CELL_IDENT_SAI:
+		if len(i) != 10 {
+			err = fmt.Errorf("error: CELL_ID (%s) unexpected len %d %s", identType, len(i), hex.EncodeToString(i))
+			return
+		}
+
+		mcc = uint16(i[3]&0x0F)*100 + uint16(i[3]>>4)*10 + uint16(i[4]&0x0F)
+
+		mnc = MNC{Val: uint16((i[5]&0x0F)*10 + i[5]>>4), Digits: 2}
+		f := i[4] >> 4
+		if f != 0x0F {
+			mnc.Val = mnc.Val*10 + uint16(f)
+			mnc.Digits = 3
+		}
+
+		lac = binary.BigEndian.Uint16(i[6:])
+		// TODO: actually not CI, but SAC
+		ci = binary.BigEndian.Uint16(i[8:])
 	default:
 		err = fmt.Errorf("error: CELL_ID option %d not supported %s", int(i[2]), hex.EncodeToString(i))
 	}
