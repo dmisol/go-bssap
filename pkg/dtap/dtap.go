@@ -8,6 +8,9 @@ import (
 type Dtap struct {
 	IEs    []IE
 	Header DtapHeader
+
+	// WARNING: DO NOT use it if you can unmarshall it using dtap functionality
+	Raw []byte
 }
 
 type DtapHeader struct {
@@ -308,6 +311,7 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
 
 	dtap := &Dtap{
 		IEs: make([]IE, 0, 10),
+		Raw: rawData,
 	}
 
 	var l2PseudoLength int = 0
