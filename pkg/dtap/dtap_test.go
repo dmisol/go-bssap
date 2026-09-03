@@ -21,6 +21,8 @@ func decodeAndLogDTAP(t *testing.T, rawData []byte, opts ...Option) {
 		t.Logf("MsgType: 0x%02X (%s)", int(dtap.Header.MsgType), MM_Msg_Type(dtap.Header.MsgType))
 	case PD_RR:
 		t.Logf("MsgType: 0x%02X (%s)", int(dtap.Header.MsgType), RR_Msg_Type(dtap.Header.MsgType))
+	case PD_CC:
+		t.Logf("MsgType: 0x%02X (%s)", int(dtap.Header.MsgType), CC_Msg_Type(dtap.Header.MsgType))
 	default:
 		t.Logf("MsgType: 0x%02X", dtap.Header.MsgType)
 	}
