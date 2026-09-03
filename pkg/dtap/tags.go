@@ -42,7 +42,7 @@ func GetTagsOrder(pd PD_Type, msgType Msg_Type) ([]DtapIE, error) {
 }
 
 func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-	switch msgType {
+	switch MM_Msg_Type(msgType) {
 	case MSG_MM_IMSI_DETACH_IND:
 		return []DtapIE{
 			MOBILE_STATION_CLASSMARK_V,
@@ -187,7 +187,7 @@ func getMMTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
 }
 
 func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-	switch msgType {
+	switch RR_Msg_Type(msgType) {
 
 	case MSG_RR_IMM_ASS:
 		return []DtapIE{
@@ -392,7 +392,7 @@ func getRRTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
 }
 
 func getCCTagsOrder(msgType Msg_Type) ([]DtapIE, error) {
-	switch msgType {
+	switch CC_Msg_Type(msgType) {
 	case MSG_CC_SETUP:
 		res := []DtapIE{
 			BC_REPEAT_INDICATOR_TV,
