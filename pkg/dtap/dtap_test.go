@@ -14,12 +14,19 @@ func decodeAndLogDTAP(t *testing.T, rawData []byte, opts ...Option) {
 	}
 
 	t.Logf("=== HEADER ===")
-	t.Logf("ProtocolDisc: 0x%02X (%v)", dtap.Header.ProtocolDisc, dtap.Header.ProtocolDisc)
+	t.Logf("ProtocolDisc: 0x%02X (%s)", int(dtap.Header.ProtocolDisc), dtap.Header.ProtocolDisc)
 	t.Logf("SkipInd: 0x%02X", dtap.Header.HalfByte)
-	t.Logf("MsgType: 0x%02X", dtap.Header.MsgType)
+	switch dtap.Header.ProtocolDisc {
+	case PD_MM:
+		t.Logf("MsgType: 0x%02X (%s)", int(dtap.Header.MsgType), MM_Msg_Type(dtap.Header.MsgType))
+	case PD_RR:
+		t.Logf("MsgType: 0x%02X (%s)", int(dtap.Header.MsgType), RR_Msg_Type(dtap.Header.MsgType))
+	default:
+		t.Logf("MsgType: 0x%02X", dtap.Header.MsgType)
+	}
 
 	for i, ie := range dtap.IEs {
-		t.Logf("IE[%d]: Tag=0x%02X, Length=%d, Value=%X", i, ie.Tag, len(ie.Value), ie.Value)
+		t.Logf("IE[%d]: Tag=0x%02X (%s), Length=%d, Value=%X", i, int(ie.Tag), ie.Tag.String(), len(ie.Value), ie.Value)
 	}
 }
 func TestMMRealLocationUpdatingRequest(t *testing.T) {

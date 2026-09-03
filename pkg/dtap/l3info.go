@@ -78,7 +78,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 
 	switch PD(b[0]) {
 	case PD_RR:
-		switch mt {
+		switch RR_Msg_Type(mt) {
 		case MSG_RR_PAG_RESP:
 			// TS 24.008 Table 9.25/GSM 04.08: PAGING RESPONSE message content
 			if len(b) < 8+2 {
@@ -94,7 +94,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 			return
 		}
 	case PD_MM:
-		switch mt {
+		switch MM_Msg_Type(mt) {
 		case MSG_MM_LOC_UPD_REQUEST:
 			// TS 24.008 Table 9.2.17
 			if len(b) < 11 {
