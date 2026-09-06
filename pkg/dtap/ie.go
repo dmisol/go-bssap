@@ -1,5 +1,6 @@
 package dtap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=DtapIE --output=ie_string.go
 type DtapIE uint16
 
 /*
@@ -202,9 +203,10 @@ const (
 */
 
 type IEDefinition struct {
+	GoTag           DtapIE
 	Format          IEFormat
 	FixedLen        int
-	Tag             DtapIE
+	ByteTag         DtapIE
 	SpecialHandling int
 }
 
@@ -248,89 +250,89 @@ func format(ie DtapIE, pd PD_Type) IEDefinition {
 func formatMM(ie DtapIE) IEDefinition {
 	switch ie {
 	case PROTOCOL_DISC_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+		return IEDefinition{GoTag: PROTOCOL_DISC_V, Format: FormatV, FixedLen: 0, ByteTag: PROTOCOL_DISC_V}
 	case SKIP_IND_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+		return IEDefinition{GoTag: SKIP_IND_V, Format: FormatV, FixedLen: 0, ByteTag: SKIP_IND_V}
 	case MSG_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
+		return IEDefinition{GoTag: MSG_TYPE_V, Format: FormatV, FixedLen: 1, ByteTag: MSG_TYPE_V}
 	case CIPHERING_KEY_SEQUENCE_NUMBER_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
+		return IEDefinition{GoTag: CIPHERING_KEY_SEQUENCE_NUMBER_V, Format: FormatV, FixedLen: 0, ByteTag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
 	case SPARE_HALF_OCTET_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCTET_V}
+		return IEDefinition{GoTag: SPARE_HALF_OCTET_V, Format: FormatV, FixedLen: 0, ByteTag: SPARE_HALF_OCTET_V}
 	case AUTH_PARAM_RAND_V:
-		return IEDefinition{Format: FormatV, FixedLen: 16, Tag: AUTH_PARAM_RAND_V}
+		return IEDefinition{GoTag: AUTH_PARAM_RAND_V, Format: FormatV, FixedLen: 16, ByteTag: AUTH_PARAM_RAND_V}
 	case AUTH_RESP_PARAM_V:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: AUTH_RESP_PARAM_V}
+		return IEDefinition{GoTag: AUTH_RESP_PARAM_V, Format: FormatV, FixedLen: 4, ByteTag: AUTH_RESP_PARAM_V}
 	case REJ_CAUSE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: REJ_CAUSE_V}
+		return IEDefinition{GoTag: REJ_CAUSE_V, Format: FormatV, FixedLen: 1, ByteTag: REJ_CAUSE_V}
 	case MOBILE_STATION_CLASSMARK_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MOBILE_STATION_CLASSMARK_LV}
+		return IEDefinition{GoTag: MOBILE_STATION_CLASSMARK_LV, Format: FormatLV, FixedLen: 4, ByteTag: MOBILE_STATION_CLASSMARK_LV}
 	case MOBILE_IDENTITY_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_LV}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_LV, Format: FormatLV, FixedLen: 0, ByteTag: MOBILE_IDENTITY_LV}
 	case PD_AND_SAPI_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: PD_AND_SAPI_V}
+		return IEDefinition{GoTag: PD_AND_SAPI_V, Format: FormatV, FixedLen: 1, ByteTag: PD_AND_SAPI_V}
 	case CM_SERVICE_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CM_SERVICE_TYPE_V}
+		return IEDefinition{GoTag: CM_SERVICE_TYPE_V, Format: FormatV, FixedLen: 0, ByteTag: CM_SERVICE_TYPE_V}
 	case IDENTITY_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IDENTITY_TYPE_V}
+		return IEDefinition{GoTag: IDENTITY_TYPE_V, Format: FormatV, FixedLen: 0, ByteTag: IDENTITY_TYPE_V}
 	case MOBILE_STATION_CLASSMARK_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MOBILE_STATION_CLASSMARK_V}
+		return IEDefinition{GoTag: MOBILE_STATION_CLASSMARK_V, Format: FormatV, FixedLen: 1, ByteTag: MOBILE_STATION_CLASSMARK_V}
 	case LOCATION_UPDATING_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: LOCATION_UPDATING_TYPE_V}
+		return IEDefinition{GoTag: LOCATION_UPDATING_TYPE_V, Format: FormatV, FixedLen: 0, ByteTag: LOCATION_UPDATING_TYPE_V}
 	case AUTH_PARAM_AUTN_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 18, Tag: AUTH_PARAM_AUTN_TLV}
+		return IEDefinition{GoTag: AUTH_PARAM_AUTN_TLV, Format: FormatTLV, FixedLen: 18, ByteTag: AUTH_PARAM_AUTN_TLV}
 	case AUTH_RESP_PARAM_EXT_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: AUTH_RESP_PARAM_EXT_TLV}
+		return IEDefinition{GoTag: AUTH_RESP_PARAM_EXT_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: AUTH_RESP_PARAM_EXT_TLV}
 	case AUTH_FAILURE_PARAM_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 16, Tag: AUTH_FAILURE_PARAM_TLV}
+		return IEDefinition{GoTag: AUTH_FAILURE_PARAM_TLV, Format: FormatTLV, FixedLen: 16, ByteTag: AUTH_FAILURE_PARAM_TLV}
 	case LOCATION_AREA_ID_V:
-		return IEDefinition{Format: FormatV, FixedLen: 5, Tag: LOCATION_AREA_ID_V}
+		return IEDefinition{GoTag: LOCATION_AREA_ID_V, Format: FormatV, FixedLen: 5, ByteTag: LOCATION_AREA_ID_V}
 	case LOCATION_AREA_ID_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 6, Tag: LOCATION_AREA_ID_TV}
+		return IEDefinition{GoTag: LOCATION_AREA_ID_TV, Format: FormatTV, FixedLen: 6, ByteTag: LOCATION_AREA_ID_TV}
 	case DEVICE_PROPS_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: DEVICE_PROPS_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case MM_TIMER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: MM_TIMER_TLV}
+		return IEDefinition{GoTag: MM_TIMER_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: MM_TIMER_TLV}
 	case PRIORITY_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+		return IEDefinition{GoTag: PRIORITY_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x08}
 	case ADDITIONAL_UPDATE_PARAMETERS_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+		return IEDefinition{GoTag: ADDITIONAL_UPDATE_PARAMETERS_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0C}
 	case P_TMSI_TYPE_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
+		return IEDefinition{GoTag: P_TMSI_TYPE_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0E}
 	case ROUTING_AREA_IDENTIFICATION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 8, Tag: ROUTING_AREA_IDENTIFICATION_TLV}
+		return IEDefinition{GoTag: ROUTING_AREA_IDENTIFICATION_TLV, Format: FormatTLV, FixedLen: 8, ByteTag: ROUTING_AREA_IDENTIFICATION_TLV}
 	case P_TMSI_SIGNATURE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: P_TMSI_SIGNATURE_TLV}
+		return IEDefinition{GoTag: P_TMSI_SIGNATURE_TLV, Format: FormatTLV, FixedLen: 5, ByteTag: P_TMSI_SIGNATURE_TLV}
 	case MOBILE_IDENTITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_IDENTITY_TLV}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MOBILE_IDENTITY_TLV}
 	case FOLLOW_ON_PROCEED_T:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: FOLLOW_ON_PROCEED_T}
+		return IEDefinition{GoTag: FOLLOW_ON_PROCEED_T, Format: FormatT, FixedLen: 1, ByteTag: FOLLOW_ON_PROCEED_T}
 	case CTS_PERMISSION_T:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CTS_PERMISSION_T}
+		return IEDefinition{GoTag: CTS_PERMISSION_T, Format: FormatT, FixedLen: 1, ByteTag: CTS_PERMISSION_T}
 	case EQUIVALENT_PLMNS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EQUIVALENT_PLMNS_TLV}
+		return IEDefinition{GoTag: EQUIVALENT_PLMNS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: EQUIVALENT_PLMNS_TLV}
 	case EMERGENCY_NUMBER_LIST_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: EMERGENCY_NUMBER_LIST_TLV}
+		return IEDefinition{GoTag: EMERGENCY_NUMBER_LIST_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: EMERGENCY_NUMBER_LIST_TLV}
 	case PER_MS_T3212_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: PER_MS_T3212_TLV}
+		return IEDefinition{GoTag: PER_MS_T3212_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: PER_MS_T3212_TLV}
 	case NON_3GPP_NW_PROVIDED_POLICIES_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: NON_3GPP_NW_PROVIDED_POLICIES_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 5, Tag: MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV}
+		return IEDefinition{GoTag: MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV, Format: FormatTLV, FixedLen: 5, ByteTag: MOBILE_STATION_CLASSMARK_FOR_UMTS_TLV}
 	case MS_NETWORK_FEATURE_SUPPORT_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0E}
+		return IEDefinition{GoTag: MS_NETWORK_FEATURE_SUPPORT_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0E}
 	case FULL_NAME_FOR_NETWORK_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FULL_NAME_FOR_NETWORK_TLV}
+		return IEDefinition{GoTag: FULL_NAME_FOR_NETWORK_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FULL_NAME_FOR_NETWORK_TLV}
 	case SHORT_NAME_FOR_NETWORK_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SHORT_NAME_FOR_NETWORK_TLV}
+		return IEDefinition{GoTag: SHORT_NAME_FOR_NETWORK_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: SHORT_NAME_FOR_NETWORK_TLV}
 	case LOCAL_TIME_ZONE_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: LOCAL_TIME_ZONE_TV}
+		return IEDefinition{GoTag: LOCAL_TIME_ZONE_TV, Format: FormatTV, FixedLen: 2, ByteTag: LOCAL_TIME_ZONE_TV}
 	case UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 8, Tag: UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV}
+		return IEDefinition{GoTag: UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV, Format: FormatTV, FixedLen: 8, ByteTag: UNIVERSAL_TIME_AND_LOCAL_TIME_ZONE_TV}
 	case LSA_IDENTITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: LSA_IDENTITY_TLV}
+		return IEDefinition{GoTag: LSA_IDENTITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: LSA_IDENTITY_TLV}
 	case NETWORK_DAYLIGHT_SAVING_TIME_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: NETWORK_DAYLIGHT_SAVING_TIME_TLV}
+		return IEDefinition{GoTag: NETWORK_DAYLIGHT_SAVING_TIME_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: NETWORK_DAYLIGHT_SAVING_TIME_TLV}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
 	}
@@ -339,199 +341,199 @@ func formatMM(ie DtapIE) IEDefinition {
 func formatRR(ie DtapIE) IEDefinition {
 	switch ie {
 	case PROTOCOL_DISC_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+		return IEDefinition{GoTag: PROTOCOL_DISC_V, Format: FormatV, FixedLen: 0, ByteTag: PROTOCOL_DISC_V}
 	case SKIP_IND_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SKIP_IND_V}
+		return IEDefinition{GoTag: SKIP_IND_V, Format: FormatV, FixedLen: 0, ByteTag: SKIP_IND_V}
 	case MSG_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
+		return IEDefinition{GoTag: MSG_TYPE_V, Format: FormatV, FixedLen: 1, ByteTag: MSG_TYPE_V}
 	case PAGE_MODE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PAGE_MODE_V}
+		return IEDefinition{GoTag: PAGE_MODE_V, Format: FormatV, FixedLen: 0, ByteTag: PAGE_MODE_V}
 	case DEDICATED_MODE_OR_TBF_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: DEDICATED_MODE_OR_TBF_V, SpecialHandling: 1} // table 9.1.18.1 IMM ASSiGNMENT
+		return IEDefinition{GoTag: DEDICATED_MODE_OR_TBF_V, Format: FormatV, FixedLen: 0, ByteTag: DEDICATED_MODE_OR_TBF_V, SpecialHandling: 1} // table 9.1.18.1 IMM ASSiGNMENT
 	case CHANNEL_DESC_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: CHANNEL_DESC_V}
+		return IEDefinition{GoTag: CHANNEL_DESC_V, Format: FormatV, FixedLen: 3, ByteTag: CHANNEL_DESC_V}
 	case PACKET_CHANNEL_DESC_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: PACKET_CHANNEL_DESC_V}
+		return IEDefinition{GoTag: PACKET_CHANNEL_DESC_V, Format: FormatV, FixedLen: 3, ByteTag: PACKET_CHANNEL_DESC_V}
 	case REQUEST_REF_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_V}
+		return IEDefinition{GoTag: REQUEST_REF_V, Format: FormatV, FixedLen: 3, ByteTag: REQUEST_REF_V}
 	case TIMING_ADVANCE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: TIMING_ADVANCE_V}
+		return IEDefinition{GoTag: TIMING_ADVANCE_V, Format: FormatV, FixedLen: 1, ByteTag: TIMING_ADVANCE_V}
 	case MOBILE_ALLOC_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_ALLOC_LV}
+		return IEDefinition{GoTag: MOBILE_ALLOC_LV, Format: FormatLV, FixedLen: 0, ByteTag: MOBILE_ALLOC_LV}
 	case STARTING_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 3, Tag: STARTING_TIME_TV}
+		return IEDefinition{GoTag: STARTING_TIME_TV, Format: FormatTV, FixedLen: 3, ByteTag: STARTING_TIME_TV}
 	case IA_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: IA_REST_OCTETS_V, SpecialHandling: 2}
+		return IEDefinition{GoTag: IA_REST_OCTETS_V, Format: FormatV, FixedLen: 0, ByteTag: IA_REST_OCTETS_V, SpecialHandling: 2}
 	case EXTENDED_TSC_SET_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_TV}
+		return IEDefinition{GoTag: EXTENDED_TSC_SET_TV, Format: FormatTV, FixedLen: 2, ByteTag: EXTENDED_TSC_SET_TV}
 	case FEATURE_INDICATOR_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: FEATURE_INDICATOR_V}
+		return IEDefinition{GoTag: FEATURE_INDICATOR_V, Format: FormatV, FixedLen: 0, ByteTag: FEATURE_INDICATOR_V}
 	case REQUEST_REF_1_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_1_V}
+		return IEDefinition{GoTag: REQUEST_REF_1_V, Format: FormatV, FixedLen: 3, ByteTag: REQUEST_REF_1_V}
 	case WAIT_INDICATION_1_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_1_V}
+		return IEDefinition{GoTag: WAIT_INDICATION_1_V, Format: FormatV, FixedLen: 1, ByteTag: WAIT_INDICATION_1_V}
 	case REQUEST_REF_2_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_2_V}
+		return IEDefinition{GoTag: REQUEST_REF_2_V, Format: FormatV, FixedLen: 3, ByteTag: REQUEST_REF_2_V}
 	case WAIT_INDICATION_2_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_2_V}
+		return IEDefinition{GoTag: WAIT_INDICATION_2_V, Format: FormatV, FixedLen: 1, ByteTag: WAIT_INDICATION_2_V}
 	case REQUEST_REF_3_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_3_V}
+		return IEDefinition{GoTag: REQUEST_REF_3_V, Format: FormatV, FixedLen: 3, ByteTag: REQUEST_REF_3_V}
 	case WAIT_INDICATION_3_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_3_V}
+		return IEDefinition{GoTag: WAIT_INDICATION_3_V, Format: FormatV, FixedLen: 1, ByteTag: WAIT_INDICATION_3_V}
 	case REQUEST_REF_4_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: REQUEST_REF_4_V}
+		return IEDefinition{GoTag: REQUEST_REF_4_V, Format: FormatV, FixedLen: 3, ByteTag: REQUEST_REF_4_V}
 	case WAIT_INDICATION_4_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: WAIT_INDICATION_4_V}
+		return IEDefinition{GoTag: WAIT_INDICATION_4_V, Format: FormatV, FixedLen: 1, ByteTag: WAIT_INDICATION_4_V}
 	case IAR_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: IAR_REST_OCTETS_V}
+		return IEDefinition{GoTag: IAR_REST_OCTETS_V, Format: FormatV, FixedLen: 3, ByteTag: IAR_REST_OCTETS_V}
 	case CIPHERING_MODE_SETTING_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_MODE_SETTING_V}
+		return IEDefinition{GoTag: CIPHERING_MODE_SETTING_V, Format: FormatV, FixedLen: 0, ByteTag: CIPHERING_MODE_SETTING_V}
 	case CIPHER_RESPONSE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHER_RESPONSE_V}
+		return IEDefinition{GoTag: CIPHER_RESPONSE_V, Format: FormatV, FixedLen: 0, ByteTag: CIPHER_RESPONSE_V}
 	case ME_IDENTITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: ME_IDENTITY_TLV}
+		return IEDefinition{GoTag: ME_IDENTITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: ME_IDENTITY_TLV}
 	case RR_CAUSE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: RR_CAUSE_V}
+		return IEDefinition{GoTag: RR_CAUSE_V, Format: FormatV, FixedLen: 1, ByteTag: RR_CAUSE_V}
 	case DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V}
+		return IEDefinition{GoTag: DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V, Format: FormatV, FixedLen: 3, ByteTag: DESCRIPTION_OF_FIRST_CHANNEL_AFTER_TIME_V}
 	case POWER_COMMAND_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_V}
+		return IEDefinition{GoTag: POWER_COMMAND_V, Format: FormatV, FixedLen: 1, ByteTag: POWER_COMMAND_V}
 	case FREQUENCY_LIST_AFTER_TIME_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_AFTER_TIME_TLV}
+		return IEDefinition{GoTag: FREQUENCY_LIST_AFTER_TIME_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FREQUENCY_LIST_AFTER_TIME_TLV}
 	case CELL_CHANNEL_DESCRIPTION_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 17, Tag: CELL_CHANNEL_DESCRIPTION_TV}
+		return IEDefinition{GoTag: CELL_CHANNEL_DESCRIPTION_TV, Format: FormatTV, FixedLen: 17, ByteTag: CELL_CHANNEL_DESCRIPTION_TV}
 	case DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV}
+		return IEDefinition{GoTag: DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: DESCRIPTION_OF_MULTISLOT_CONFIGURATION_TLV}
 	case MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV}
+		return IEDefinition{GoTag: MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_FIRST_CHANNEL_CHANNEL_SET_1_TV}
 	case MODE_OF_CHANNEL_SET_2_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_2_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_2_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_2_TV}
 	case MODE_OF_CHANNEL_SET_3_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_3_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_3_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_3_TV}
 	case MODE_OF_CHANNEL_SET_4_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_4_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_4_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_4_TV}
 	case MODE_OF_CHANNEL_SET_5_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_5_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_5_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_5_TV}
 	case MODE_OF_CHANNEL_SET_6_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_6_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_6_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_6_TV}
 	case MODE_OF_CHANNEL_SET_7_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: 0x17}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_7_TV, Format: FormatTV, FixedLen: 2, ByteTag: 0x17}
 	case MODE_OF_CHANNEL_SET_8_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_CHANNEL_SET_8_TV}
+		return IEDefinition{GoTag: MODE_OF_CHANNEL_SET_8_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_CHANNEL_SET_8_TV}
 	case DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV}
+		return IEDefinition{GoTag: DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV, Format: FormatTV, FixedLen: 4, ByteTag: DESCRIPTION_OF_SECOND_CHANNEL_AFTER_TIME_TV}
 	case MODE_OF_SECOND_CHANNEL_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: MODE_OF_SECOND_CHANNEL_TV}
+		return IEDefinition{GoTag: MODE_OF_SECOND_CHANNEL_TV, Format: FormatTV, FixedLen: 2, ByteTag: MODE_OF_SECOND_CHANNEL_TV}
 	case MOBILE_ALLOCATION_AFTER_TIME_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_AFTER_TIME_TLV}
+		return IEDefinition{GoTag: MOBILE_ALLOCATION_AFTER_TIME_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MOBILE_ALLOCATION_AFTER_TIME_TLV}
 	case FREQUENCY_LIST_BEFORE_TIME_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FREQUENCY_LIST_BEFORE_TIME_TLV}
+		return IEDefinition{GoTag: FREQUENCY_LIST_BEFORE_TIME_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FREQUENCY_LIST_BEFORE_TIME_TLV}
 	case DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV}
+		return IEDefinition{GoTag: DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV, Format: FormatTV, FixedLen: 4, ByteTag: DESCRIPTION_OF_FIRST_CHANNEL_BEFORE_TIME_TV}
 	case DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 4, Tag: DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV}
+		return IEDefinition{GoTag: DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV, Format: FormatTV, FixedLen: 4, ByteTag: DESCRIPTION_OF_SECOND_CHANNEL_BEFORE_TIME_TV}
 	case FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV}
+		return IEDefinition{GoTag: FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV, Format: FormatTV, FixedLen: 10, ByteTag: FREQUENCY_CHANNEL_SEQUENCE_BEFORE_TIME_TV}
 	case MOBILE_ALLOCATION_BEFORE_TIME_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_ALLOCATION_BEFORE_TIME_TLV}
+		return IEDefinition{GoTag: MOBILE_ALLOCATION_BEFORE_TIME_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MOBILE_ALLOCATION_BEFORE_TIME_TLV}
 	case CIPHER_MODE_SETTING_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+		return IEDefinition{GoTag: CIPHER_MODE_SETTING_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x09}
 	case VGCS_TARGET_MODE_INDICATION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: VGCS_TARGET_MODE_INDICATION_TLV}
+		return IEDefinition{GoTag: VGCS_TARGET_MODE_INDICATION_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: VGCS_TARGET_MODE_INDICATION_TLV}
 	case MULTI_RATE_CONFIGURATION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MULTI_RATE_CONFIGURATION_TLV}
+		return IEDefinition{GoTag: MULTI_RATE_CONFIGURATION_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MULTI_RATE_CONFIGURATION_TLV}
 	case VGCS_CIPHERING_PARAMETERS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: VGCS_CIPHERING_PARAMETERS_TLV}
+		return IEDefinition{GoTag: VGCS_CIPHERING_PARAMETERS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: VGCS_CIPHERING_PARAMETERS_TLV}
 	case EXTENDED_TSC_SET_BEFORE_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: EXTENDED_TSC_SET_BEFORE_TIME_TV}
+		return IEDefinition{GoTag: EXTENDED_TSC_SET_BEFORE_TIME_TV, Format: FormatTV, FixedLen: 2, ByteTag: EXTENDED_TSC_SET_BEFORE_TIME_TV}
 	case CELL_DESCRIPTION_V:
-		return IEDefinition{Format: FormatV, FixedLen: 2, Tag: CELL_DESCRIPTION_V}
+		return IEDefinition{GoTag: CELL_DESCRIPTION_V, Format: FormatV, FixedLen: 2, ByteTag: CELL_DESCRIPTION_V}
 	case HANDOVER_REFERENCE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: HANDOVER_REFERENCE_V}
+		return IEDefinition{GoTag: HANDOVER_REFERENCE_V, Format: FormatV, FixedLen: 1, ByteTag: HANDOVER_REFERENCE_V}
 	case POWER_COMMAND_AND_ACCESS_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: POWER_COMMAND_AND_ACCESS_TYPE_V}
+		return IEDefinition{GoTag: POWER_COMMAND_AND_ACCESS_TYPE_V, Format: FormatV, FixedLen: 1, ByteTag: POWER_COMMAND_AND_ACCESS_TYPE_V}
 	case SYNCHRONIZATION_INDICATION_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: SYNCHRONIZATION_INDICATION_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case FREQUENCY_SHORT_LIST_AFTER_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_AFTER_TIME_TV}
+		return IEDefinition{GoTag: FREQUENCY_SHORT_LIST_AFTER_TIME_TV, Format: FormatTV, FixedLen: 10, ByteTag: FREQUENCY_SHORT_LIST_AFTER_TIME_TV}
 	case FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV}
+		return IEDefinition{GoTag: FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV, Format: FormatTV, FixedLen: 10, ByteTag: FREQUENCY_CHANNEL_SEQUENCE_AFTER_TIME_TV}
 	case REAL_TIME_DIFFERENCE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: REAL_TIME_DIFFERENCE_TLV}
+		return IEDefinition{GoTag: REAL_TIME_DIFFERENCE_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: REAL_TIME_DIFFERENCE_TLV}
 	case TIMING_ADVANCE_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: TIMING_ADVANCE_TV}
+		return IEDefinition{GoTag: TIMING_ADVANCE_TV, Format: FormatTV, FixedLen: 2, ByteTag: TIMING_ADVANCE_TV}
 	case FREQUENCY_SHORT_LIST_BEFORE_TIME_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 10, Tag: FREQUENCY_SHORT_LIST_BEFORE_TIME_TV}
+		return IEDefinition{GoTag: FREQUENCY_SHORT_LIST_BEFORE_TIME_TV, Format: FormatTV, FixedLen: 10, ByteTag: FREQUENCY_SHORT_LIST_BEFORE_TIME_TV}
 	case DYNAMIC_ARFCN_MAPPING_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: DYNAMIC_ARFCN_MAPPING_TLV}
+		return IEDefinition{GoTag: DYNAMIC_ARFCN_MAPPING_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: DYNAMIC_ARFCN_MAPPING_TLV}
 	case DEDICATED_SERVICE_INFORMATION_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 2, Tag: DEDICATED_SERVICE_INFORMATION_TV}
+		return IEDefinition{GoTag: DEDICATED_SERVICE_INFORMATION_TV, Format: FormatTV, FixedLen: 2, ByteTag: DEDICATED_SERVICE_INFORMATION_TV}
 	case PLMN_INDEX_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: 1, Tag: 0x0A}
+		return IEDefinition{GoTag: PLMN_INDEX_TV, Format: FormatTV, FixedLen: 1, ByteTag: 0x0A}
 	case MOBILE_OBSERVED_TIME_DIFF_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_TLV}
+		return IEDefinition{GoTag: MOBILE_OBSERVED_TIME_DIFF_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MOBILE_OBSERVED_TIME_DIFF_TLV}
 	case MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV}
+		return IEDefinition{GoTag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: MOBILE_OBSERVED_TIME_DIFF_ON_HYPERFRAME_LVL_TLV}
 	case PS_CAUSE_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x09}
+		return IEDefinition{GoTag: PS_CAUSE_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x09}
 	case BA_RANGE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_RANGE_TLV}
+		return IEDefinition{GoTag: BA_RANGE_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: BA_RANGE_TLV}
 	case GROUP_CHANNEL_DESCRIPTION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: GROUP_CHANNEL_DESCRIPTION_TLV}
+		return IEDefinition{GoTag: GROUP_CHANNEL_DESCRIPTION_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: GROUP_CHANNEL_DESCRIPTION_TLV}
 	case GROUP_CIPHER_KEY_NUMBER_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+		return IEDefinition{GoTag: GROUP_CIPHER_KEY_NUMBER_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x08}
 	case GPRS_RESUMPTION_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+		return IEDefinition{GoTag: GPRS_RESUMPTION_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0C}
 	case BA_LIST_PREF_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BA_LIST_PREF_TLV}
+		return IEDefinition{GoTag: BA_LIST_PREF_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: BA_LIST_PREF_TLV}
 	case UTRAN_FREQ_LIST_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x76}
+		return IEDefinition{GoTag: UTRAN_FREQ_LIST_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x76}
 	case CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x77}
+		return IEDefinition{GoTag: CELL_SELECTION_INDICATOR_AFTER_RELEASE_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x77}
 	case ENHANCED_DTM_CS_RELEASE_INDICATION_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0A}
+		return IEDefinition{GoTag: ENHANCED_DTM_CS_RELEASE_INDICATION_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0A}
 	case GROUP_CHANNEL_DESCRIPTION_2_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 13, Tag: GROUP_CHANNEL_DESCRIPTION_2_TLV}
+		return IEDefinition{GoTag: GROUP_CHANNEL_DESCRIPTION_2_TLV, Format: FormatTLV, FixedLen: 13, ByteTag: GROUP_CHANNEL_DESCRIPTION_2_TLV}
 	case TALKER_IDENTITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: TALKER_IDENTITY_TLV}
+		return IEDefinition{GoTag: TALKER_IDENTITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: TALKER_IDENTITY_TLV}
 	case TALKER_PRIORITY_STATUS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: TALKER_PRIORITY_STATUS_TLV}
+		return IEDefinition{GoTag: TALKER_PRIORITY_STATUS_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: TALKER_PRIORITY_STATUS_TLV}
 	case VGCS_AMR_CONFIGURATION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: 0x7B}
+		return IEDefinition{GoTag: VGCS_AMR_CONFIGURATION_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: 0x7B}
 	case INDIVIDUAL_PRIORITIES_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
+		return IEDefinition{GoTag: INDIVIDUAL_PRIORITIES_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x7C}
 	case CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V}
+		return IEDefinition{GoTag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V, Format: FormatV, FixedLen: 0, ByteTag: CHANNELS_NEEDED_FOR_MOBILES_1_AND_2_V}
 	case MOBILE_IDENTITY_1_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_1_LV}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_1_LV, Format: FormatLV, FixedLen: 0, ByteTag: MOBILE_IDENTITY_1_LV}
 	case MOBILE_IDENTITY_2_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_2_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x17}
 	case P1_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P1_REST_OCTETS_V, SpecialHandling: 2}
+		return IEDefinition{GoTag: P1_REST_OCTETS_V, Format: FormatV, FixedLen: 0, ByteTag: P1_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_1_V:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_1_V}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_1_V, Format: FormatV, FixedLen: 4, ByteTag: MOBILE_IDENTITY_1_V}
 	case MOBILE_IDENTITY_2_V:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_2_V}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_2_V, Format: FormatV, FixedLen: 4, ByteTag: MOBILE_IDENTITY_2_V}
 	case MOBILE_IDENTITY_3_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x17}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_3_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x17}
 	case P2_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: P2_REST_OCTETS_V, SpecialHandling: 2}
+		return IEDefinition{GoTag: P2_REST_OCTETS_V, Format: FormatV, FixedLen: 0, ByteTag: P2_REST_OCTETS_V, SpecialHandling: 2}
 	case MOBILE_IDENTITY_3_V:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_3_V}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_3_V, Format: FormatV, FixedLen: 4, ByteTag: MOBILE_IDENTITY_3_V}
 	case MOBILE_IDENTITY_4_V:
-		return IEDefinition{Format: FormatV, FixedLen: 4, Tag: MOBILE_IDENTITY_4_V}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_4_V, Format: FormatV, FixedLen: 4, ByteTag: MOBILE_IDENTITY_4_V}
 	case P3_REST_OCTETS_V:
-		return IEDefinition{Format: FormatV, FixedLen: 3, Tag: P3_REST_OCTETS_V}
+		return IEDefinition{GoTag: P3_REST_OCTETS_V, Format: FormatV, FixedLen: 3, ByteTag: P3_REST_OCTETS_V}
 	case CIPHERING_KEY_SEQUENCE_NUMBER_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
+		return IEDefinition{GoTag: CIPHERING_KEY_SEQUENCE_NUMBER_V, Format: FormatV, FixedLen: 0, ByteTag: CIPHERING_KEY_SEQUENCE_NUMBER_V}
 	case SPARE_HALF_OCTET_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: SPARE_HALF_OCTET_V}
+		return IEDefinition{GoTag: SPARE_HALF_OCTET_V, Format: FormatV, FixedLen: 0, ByteTag: SPARE_HALF_OCTET_V}
 	case MOBILE_STATION_CLASSMARK_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 4, Tag: MOBILE_STATION_CLASSMARK_LV}
+		return IEDefinition{GoTag: MOBILE_STATION_CLASSMARK_LV, Format: FormatLV, FixedLen: 4, ByteTag: MOBILE_STATION_CLASSMARK_LV}
 	case MOBILE_IDENTITY_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: MOBILE_IDENTITY_LV}
+		return IEDefinition{GoTag: MOBILE_IDENTITY_LV, Format: FormatLV, FixedLen: 0, ByteTag: MOBILE_IDENTITY_LV}
 	case ADDITIONAL_UPDATE_PARAMETERS_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0C}
+		return IEDefinition{GoTag: ADDITIONAL_UPDATE_PARAMETERS_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0C}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
 	}
@@ -540,85 +542,85 @@ func formatRR(ie DtapIE) IEDefinition {
 func formatCC(ie DtapIE) IEDefinition {
 	switch ie {
 	case PROTOCOL_DISC_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: PROTOCOL_DISC_V}
+		return IEDefinition{GoTag: PROTOCOL_DISC_V, Format: FormatV, FixedLen: 0, ByteTag: PROTOCOL_DISC_V}
 	case TRANSACTION_IDEN_V:
-		return IEDefinition{Format: FormatV, FixedLen: 0, Tag: TRANSACTION_IDEN_V}
+		return IEDefinition{GoTag: TRANSACTION_IDEN_V, Format: FormatV, FixedLen: 0, ByteTag: TRANSACTION_IDEN_V}
 	case MSG_TYPE_V:
-		return IEDefinition{Format: FormatV, FixedLen: 1, Tag: MSG_TYPE_V}
+		return IEDefinition{GoTag: MSG_TYPE_V, Format: FormatV, FixedLen: 1, ByteTag: MSG_TYPE_V}
 	case BC_REPEAT_INDICATOR_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: BC_REPEAT_INDICATOR_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case BEARER_CAPABILITY_1_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BEARER_CAPABILITY_1_TLV}
+		return IEDefinition{GoTag: BEARER_CAPABILITY_1_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: BEARER_CAPABILITY_1_TLV}
 	case BEARER_CAPABILITY_2_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x04}
+		return IEDefinition{GoTag: BEARER_CAPABILITY_2_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x04}
 	case FACILITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FACILITY_TLV}
+		return IEDefinition{GoTag: FACILITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FACILITY_TLV}
 	case PROGRESS_INDICATOR_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: PROGRESS_INDICATOR_TLV}
+		return IEDefinition{GoTag: PROGRESS_INDICATOR_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: PROGRESS_INDICATOR_TLV}
 	case SIGNAL_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x34}
+		return IEDefinition{GoTag: SIGNAL_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x34}
 	case CALLING_PARTY_BCD_NUMBER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: CALLING_PARTY_BCD_NUMBER_TLV}
+		return IEDefinition{GoTag: CALLING_PARTY_BCD_NUMBER_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: CALLING_PARTY_BCD_NUMBER_TLV}
 	case CALLING_PARTY_SUB_ADDRESS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: CALLING_PARTY_SUB_ADDRESS_TLV}
+		return IEDefinition{GoTag: CALLING_PARTY_SUB_ADDRESS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: CALLING_PARTY_SUB_ADDRESS_TLV}
 	case CALLED_PARTY_BCD_NUMBER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: CALLED_PARTY_BCD_NUMBER_TLV}
+		return IEDefinition{GoTag: CALLED_PARTY_BCD_NUMBER_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: CALLED_PARTY_BCD_NUMBER_TLV}
 	case CALLED_PARTY_SUB_ADDRESS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: CALLED_PARTY_SUB_ADDRESS_TLV}
+		return IEDefinition{GoTag: CALLED_PARTY_SUB_ADDRESS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: CALLED_PARTY_SUB_ADDRESS_TLV}
 	case REDIRECTING_PARTY_BCD_NUMBER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: REDIRECTING_PARTY_BCD_NUMBER_TLV}
+		return IEDefinition{GoTag: REDIRECTING_PARTY_BCD_NUMBER_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: REDIRECTING_PARTY_BCD_NUMBER_TLV}
 	case REDIRECTING_PARTY_SUB_ADDRESS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: REDIRECTING_PARTY_SUB_ADDRESS_TLV}
+		return IEDefinition{GoTag: REDIRECTING_PARTY_SUB_ADDRESS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: REDIRECTING_PARTY_SUB_ADDRESS_TLV}
 	case LLC_REPEAT_INDICATOR_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: LLC_REPEAT_INDICATOR_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case LOW_LAYER_COMPATIBILITY_I_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: LOW_LAYER_COMPATIBILITY_I_TLV}
+		return IEDefinition{GoTag: LOW_LAYER_COMPATIBILITY_I_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: LOW_LAYER_COMPATIBILITY_I_TLV}
 	case LOW_LAYER_COMPATIBILITY_II_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7C}
+		return IEDefinition{GoTag: LOW_LAYER_COMPATIBILITY_II_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x7C}
 	case HLC_REPEAT_INDICATOR_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x0D}
+		return IEDefinition{GoTag: HLC_REPEAT_INDICATOR_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x0D}
 	case HIGH_LAYER_COMPATIBILITY_I_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: HIGH_LAYER_COMPATIBILITY_I_TLV}
+		return IEDefinition{GoTag: HIGH_LAYER_COMPATIBILITY_I_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: HIGH_LAYER_COMPATIBILITY_I_TLV}
 	case HIGH_LAYER_COMPATIBILITY_II_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x7D}
+		return IEDefinition{GoTag: HIGH_LAYER_COMPATIBILITY_II_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x7D}
 	case USER_USER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: USER_USER_TLV}
+		return IEDefinition{GoTag: USER_USER_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: USER_USER_TLV}
 	case PRIORITY_TV:
-		return IEDefinition{Format: FormatTV, FixedLen: -2, Tag: 0x08}
+		return IEDefinition{GoTag: PRIORITY_TV, Format: FormatTV, FixedLen: -2, ByteTag: 0x08}
 	case ALERT_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: ALERT_TLV}
+		return IEDefinition{GoTag: ALERT_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: ALERT_TLV}
 	case NETWORK_CALL_CONTROL_CAPABILITIES_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: NETWORK_CALL_CONTROL_CAPABILITIES_TLV}
+		return IEDefinition{GoTag: NETWORK_CALL_CONTROL_CAPABILITIES_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: NETWORK_CALL_CONTROL_CAPABILITIES_TLV}
 	case CAUSE_OF_NO_CLI_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: CAUSE_OF_NO_CLI_TLV}
+		return IEDefinition{GoTag: CAUSE_OF_NO_CLI_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: CAUSE_OF_NO_CLI_TLV}
 	case BACKUP_BEARER_CAPABILITY_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: BACKUP_BEARER_CAPABILITY_TLV}
+		return IEDefinition{GoTag: BACKUP_BEARER_CAPABILITY_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: BACKUP_BEARER_CAPABILITY_TLV}
 	case CAUSE_LV:
-		return IEDefinition{Format: FormatLV, FixedLen: 0, Tag: CAUSE_LV}
+		return IEDefinition{GoTag: CAUSE_LV, Format: FormatLV, FixedLen: 0, ByteTag: CAUSE_LV}
 	case ALLOWED_ACTIONS_CCBS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: ALLOWED_ACTIONS_CCBS_TLV}
+		return IEDefinition{GoTag: ALLOWED_ACTIONS_CCBS_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: ALLOWED_ACTIONS_CCBS_TLV}
 	case CAUSE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: CAUSE_TLV}
+		return IEDefinition{GoTag: CAUSE_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: CAUSE_TLV}
 	case SECOND_CAUSE_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: 0x08}
+		return IEDefinition{GoTag: SECOND_CAUSE_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: 0x08}
 	case SS_VERSION_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SS_VERSION_TLV}
+		return IEDefinition{GoTag: SS_VERSION_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: SS_VERSION_TLV}
 	case CLIR_SUPPRESSION_T:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CLIR_SUPPRESSION_T}
+		return IEDefinition{GoTag: CLIR_SUPPRESSION_T, Format: FormatT, FixedLen: 1, ByteTag: CLIR_SUPPRESSION_T}
 	case CLIR_INVOCATION_T:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: CLIR_INVOCATION_T}
+		return IEDefinition{GoTag: CLIR_INVOCATION_T, Format: FormatT, FixedLen: 1, ByteTag: CLIR_INVOCATION_T}
 	case CC_CAPABILITIES_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 4, Tag: CC_CAPABILITIES_TLV}
+		return IEDefinition{GoTag: CC_CAPABILITIES_TLV, Format: FormatTLV, FixedLen: 4, ByteTag: CC_CAPABILITIES_TLV}
 	case FACILITY_CCBS_ADVANCED_RECALL_ALIGNMENT_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FACILITY_CCBS_ADVANCED_RECALL_ALIGNMENT_TLV}
+		return IEDefinition{GoTag: FACILITY_CCBS_ADVANCED_RECALL_ALIGNMENT_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FACILITY_CCBS_ADVANCED_RECALL_ALIGNMENT_TLV}
 	case FACILITY_RECALL_ALIGNMENT_NOT_ESSENTIAL_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: FACILITY_RECALL_ALIGNMENT_NOT_ESSENTIAL_TLV}
+		return IEDefinition{GoTag: FACILITY_RECALL_ALIGNMENT_NOT_ESSENTIAL_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: FACILITY_RECALL_ALIGNMENT_NOT_ESSENTIAL_TLV}
 	case STREAM_IDENTIFIER_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 3, Tag: STREAM_IDENTIFIER_TLV}
+		return IEDefinition{GoTag: STREAM_IDENTIFIER_TLV, Format: FormatTLV, FixedLen: 3, ByteTag: STREAM_IDENTIFIER_TLV}
 	case SUPPORTED_CODECS_TLV:
-		return IEDefinition{Format: FormatTLV, FixedLen: 0, Tag: SUPPORTED_CODECS_TLV}
+		return IEDefinition{GoTag: SUPPORTED_CODECS_TLV, Format: FormatTLV, FixedLen: 0, ByteTag: SUPPORTED_CODECS_TLV}
 	case REDIAL_T:
-		return IEDefinition{Format: FormatT, FixedLen: 1, Tag: REDIAL_T}
+		return IEDefinition{GoTag: REDIAL_T, Format: FormatT, FixedLen: 1, ByteTag: REDIAL_T}
 	default:
 		return IEDefinition{Format: FormatUnsupported, FixedLen: -1}
 	}

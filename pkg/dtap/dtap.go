@@ -62,16 +62,16 @@ func decodeHeader(rawData []byte, offset int) (DtapHeader, int, error) {
 	return header, offset, nil
 }
 
-func decodeFormatT(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatT(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	tagFromData := data[*offset]
 
-	if DtapIE(tagFromData) != expectedTag {
+	if DtapIE(tagFromData) != ieDef.ByteTag {
 		return nil
 	}
 
 	ie := IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: []byte{},
 	}
 	dtap.IEs = append(dtap.IEs, ie)
@@ -79,21 +79,20 @@ func decodeFormatT(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) err
 	return nil
 }
 
-func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
-	dtap *Dtap, pendingNibble *int, skipTags []int, idx int, options *DecodeOptions, l2PseudoLength int) error {
+func decodeFormatV(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap, pendingNibble *int, skipTags []int, idx int, options *DecodeOptions, l2PseudoLength int) error {
 
 	if ieDef.SpecialHandling == 2 {
-		return decodeFormatVVariableLength(data, offset, expectedTag, dtap, options, l2PseudoLength)
+		return decodeFormatVVariableLength(data, offset, ieDef, dtap, options, l2PseudoLength)
 	}
 
 	if ieDef.FixedLen == 0 {
-		return decodeFormatVNibble(data, offset, ieDef, expectedTag, dtap, pendingNibble, skipTags, idx)
+		return decodeFormatVNibble(data, offset, ieDef, dtap, pendingNibble, skipTags, idx)
 	}
 
-	return decodeFormatVFixedLen(data, offset, ieDef, expectedTag, dtap)
+	return decodeFormatVFixedLen(data, offset, ieDef, dtap)
 }
 
-func decodeFormatVVariableLength(data []byte, offset *int, expectedTag DtapIE,
+func decodeFormatVVariableLength(data []byte, offset *int, ieDef *IEDefinition,
 	dtap *Dtap, options *DecodeOptions, l2PseudoLength int) error {
 
 	if options == nil || options.L3TotalLength <= 0 {
@@ -115,7 +114,7 @@ func decodeFormatVVariableLength(data []byte, offset *int, expectedTag DtapIE,
 	value := data[*offset : *offset+vLength]
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: value,
 	})
 
@@ -123,7 +122,7 @@ func decodeFormatVVariableLength(data []byte, offset *int, expectedTag DtapIE,
 	return nil
 }
 
-func decodeFormatVNibble(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
+func decodeFormatVNibble(data []byte, offset *int, ieDef *IEDefinition,
 	dtap *Dtap, pendingNibble *int, skipTags []int, idx int) error {
 
 	value, err := getNextNibble(data, offset, pendingNibble)
@@ -136,15 +135,14 @@ func decodeFormatVNibble(data []byte, offset *int, ieDef *IEDefinition, expected
 	}
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: []byte{value},
 	})
 
 	return nil
 }
 
-func decodeFormatVFixedLen(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE,
-	dtap *Dtap) error {
+func decodeFormatVFixedLen(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	if *offset+ieDef.FixedLen > len(data) {
 		return fmt.Errorf("%w: need %d bytes for FormatV at offset %d",
@@ -154,7 +152,7 @@ func decodeFormatVFixedLen(data []byte, offset *int, ieDef *IEDefinition, expect
 	value := data[*offset : *offset+ieDef.FixedLen]
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: value,
 	})
 
@@ -190,11 +188,11 @@ func handleSpecialSkip(value byte, idx int, skipTags []int) {
 	}
 }
 
-func decodeFormatTLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatTLV(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	tagFromData := data[*offset]
 
-	if DtapIE(tagFromData) != expectedTag {
+	if DtapIE(tagFromData) != ieDef.ByteTag {
 		return nil
 	}
 
@@ -221,14 +219,14 @@ func decodeFormatTLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) e
 	*offset += length
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   DtapIE(tagFromData),
+		Tag:   ieDef.GoTag,
 		Value: value,
 	})
 
 	return nil
 }
 
-func decodeFormatLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatLV(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	length := int(data[*offset])
 	*offset++
@@ -247,32 +245,32 @@ func decodeFormatLV(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) er
 	*offset += length
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: value,
 	})
 
 	return nil
 }
 
-func decodeFormatTV(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatTV(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 	if ieDef.FixedLen == -2 {
-		return decodeFormatTVHalfByte(data, offset, expectedTag, dtap)
+		return decodeFormatTVHalfByte(data, offset, ieDef, dtap)
 	}
-	return decodeFormatTVRegular(data, offset, ieDef, expectedTag, dtap)
+	return decodeFormatTVRegular(data, offset, ieDef, dtap)
 }
 
-func decodeFormatTVHalfByte(data []byte, offset *int, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatTVHalfByte(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	b := data[*offset]
 
 	tagFromData := b >> 4
 	value := b & 0x0F
-	if DtapIE(tagFromData) != expectedTag {
+	if DtapIE(tagFromData) != ieDef.ByteTag {
 		return nil
 	}
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: []byte{value},
 	})
 
@@ -280,11 +278,11 @@ func decodeFormatTVHalfByte(data []byte, offset *int, expectedTag DtapIE, dtap *
 	return nil
 }
 
-func decodeFormatTVRegular(data []byte, offset *int, ieDef *IEDefinition, expectedTag DtapIE, dtap *Dtap) error {
+func decodeFormatTVRegular(data []byte, offset *int, ieDef *IEDefinition, dtap *Dtap) error {
 
 	tagFromData := data[*offset]
 
-	if DtapIE(tagFromData) != expectedTag {
+	if DtapIE(tagFromData) != ieDef.ByteTag {
 		return nil
 	}
 	*offset++
@@ -297,7 +295,7 @@ func decodeFormatTVRegular(data []byte, offset *int, ieDef *IEDefinition, expect
 	*offset += ieDef.FixedLen - 1
 
 	dtap.IEs = append(dtap.IEs, IE{
-		Tag:   expectedTag,
+		Tag:   ieDef.GoTag,
 		Value: value,
 	})
 
@@ -365,27 +363,26 @@ func DtapDecode(rawData []byte, opts ...Option) (*Dtap, error) {
 			continue
 		}
 		ieDef := format(expectedTag, dtap.Header.ProtocolDisc)
-		expectedTag = ieDef.Tag
 		switch ieDef.Format {
 		case FormatT:
-			if err := decodeFormatT(rawData, &offset, expectedTag, dtap); err != nil {
+			if err := decodeFormatT(rawData, &offset, &ieDef, dtap); err != nil {
 				return nil, fmt.Errorf("decoding IE 0x%02X (FormatT): %w", expectedTag, err)
 			}
 		case FormatV:
-			if err := decodeFormatV(rawData, &offset, &ieDef, expectedTag,
-				dtap, &pendingNibble, skipTags, i, options, l2PseudoLength); err != nil {
+			if err := decodeFormatV(rawData, &offset, &ieDef, dtap, &pendingNibble, skipTags,
+				i, options, l2PseudoLength); err != nil {
 				return nil, fmt.Errorf("decoding IE 0x%02X (FormatV): %w", expectedTag, err)
 			}
 		case FormatTV:
-			if err := decodeFormatTV(rawData, &offset, &ieDef, expectedTag, dtap); err != nil {
+			if err := decodeFormatTV(rawData, &offset, &ieDef, dtap); err != nil {
 				return nil, fmt.Errorf("decoding IE 0x%02X (FormatTV): %w", expectedTag, err)
 			}
 		case FormatLV:
-			if err := decodeFormatLV(rawData, &offset, expectedTag, dtap); err != nil {
+			if err := decodeFormatLV(rawData, &offset, &ieDef, dtap); err != nil {
 				return nil, fmt.Errorf("decoding IE 0x%02X (FormatLV): %w", expectedTag, err)
 			}
 		case FormatTLV:
-			if err := decodeFormatTLV(rawData, &offset, expectedTag, dtap); err != nil {
+			if err := decodeFormatTLV(rawData, &offset, &ieDef, dtap); err != nil {
 				return nil, fmt.Errorf("decoding IE 0x%02X (FormatTLV): %w", expectedTag, err)
 			}
 		default:
