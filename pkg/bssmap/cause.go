@@ -1,5 +1,6 @@
 package bssmap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=BSSMAP_Cause --output=cause_string.go
 type BSSMAP_Cause byte
 
 const (
