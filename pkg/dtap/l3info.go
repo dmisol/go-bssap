@@ -36,7 +36,7 @@ func (i IdentityType) String() string {
 	}
 }
 
-func identiny(b []byte) (it IdentityType, tmsi TMSI, imsi IMSI) {
+func Identiny(b []byte) (it IdentityType, tmsi TMSI, imsi IMSI) {
 	// fmt.Println(hex.EncodeToString(b))
 	if len(b) < 2 {
 		return
@@ -68,7 +68,7 @@ func identiny(b []byte) (it IdentityType, tmsi TMSI, imsi IMSI) {
 	return
 }
 
-// in fact, we just worry abount IMSI and TMSI only, to route between MOCN cores or MSC pools
+/*
 func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI) {
 	if len(b) < 2 {
 		return
@@ -90,7 +90,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 				mt = 0
 				return
 			}
-			it, tmsi, imsi = identiny(b[8 : 8+l])
+			it, tmsi, imsi = Identiny(b[8 : 8+l])
 			return
 		}
 	case PD_MM:
@@ -106,7 +106,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 				mt = 0
 				return
 			}
-			it, tmsi, imsi = identiny(b[10 : 10+l])
+			it, tmsi, imsi = Identiny(b[10 : 10+l])
 			return
 		case MSG_MM_CM_REEST_REQ:
 			// Table 9.42/GSM 04.08: CM RE-ESTABLISHMENT REQUEST message content
@@ -119,7 +119,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 				mt = 0
 				return
 			}
-			it, tmsi, imsi = identiny(b[8 : 8+l])
+			it, tmsi, imsi = Identiny(b[8 : 8+l])
 			return
 		case MSG_MM_CM_SERV_REQ:
 			// Table 9.45/GSM 04.08: CM SERVICE REQUEST message content
@@ -132,7 +132,7 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 				mt = 0
 				return
 			}
-			it, tmsi, imsi = identiny(b[8 : 8+l])
+			it, tmsi, imsi = Identiny(b[8 : 8+l])
 			return
 		case MSG_MM_IMSI_DETACH_IND:
 			// Table 9.48/GSM 04.08: IMSI DETACH INDICATION message content
@@ -145,9 +145,10 @@ func InitialL3Info(b []byte) (mt Msg_Type, it IdentityType, tmsi TMSI, imsi IMSI
 				mt = 0
 				return
 			}
-			it, tmsi, imsi = identiny(b[4 : 4+l])
+			it, tmsi, imsi = Identiny(b[4 : 4+l])
 			return
 		}
 	}
 	return
 }
+*/
