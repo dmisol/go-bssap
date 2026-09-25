@@ -1,5 +1,7 @@
 package dtap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=PD_Type -trimprefix=PD_ -output=pd_string.go
+
 type PD_Type byte
 
 // ETSI TS 124 007 V19.5.0 Table 11.2

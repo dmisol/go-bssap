@@ -1,5 +1,7 @@
 package abisrsl
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=MT -trimprefix=MT_ -output=mt_string.go
+
 type MT byte
 
 const (

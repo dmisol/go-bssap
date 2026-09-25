@@ -1,5 +1,7 @@
 package dtap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=RR_Msg_Type -trimprefix=MSG_ -output=msg-rr_string.go
+
 const (
 	MSG_RR_INIT_REQ     RR_Msg_Type = 0x3c
 	MSG_RR_ADD_ASS      RR_Msg_Type = 0x3b

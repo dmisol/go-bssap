@@ -1,5 +1,7 @@
 package dtap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=MM_Msg_Type -trimprefix=MSG_ -output=msg-mm_string.go
+
 const (
 	/* Table 10.2/3GPP TS 04.08 */
 	MSG_MM_IMSI_DETACH_IND MM_Msg_Type = 0x01

@@ -6,11 +6,12 @@ import (
 )
 
 var (
-	ErrWrongIE    = errors.New("invalid IE for request")
-	ErrWrongPload = errors.New("unexpected l3 payload")
+	ErrWrongIE       = errors.New("invalid IE for request")
+	ErrWrongPload    = errors.New("unexpected l3 payload")
 	ErrInvalidLength = errors.New("Invalid length")
-	ErrRslIsNil = errors.New("RSL is nil")
+	ErrRslIsNil      = errors.New("RSL is nil")
 	ErrNoDtapIEFound = errors.New("No Dtap")
+	ErrIEMissing     = errors.New("Missing IE")
 )
 
 // fixme: there should be a way to do it better
@@ -57,7 +58,7 @@ const (
 func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	ie, ok := Get(r.IEs, IE_L3_INFO)
 	if !ok {
-		err = ErrWrongIE
+		err = ErrIEMissing
 		return
 	}
 	if len(ie) != 21 {

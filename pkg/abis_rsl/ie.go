@@ -1,5 +1,7 @@
 package abisrsl
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=TAG -output=ie_string.go
+
 type IE []byte
 type TAG byte
 
@@ -71,11 +73,11 @@ const (
 	IE_LLP_APDU
 	IE_TFO_TRANS_CONT
 	// Osmocom specific
-	RSL_IE_OSMO_REP_ACCH_CAP	= 0x60
-	RSL_IE_OSMO_TRAINING_SEQUENCE	= 0x61
-	RSL_IE_OSMO_TEMP_OVP_ACCH_CAP	= 0x62
-	RSL_IE_OSMO_OSMUX_CID		= 0x63
-	RSL_IE_OSMO_RTP_EXTENSIONS	= 0x64
+	RSL_IE_OSMO_REP_ACCH_CAP      = 0x60
+	RSL_IE_OSMO_TRAINING_SEQUENCE = 0x61
+	RSL_IE_OSMO_TEMP_OVP_ACCH_CAP = 0x62
+	RSL_IE_OSMO_OSMUX_CID         = 0x63
+	RSL_IE_OSMO_RTP_EXTENSIONS    = 0x64
 )
 
 // format() returns a format of the Information Element (IE)
@@ -205,7 +207,7 @@ func (ie TAG) format() int {
 		return 2 // GSM 08.58 -> 9.3.57
 	case IE_LLP_APDU:
 		return -1 // GSM 08.58 -> 9.3.58
-	case IE_TFO_TRANS_CONT: 
+	case IE_TFO_TRANS_CONT:
 		return -1 // GSM 9.0.0 -> 9.3.59
 
 	//osmocom specific

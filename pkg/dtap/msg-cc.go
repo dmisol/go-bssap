@@ -1,5 +1,7 @@
 package dtap
 
+//go:generate go run golang.org/x/tools/cmd/stringer -type=CC_Msg_Type -trimprefix=MSG_ -output=msg-cc_string.go
+
 const (
 
 	/* Table 10.3/3GPP TS 04.08 */
