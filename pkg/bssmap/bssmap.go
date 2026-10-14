@@ -285,20 +285,28 @@ func BssmapDecode(b []byte) (*Bssmap, error) {
 		// Variable part
 		if ieLen == 0 { // (0 means a length is unknown and should be calculated)
 			// Next byte is length
-			if (offset + 1) >= len(b) {
+			headerLen := 0
+			if ((offset + 1) >= len(b)) || (ie == APDU && (offset+2) >= len(b)) {
 				return nil, fmt.Errorf("variable IE %q is invalid: [len]", ie)
 			}
-			l := int(b[offset+1])
+			l := 0
+			if ie == APDU {
+				headerLen = 3
+				l = int(binary.BigEndian.Uint16(b[offset+1 : offset+3]))
+			} else {
+				headerLen = 2
+				l = int(b[offset+1])
+			}
 
-			if (offset + 1 + l) >= len(b) {
+			if ((offset + 1 + l) >= len(b)) || (ie == APDU && (offset+2+l) >= len(b)) {
 
 				//fmt.Println("given IE:", offset, hex.EncodeToString(b[offset:]))
 				return nil, fmt.Errorf("variable IE %q (%d bytes) is invalid: [val]", ie, l)
 			}
-			d := b[offset : offset+l+2]
+			d := b[offset : offset+l+headerLen]
 
 			m.IEs = append(m.IEs, d)
-			offset += l + 2
+			offset += l + headerLen
 			// Fixed part
 		} else if ieLen > 0 {
 			if (offset + ieLen) > len(b) {
