@@ -28,7 +28,7 @@ func (r *RSL) DecodeL1Info() (power int, ta int, err error) {
 		return
 	}
 	power = int(ie[1]) >> 3
-	ta = int(ie[2]) >> 2
+	ta = int(ie[2])
 	return
 }
 
