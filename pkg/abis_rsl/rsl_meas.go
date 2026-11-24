@@ -114,7 +114,7 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	nc = &NCell{ // ncell 3
 		RxLev: uint8((u << 2) & 0x3C),
 	}
-	u = binary.BigEndian.Uint32(ie[3+2+4:]) // 10.5.2.20 Measurement Results, Octets 10+
+	u = binary.BigEndian.Uint32(ie[3+2+8:]) // 10.5.2.20 Measurement Results, Octets 10+
 	nc.RxLev |= uint8((u >> 30) & 0x3)
 	nc.FreqIdx = uint8((u >> (24 + 1)) & freqMask)
 	nc.BSIC = uint8((u >> (16 + 3)) & bsicMask)
@@ -136,7 +136,7 @@ func (r *RSL) DecodeDownlinkMeas() (sc *SCell, ncs []*NCell, err error) {
 	nc = &NCell{ // ncell 5
 		RxLev: uint8((u << 4) & 0xF0),
 	}
-	u = binary.BigEndian.Uint32(ie[3+2+8:]) // 10.5.2.20 Measurement Results, Octets 14+
+	u = binary.BigEndian.Uint32(ie[3+2+12:]) // 10.5.2.20 Measurement Results, Octets 14+
 	nc.RxLev |= uint8((u >> (24 + 4)) & 0xF)
 	nc.FreqIdx = uint8((u >> (16 + 7)) & freqMask)
 	nc.BSIC = uint8((u >> (16 + 1)) & bsicMask)
